@@ -111,15 +111,16 @@ export default function OpdDashboard({ initialPatients }: OpdDashboardProps) {
                 ) : (
                   filteredPatients.map((patient) => {
                     return (
-                      <div
+                      <Link
                         key={patient.id}
-                        className="p-6 hover:bg-panel/20 transition-colors"
+                        href={`/patient/${patient.id}`}
+                        className="block p-6 hover:bg-panel/40 transition-all group cursor-pointer"
                       >
                         <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
                           {/* Token & Patient Demographics */}
                           <div className="flex items-start gap-4">
                             {/* Token Badge */}
-                            <div className="shrink-0 flex flex-col items-center justify-center w-14 h-14 rounded-xl border bg-panel border-border text-navy">
+                            <div className="shrink-0 flex flex-col items-center justify-center w-14 h-14 rounded-xl border bg-panel border-border text-navy group-hover:border-blue/50 transition-colors">
                               <span className="font-mono text-xs uppercase tracking-wider text-slate">
                                 TOKEN
                               </span>
@@ -131,7 +132,7 @@ export default function OpdDashboard({ initialPatients }: OpdDashboardProps) {
                             {/* Details */}
                             <div>
                               <div className="flex flex-wrap items-center gap-2">
-                                <h3 className="text-lg font-bold text-navy tracking-tight">
+                                <h3 className="text-lg font-bold text-navy tracking-tight group-hover:text-blue transition-colors">
                                   {patient.name}
                                 </h3>
                                 <span className="text-sm text-navy-muted">
@@ -181,7 +182,7 @@ export default function OpdDashboard({ initialPatients }: OpdDashboardProps) {
                             </div>
                           </div>
 
-                          {/* Data Status Badge */}
+                          {/* Data Status Badge & Consultation Link */}
                           <div className="flex items-center gap-3 self-start md:self-center shrink-0">
                             {patient.dataStatus === "Records available" ? (
                               <div className="flex items-center gap-2 px-3 py-1.5 rounded-full border border-border bg-panel text-navy text-xs font-semibold">
@@ -229,9 +230,13 @@ export default function OpdDashboard({ initialPatients }: OpdDashboardProps) {
                                 </span>
                               </div>
                             )}
+
+                            <span className="text-xs text-blue group-hover:translate-x-0.5 transition-transform font-medium hidden sm:inline-block">
+                              Consultation &rarr;
+                            </span>
                           </div>
                         </div>
-                      </div>
+                      </Link>
                     );
                   })
                 )}
