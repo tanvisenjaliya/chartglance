@@ -1,0 +1,73 @@
+[
+  {
+    "id": "p1",
+    "tokenNumber": "OPD-01",
+    "name": "Ramesh Patel",
+    "age": 52,
+    "gender": "Male",
+    "abhaNumber": "91-5555-4321-1001",
+    "abhaAddress": "ramesh.patel@sbx",
+    "arrivalTime": "09:15 AM",
+    "dataStatus": "Records Available",
+    "recordCount": 3,
+    "hasRecords": true,
+    "recordFile": "persona-1.json",
+    "notes": "TODO-VERIFY: Primary demo persona (diabetic, hypertensive)"
+  },
+  {
+    "id": "p2",
+    "tokenNumber": "OPD-02",
+    "name": "Sunita Sharma",
+    "age": 24,
+    "gender": "Female",
+    "abhaNumber": "91-5555-7890-2002",
+    "abhaAddress": "sunita.sharma@sbx",
+    "arrivalTime": "09:30 AM",
+    "dataStatus": "Consent Pending",
+    "recordCount": 0,
+    "hasRecords": false,
+    "notes": "TODO-VERIFY: Persona 2 (pregnant woman, 2nd trimester - milestone 2)"
+  },
+  {
+    "id": "p3",
+    "tokenNumber": "OPD-03",
+    "name": "Rajesh Kumar",
+    "age": 38,
+    "gender": "Male",
+    "abhaNumber": "91-5555-6543-3003",
+    "abhaAddress": "rajesh.kumar@sbx",
+    "arrivalTime": "09:45 AM",
+    "dataStatus": "Consent Pending",
+    "recordCount": 0,
+    "hasRecords": false,
+    "notes": "TODO-VERIFY: Persona 3 (TB patient on treatment - milestone 2)"
+  },
+  {
+    "id": "p4",
+    "tokenNumber": "OPD-04",
+    "name": "Meena Devi",
+    "age": 45,
+    "gender": "Female",
+    "abhaNumber": "91-5555-1122-4004",
+    "abhaAddress": "meena.devi@sbx",
+    "arrivalTime": "10:00 AM",
+    "dataStatus": "No Linked Records",
+    "recordCount": 0,
+    "hasRecords": false,
+    "notes": "TODO-VERIFY: Persona 4 (empty state persona)"
+  },
+  {
+    "id": "p5",
+    "tokenNumber": "OPD-05",
+    "name": "Anand Verma",
+    "age": 60,
+    "gender": "Male",
+    "abhaNumber": "91-5555-9988-5005",
+    "abhaAddress": "anand.verma@sbx",
+    "arrivalTime": "10:15 AM",
+    "dataStatus": "Consent Pending",
+    "recordCount": 0,
+    "hasRecords": false,
+    "notes": "TODO-VERIFY: Persona 5 (conflicting records across facilities)"
+  }
+]
