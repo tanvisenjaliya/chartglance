@@ -6,24 +6,19 @@ export interface PatientQueueItem {
   tokenNumber: string;
   name: string;
   age: number;
-  gender: string;
+  gender: "Male" | "Female" | "Other";
   abhaNumber: string;
   abhaAddress: string;
+  abhaStatus: "LINKED" | "UNLINKED";
   arrivalTime: string;
+  visitType: "Follow-up" | "New Visit" | "Emergency Triage";
+  chiefComplaint: string;
   dataStatus: "Records Available" | "Consent Pending" | "No Linked Records";
   recordCount: number;
   hasRecords: boolean;
   recordFile?: string;
   notes?: string;
-}
-
-export interface ResolvedResource {
-  resourceType: string;
-  id: string;
-  sourceId: string;
-  facility: string;
-  resolvedDate?: string;
-  [key: string]: unknown;
+  isEmergency?: boolean;
 }
 
 /**
@@ -65,7 +60,7 @@ export function getOpdQueue(): PatientQueueItem[] {
 }
 
 /**
- * Loads a patient's FHIR bundle from /data/records/ and resolves day offsets to real dates.
+ * Loads a patient's FHIR bundle from /data/records/ and returns raw JSON bundle
  */
 export function getPatientRecordBundle(fileName: string) {
   const filePath = path.join(process.cwd(), "data", "records", fileName);
@@ -73,8 +68,5 @@ export function getPatientRecordBundle(fileName: string) {
     return null;
   }
   const fileContent = fs.readFileSync(filePath, "utf-8");
-  const rawBundle = JSON.parse(fileContent);
-
-  // Return raw bundle with helper resolution metadata
-  return rawBundle;
+  return JSON.parse(fileContent);
 }

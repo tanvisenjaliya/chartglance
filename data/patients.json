@@ -7,12 +7,15 @@
     "gender": "Male",
     "abhaNumber": "91-5555-4321-1001",
     "abhaAddress": "ramesh.patel@sbx",
+    "abhaStatus": "LINKED",
     "arrivalTime": "09:15 AM",
+    "visitType": "Follow-up",
+    "chiefComplaint": "Uncontrolled blood sugars & giddiness",
     "dataStatus": "Records Available",
     "recordCount": 3,
     "hasRecords": true,
     "recordFile": "persona-1.json",
-    "notes": "TODO-VERIFY: Primary demo persona (diabetic, hypertensive)"
+    "notes": "Diabetic + hypertensive, rising HbA1c, missed 30-day follow-up (TODO-VERIFY)"
   },
   {
     "id": "p2",
@@ -22,11 +25,14 @@
     "gender": "Female",
     "abhaNumber": "91-5555-7890-2002",
     "abhaAddress": "sunita.sharma@sbx",
+    "abhaStatus": "LINKED",
     "arrivalTime": "09:30 AM",
+    "visitType": "Follow-up",
+    "chiefComplaint": "ANC 2nd Trimester Checkup & severe fatigue",
     "dataStatus": "Consent Pending",
     "recordCount": 0,
     "hasRecords": false,
-    "notes": "TODO-VERIFY: Persona 2 (pregnant woman, 2nd trimester - milestone 2)"
+    "notes": "Pregnant woman, 24, 2nd trimester, low Hb (Maternal red flag - M2)"
   },
   {
     "id": "p3",
@@ -36,11 +42,14 @@
     "gender": "Male",
     "abhaNumber": "91-5555-6543-3003",
     "abhaAddress": "rajesh.kumar@sbx",
+    "abhaStatus": "LINKED",
     "arrivalTime": "09:45 AM",
+    "visitType": "Follow-up",
+    "chiefComplaint": "Persistent cough & medicine refill request",
     "dataStatus": "Consent Pending",
     "recordCount": 0,
     "hasRecords": false,
-    "notes": "TODO-VERIFY: Persona 3 (TB patient on treatment - milestone 2)"
+    "notes": "TB patient on treatment, gap in medicine pick-ups (Treatment gap flag - M2)"
   },
   {
     "id": "p4",
@@ -50,11 +59,14 @@
     "gender": "Female",
     "abhaNumber": "91-5555-1122-4004",
     "abhaAddress": "meena.devi@sbx",
+    "abhaStatus": "UNLINKED",
     "arrivalTime": "10:00 AM",
+    "visitType": "New Visit",
+    "chiefComplaint": "High fever with chills & generalized joint pain",
     "dataStatus": "No Linked Records",
     "recordCount": 0,
     "hasRecords": false,
-    "notes": "TODO-VERIFY: Persona 4 (empty state persona)"
+    "notes": "Has ABHA ID but zero linked hospital records (Empty state persona)"
   },
   {
     "id": "p5",
@@ -64,10 +76,13 @@
     "gender": "Male",
     "abhaNumber": "91-5555-9988-5005",
     "abhaAddress": "anand.verma@sbx",
+    "abhaStatus": "LINKED",
     "arrivalTime": "10:15 AM",
+    "visitType": "New Visit",
+    "chiefComplaint": "Chest tightness on exertion & medication review",
     "dataStatus": "Consent Pending",
     "recordCount": 0,
     "hasRecords": false,
-    "notes": "TODO-VERIFY: Persona 5 (conflicting records across facilities)"
+    "notes": "Senior citizen, conflicting prescriptions across 2 facilities (M2)"
   }
 ]
