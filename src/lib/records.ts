@@ -9,16 +9,13 @@ export interface PatientQueueItem {
   gender: "Male" | "Female" | "Other";
   abhaNumber: string;
   abhaAddress: string;
-  abhaStatus: "LINKED" | "UNLINKED";
   arrivalTime: string;
-  visitType: "Follow-up" | "New Visit" | "Emergency Triage";
+  visitType: "Follow-up" | "New Visit";
   chiefComplaint: string;
-  dataStatus: "Records Available" | "Consent Pending" | "No Linked Records";
+  dataStatus: "Records available" | "ABHA, no records" | "No ABHA";
   recordCount: number;
   hasRecords: boolean;
   recordFile?: string;
-  notes?: string;
-  isEmergency?: boolean;
 }
 
 /**

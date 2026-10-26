@@ -7,15 +7,13 @@
     "gender": "Male",
     "abhaNumber": "91-5555-4321-1001",
     "abhaAddress": "ramesh.patel@sbx",
-    "abhaStatus": "LINKED",
     "arrivalTime": "09:15 AM",
     "visitType": "Follow-up",
     "chiefComplaint": "Uncontrolled blood sugars & giddiness",
-    "dataStatus": "Records Available",
+    "dataStatus": "Records available",
     "recordCount": 3,
     "hasRecords": true,
-    "recordFile": "persona-1.json",
-    "notes": "Diabetic + hypertensive, rising HbA1c, missed 30-day follow-up (TODO-VERIFY)"
+    "recordFile": "persona-1.json"
   },
   {
     "id": "p2",
@@ -25,31 +23,27 @@
     "gender": "Female",
     "abhaNumber": "91-5555-7890-2002",
     "abhaAddress": "sunita.sharma@sbx",
-    "abhaStatus": "LINKED",
     "arrivalTime": "09:30 AM",
     "visitType": "Follow-up",
     "chiefComplaint": "ANC 2nd Trimester Checkup & severe fatigue",
-    "dataStatus": "Consent Pending",
+    "dataStatus": "ABHA, no records",
     "recordCount": 0,
-    "hasRecords": false,
-    "notes": "Pregnant woman, 24, 2nd trimester, low Hb (Maternal red flag - M2)"
+    "hasRecords": false
   },
   {
     "id": "p3",
     "tokenNumber": "OPD-03",
-    "name": "Rajesh Kumar",
+    "name": "Jugal Sen",
     "age": 38,
     "gender": "Male",
     "abhaNumber": "91-5555-6543-3003",
-    "abhaAddress": "rajesh.kumar@sbx",
-    "abhaStatus": "LINKED",
+    "abhaAddress": "jugal.sen@sbx",
     "arrivalTime": "09:45 AM",
     "visitType": "Follow-up",
     "chiefComplaint": "Persistent cough & medicine refill request",
-    "dataStatus": "Consent Pending",
+    "dataStatus": "ABHA, no records",
     "recordCount": 0,
-    "hasRecords": false,
-    "notes": "TB patient on treatment, gap in medicine pick-ups (Treatment gap flag - M2)"
+    "hasRecords": false
   },
   {
     "id": "p4",
@@ -57,16 +51,14 @@
     "name": "Meena Devi",
     "age": 45,
     "gender": "Female",
-    "abhaNumber": "91-5555-1122-4004",
-    "abhaAddress": "meena.devi@sbx",
-    "abhaStatus": "UNLINKED",
+    "abhaNumber": "—",
+    "abhaAddress": "—",
     "arrivalTime": "10:00 AM",
     "visitType": "New Visit",
     "chiefComplaint": "High fever with chills & generalized joint pain",
-    "dataStatus": "No Linked Records",
+    "dataStatus": "No ABHA",
     "recordCount": 0,
-    "hasRecords": false,
-    "notes": "Has ABHA ID but zero linked hospital records (Empty state persona)"
+    "hasRecords": false
   },
   {
     "id": "p5",
@@ -76,13 +68,11 @@
     "gender": "Male",
     "abhaNumber": "91-5555-9988-5005",
     "abhaAddress": "anand.verma@sbx",
-    "abhaStatus": "LINKED",
     "arrivalTime": "10:15 AM",
     "visitType": "New Visit",
-    "chiefComplaint": "Chest tightness on exertion & medication review",
-    "dataStatus": "Consent Pending",
+    "chiefComplaint": "Lower back pain and medicine refill.",
+    "dataStatus": "ABHA, no records",
     "recordCount": 0,
-    "hasRecords": false,
-    "notes": "Senior citizen, conflicting prescriptions across 2 facilities (M2)"
+    "hasRecords": false
   }
 ]
