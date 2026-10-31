@@ -11,9 +11,10 @@
     "visitType": "Follow-up",
     "chiefComplaint": "Uncontrolled blood sugars & giddiness",
     "dataStatus": "Records available",
-    "recordCount": 3,
+    "recordCount": 4,
     "hasRecords": true,
-    "recordFile": "persona-1.json"
+    "recordFile": "persona-1.json",
+    "queueStatus": "Waiting"
   },
   {
     "id": "p2",
@@ -26,24 +27,28 @@
     "arrivalTime": "09:30 AM",
     "visitType": "Follow-up",
     "chiefComplaint": "ANC 2nd Trimester Checkup & severe fatigue",
-    "dataStatus": "ABHA, no records",
-    "recordCount": 0,
-    "hasRecords": false
+    "dataStatus": "Records available",
+    "recordCount": 6,
+    "hasRecords": true,
+    "recordFile": "persona-2.json",
+    "queueStatus": "Waiting"
   },
   {
     "id": "p3",
     "tokenNumber": "OPD-03",
-    "name": "Jugal Sen",
+    "name": "Vikas Jadhav",
     "age": 38,
     "gender": "Male",
     "abhaNumber": "91-5555-6543-3003",
-    "abhaAddress": "jugal.sen@sbx",
+    "abhaAddress": "vikas.jadhav@sbx",
     "arrivalTime": "09:45 AM",
     "visitType": "Follow-up",
     "chiefComplaint": "Persistent cough & medicine refill request",
-    "dataStatus": "ABHA, no records",
-    "recordCount": 0,
-    "hasRecords": false
+    "dataStatus": "Records available",
+    "recordCount": 8,
+    "hasRecords": true,
+    "recordFile": "persona-3.json",
+    "queueStatus": "Waiting"
   },
   {
     "id": "p4",
@@ -58,7 +63,8 @@
     "chiefComplaint": "High fever with chills & generalized joint pain",
     "dataStatus": "No ABHA",
     "recordCount": 0,
-    "hasRecords": false
+    "hasRecords": false,
+    "queueStatus": "Waiting"
   },
   {
     "id": "p5",
@@ -71,8 +77,10 @@
     "arrivalTime": "10:15 AM",
     "visitType": "New Visit",
     "chiefComplaint": "Lower back pain and medicine refill.",
-    "dataStatus": "ABHA, no records",
-    "recordCount": 0,
-    "hasRecords": false
+    "dataStatus": "Records available",
+    "recordCount": 6,
+    "hasRecords": true,
+    "recordFile": "persona-5.json",
+    "queueStatus": "Waiting"
   }
 ]

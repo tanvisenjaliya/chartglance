@@ -577,6 +577,23 @@
           }
         ]
       }
+    },
+    {
+      "fullUrl": "urn:uuid:p1-eye-checkup-missed",
+      "resource": {
+        "resourceType": "Appointment",
+        "id": "p1-eye-checkup-missed",
+        "sourceId": "rec-p1-eye-checkup-missed",
+        "facility": "CHC Shirur (HIP-MH-PUN-001)",
+        "status": "noshow",
+        "scheduledDateOffsetDays": -60,
+        "description": "TODO-VERIFY: Annual diabetic retinopathy eye check-up scheduled for 60 days ago - patient missed appointment (overdue by 60 days)",
+        "serviceType": [
+          {
+            "text": "Annual Diabetic Retinopathy Fundus Screening (TODO-VERIFY)"
+          }
+        ]
+      }
     }
   ]
 }

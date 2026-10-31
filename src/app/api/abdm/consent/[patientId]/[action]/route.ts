@@ -25,17 +25,15 @@ export async function POST(
       );
     }
 
-    const recordsData = abdmClient.fetchRecords(patientId);
+    const recordsData = abdmClient.fetchRecordsStaged(patientId);
 
     return NextResponse.json({
       consent,
       recordsData,
     });
   } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : "Failed to process consent action";
-    return NextResponse.json(
-      { error: message },
-      { status: 500 }
-    );
+    const message =
+      err instanceof Error ? err.message : "Failed to process consent action";
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }

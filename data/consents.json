@@ -1,1 +1,25 @@
-{}
+{
+  "p1": {
+    "id": "consent-p1-1793017474146",
+    "patientId": "p1",
+    "abhaNumber": "91-5555-4321-1001",
+    "abhaAddress": "ramesh.patel@sbx",
+    "requesterName": "Dr. Aditi Sharma",
+    "requesterFacility": "PHC Mandavgan (HIU-MH-PUN-042)",
+    "purpose": "CAREMGT",
+    "hiTypes": [
+      "OPConsultation",
+      "DiagnosticReport",
+      "Prescription",
+      "DischargeSummary"
+    ],
+    "dateRange": {
+      "from": "2023-10-27",
+      "to": "2026-10-26"
+    },
+    "expiryDate": "2026-10-27T12:24:47.994Z",
+    "status": "GRANTED",
+    "createdAt": "2026-10-26T12:24:34.146Z",
+    "updatedAt": "2026-10-26T12:24:47.994Z"
+  }
+}

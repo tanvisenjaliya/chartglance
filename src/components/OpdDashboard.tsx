@@ -2,16 +2,20 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { PatientQueueItem } from "@/lib/records";
 import KpiBar, { FilterType } from "./KpiBar";
 import DoctorSidebar from "./DoctorSidebar";
+import QueueStatusBadge from "./QueueStatusBadge";
+import DemoModeBanner from "./DemoModeBanner";
 
 interface OpdDashboardProps {
   initialPatients: PatientQueueItem[];
 }
 
 export default function OpdDashboard({ initialPatients }: OpdDashboardProps) {
-  const [patients] = useState<PatientQueueItem[]>(initialPatients);
+  const router = useRouter();
+  const [patients, setPatients] = useState<PatientQueueItem[]>(initialPatients);
   const [activeFilter, setActiveFilter] = useState<FilterType>("all");
 
   // Filter logic
@@ -26,6 +30,44 @@ export default function OpdDashboard({ initialPatients }: OpdDashboardProps) {
     month: "long",
     year: "numeric",
   });
+
+  // Next patient: first Waiting patient
+  const nextWaiting = patients.find((p) => p.queueStatus === "Waiting");
+
+  // Counts for sidebar display
+  const waitingCount = patients.filter((p) => p.queueStatus === "Waiting").length;
+  const inConsultCount = patients.filter((p) => p.queueStatus === "In consultation").length;
+  const doneCount = patients.filter((p) => p.queueStatus === "Done").length;
+
+  const handleNextPatient = () => {
+    if (nextWaiting) {
+      router.push(`/patient/${nextWaiting.id}`);
+    }
+  };
+
+  // Optimistic local status update (syncs with server via the consultation page)
+  const handleStatusChange = async (
+    patientId: string,
+    newStatus: "Waiting" | "In consultation" | "Done"
+  ) => {
+    // Optimistic update
+    setPatients((prev) =>
+      prev.map((p) =>
+        p.id === patientId ? { ...p, queueStatus: newStatus } : p
+      )
+    );
+    try {
+      await fetch(`/api/patients/${patientId}/status`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: newStatus }),
+      });
+    } catch {
+      // Revert on error by re-fetching
+      const res = await fetch("/api/patients");
+      if (res.ok) setPatients(await res.json());
+    }
+  };
 
   return (
     <div className="min-h-screen bg-panel text-navy font-sans">
@@ -62,6 +104,9 @@ export default function OpdDashboard({ initialPatients }: OpdDashboardProps) {
         </div>
       </header>
 
+      {/* Demo Mode Banner */}
+      <DemoModeBanner />
+
       {/* Main Workspace */}
       <main className="max-w-7xl mx-auto px-6 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
@@ -88,9 +133,36 @@ export default function OpdDashboard({ initialPatients }: OpdDashboardProps) {
                     </span>
                   )}
                 </div>
-                <span className="font-mono text-xs uppercase tracking-wider text-slate">
-                  ORDER: ARRIVAL SEQUENCE
-                </span>
+
+                <div className="flex items-center gap-3">
+                  {/* Queue status summary */}
+                  <div className="hidden sm:flex items-center gap-2 text-[11px] font-mono text-slate">
+                    <span>{waitingCount} waiting</span>
+                    <span>&bull;</span>
+                    <span>{inConsultCount} in consult</span>
+                    <span>&bull;</span>
+                    <span>{doneCount} done</span>
+                  </div>
+
+                  {/* Next Patient shortcut */}
+                  {nextWaiting && (
+                    <button
+                      type="button"
+                      onClick={handleNextPatient}
+                      className="px-3 py-1.5 rounded-lg bg-blue text-white text-xs font-mono uppercase tracking-wider font-semibold hover:bg-blue/90 transition-colors"
+                    >
+                      Next Patient &rarr;
+                    </button>
+                  )}
+
+                  {/* Register Patient */}
+                  <Link
+                    href="/register"
+                    className="px-3 py-1.5 rounded-lg border border-border bg-panel text-navy-muted text-xs font-mono uppercase tracking-wider font-semibold hover:bg-border/60 transition-colors"
+                  >
+                    + Register
+                  </Link>
+                </div>
               </div>
 
               {/* Patient Rows */}
@@ -110,15 +182,18 @@ export default function OpdDashboard({ initialPatients }: OpdDashboardProps) {
                   </div>
                 ) : (
                   filteredPatients.map((patient) => {
+                    const isDone = patient.queueStatus === "Done";
                     return (
-                      <Link
+                      <div
                         key={patient.id}
-                        href={`/patient/${patient.id}`}
-                        className="block p-6 hover:bg-panel/40 transition-all group cursor-pointer"
+                        className={`p-6 transition-all group ${isDone ? "opacity-60" : "hover:bg-panel/40"}`}
                       >
                         <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
                           {/* Token & Patient Demographics */}
-                          <div className="flex items-start gap-4">
+                          <Link
+                            href={`/patient/${patient.id}`}
+                            className="flex items-start gap-4 flex-1 min-w-0"
+                          >
                             {/* Token Badge */}
                             <div className="shrink-0 flex flex-col items-center justify-center w-14 h-14 rounded-xl border bg-panel border-border text-navy group-hover:border-blue/50 transition-colors">
                               <span className="font-mono text-xs uppercase tracking-wider text-slate">
@@ -130,7 +205,7 @@ export default function OpdDashboard({ initialPatients }: OpdDashboardProps) {
                             </div>
 
                             {/* Details */}
-                            <div>
+                            <div className="min-w-0 flex-1">
                               <div className="flex flex-wrap items-center gap-2">
                                 <h3 className="text-lg font-bold text-navy tracking-tight group-hover:text-blue transition-colors">
                                   {patient.name}
@@ -138,6 +213,11 @@ export default function OpdDashboard({ initialPatients }: OpdDashboardProps) {
                                 <span className="text-sm text-navy-muted">
                                   {patient.age} yrs &bull; {patient.gender}
                                 </span>
+                                {/* Queue status inline badge */}
+                                <QueueStatusBadge
+                                  status={patient.queueStatus ?? "Waiting"}
+                                  compact
+                                />
                               </div>
 
                               {/* Chief Complaint */}
@@ -180,10 +260,11 @@ export default function OpdDashboard({ initialPatients }: OpdDashboardProps) {
                                 </div>
                               </div>
                             </div>
-                          </div>
+                          </Link>
 
-                          {/* Data Status Badge & Consultation Link */}
-                          <div className="flex items-center gap-3 self-start md:self-center shrink-0">
+                          {/* Right side: data status badge + status controls */}
+                          <div className="flex flex-col items-start md:items-end gap-2 shrink-0">
+                            {/* Data Status Badge */}
                             {patient.dataStatus === "Records available" ? (
                               <div className="flex items-center gap-2 px-3 py-1.5 rounded-full border border-border bg-panel text-navy text-xs font-semibold">
                                 <svg
@@ -231,12 +312,39 @@ export default function OpdDashboard({ initialPatients }: OpdDashboardProps) {
                               </div>
                             )}
 
-                            <span className="text-xs text-blue group-hover:translate-x-0.5 transition-transform font-medium hidden sm:inline-block">
+                            {/* Quick status advance controls */}
+                            {patient.queueStatus === "Waiting" && (
+                              <button
+                                type="button"
+                                onClick={() =>
+                                  handleStatusChange(patient.id, "In consultation")
+                                }
+                                className="text-[11px] font-mono uppercase tracking-wider text-blue hover:underline"
+                              >
+                                Start consultation
+                              </button>
+                            )}
+                            {patient.queueStatus === "In consultation" && (
+                              <button
+                                type="button"
+                                onClick={() =>
+                                  handleStatusChange(patient.id, "Done")
+                                }
+                                className="text-[11px] font-mono uppercase tracking-wider text-navy-muted hover:text-navy hover:underline"
+                              >
+                                Mark done
+                              </button>
+                            )}
+
+                            <Link
+                              href={`/patient/${patient.id}`}
+                              className="text-xs text-blue font-medium hidden sm:inline-block"
+                            >
                               Consultation &rarr;
-                            </span>
+                            </Link>
                           </div>
                         </div>
-                      </Link>
+                      </div>
                     );
                   })
                 )}
@@ -246,12 +354,17 @@ export default function OpdDashboard({ initialPatients }: OpdDashboardProps) {
 
           {/* Right Column: Doctor Profile (4 cols) */}
           <div className="lg:col-span-4">
-            <DoctorSidebar totalPatients={patients.length} />
+            <DoctorSidebar
+              totalPatients={patients.length}
+              waitingCount={waitingCount}
+              inConsultCount={inConsultCount}
+              doneCount={doneCount}
+            />
           </div>
         </div>
       </main>
 
-      {/* Footer with Dev Inspector Link */}
+      {/* Footer */}
       <footer className="mt-12 border-t border-border bg-surface py-6 px-6">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate">
           <div>
@@ -261,7 +374,13 @@ export default function OpdDashboard({ initialPatients }: OpdDashboardProps) {
             </p>
           </div>
 
-          <div>
+          <div className="flex items-center gap-4">
+            <Link
+              href="/register"
+              className="text-xs text-blue hover:underline font-medium flex items-center gap-1"
+            >
+              Register Patient &rarr;
+            </Link>
             <Link
               href="/dev"
               className="text-xs text-blue hover:underline font-medium flex items-center gap-1"

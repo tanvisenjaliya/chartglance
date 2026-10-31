@@ -5,6 +5,8 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { ConsentRecord, RawClinicalRecord } from "@/lib/abdm-mock";
 import { PatientQueueItem } from "@/lib/records";
+import QueueStatusBadge from "@/components/QueueStatusBadge";
+import DemoModeBanner from "@/components/DemoModeBanner";
 
 export default function PatientConsultationPage() {
   const params = useParams();
@@ -15,10 +17,13 @@ export default function PatientConsultationPage() {
   const [consent, setConsent] = useState<ConsentRecord | null>(null);
   const [records, setRecords] = useState<RawClinicalRecord[]>([]);
   const [facilityCount, setFacilityCount] = useState(0);
+  const [pendingFacilities, setPendingFacilities] = useState<string[]>([]);
+  const [timedOutCount, setTimedOutCount] = useState(0);
   const [requesting, setRequesting] = useState(false);
   const [actionLoading, setActionLoading] = useState(false);
+  const [statusUpdating, setStatusUpdating] = useState(false);
 
-  // Fetch patient details from /data/patients.json (via a client fetch or helper)
+  // Fetch patient details
   useEffect(() => {
     async function loadPatient() {
       try {
@@ -47,6 +52,8 @@ export default function PatientConsultationPage() {
         if (data.recordsData) {
           setRecords(data.recordsData.records || []);
           setFacilityCount(data.recordsData.facilityCount || 0);
+          setPendingFacilities(data.recordsData.pendingFacilities || []);
+          setTimedOutCount(data.recordsData.timedOutCount || 0);
         }
       }
     } catch {
@@ -58,15 +65,17 @@ export default function PatientConsultationPage() {
     fetchConsentStatus();
   }, [fetchConsentStatus]);
 
-  // Poll every 2.5 seconds when consent is in REQUESTED state to auto-update upon patient phone action
+  // Poll when consent is REQUESTED (waiting for patient action or auto-resolution)
+  // Also poll when GRANTED but facilities still pending
   useEffect(() => {
-    if (consent?.status === "REQUESTED") {
-      const interval = setInterval(() => {
-        fetchConsentStatus();
-      }, 2500);
-      return () => clearInterval(interval);
-    }
-  }, [consent?.status, fetchConsentStatus]);
+    const shouldPoll =
+      consent?.status === "REQUESTED" || pendingFacilities.length > 0;
+    if (!shouldPoll) return;
+    const interval = setInterval(() => {
+      fetchConsentStatus();
+    }, 2500);
+    return () => clearInterval(interval);
+  }, [consent?.status, pendingFacilities.length, fetchConsentStatus]);
 
   // Doctor initiates consent request
   const handleRequestRecords = async () => {
@@ -93,7 +102,6 @@ export default function PatientConsultationPage() {
     }
   };
 
-  // Demo: Simulate Expiry
   const handleSimulateExpiry = async () => {
     setActionLoading(true);
     try {
@@ -104,13 +112,13 @@ export default function PatientConsultationPage() {
         const data = await res.json();
         setConsent(data.consent);
         setRecords([]);
+        setPendingFacilities([]);
       }
     } finally {
       setActionLoading(false);
     }
   };
 
-  // Demo: Reset Consent for re-testing
   const handleResetConsent = async () => {
     setActionLoading(true);
     try {
@@ -120,9 +128,34 @@ export default function PatientConsultationPage() {
       if (res.ok) {
         setConsent(null);
         setRecords([]);
+        setPendingFacilities([]);
+        setTimedOutCount(0);
       }
     } finally {
       setActionLoading(false);
+    }
+  };
+
+  // Queue status lifecycle
+  const handleStatusChange = async (
+    newStatus: "Waiting" | "In consultation" | "Done"
+  ) => {
+    if (!patient) return;
+    setStatusUpdating(true);
+    try {
+      const res = await fetch(`/api/patients/${patientId}/status`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: newStatus }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setPatient(data.patient);
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setStatusUpdating(false);
     }
   };
 
@@ -152,6 +185,8 @@ export default function PatientConsultationPage() {
     hoursRemaining = Math.max(0, Math.ceil(diff / (1000 * 60 * 60)));
   }
 
+  const queueStatus = patient.queueStatus ?? "Waiting";
+
   return (
     <div className="min-h-screen bg-panel text-navy font-sans">
       {/* Top Header */}
@@ -178,6 +213,9 @@ export default function PatientConsultationPage() {
         </div>
       </header>
 
+      {/* Demo Mode Banner */}
+      <DemoModeBanner />
+
       {/* Main Container */}
       <main className="max-w-6xl mx-auto px-6 py-8 space-y-6">
         {/* Patient Demographics Card */}
@@ -201,6 +239,7 @@ export default function PatientConsultationPage() {
                   <span className="text-sm text-navy-muted">
                     {patient.age} yrs &bull; {patient.gender}
                   </span>
+                  <QueueStatusBadge status={queueStatus} />
                 </div>
 
                 {patient.chiefComplaint && (
@@ -242,39 +281,48 @@ export default function PatientConsultationPage() {
               </div>
             </div>
 
-            {/* Current Data Status Badge */}
-            <div className="flex flex-col sm:items-end gap-2">
+            {/* Queue Lifecycle Controls */}
+            <div className="flex flex-col sm:items-end gap-3">
               <span className="font-mono text-xs uppercase tracking-wider text-slate">
-                DATA STATUS
+                CONSULTATION STATUS
               </span>
-              <div>
-                {patient.dataStatus === "Records available" ? (
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-border bg-panel text-navy text-xs font-semibold">
-                    <svg className="w-3.5 h-3.5 text-blue" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    <span className="font-mono text-xs uppercase tracking-wider">
-                      RECORDS AVAILABLE
-                    </span>
-                  </span>
-                ) : patient.dataStatus === "ABHA, no records" ? (
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-border bg-surface text-slate text-xs font-medium">
-                    <svg className="w-3.5 h-3.5 text-slate" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    <span className="font-mono text-xs uppercase tracking-wider">
-                      ABHA, NO RECORDS
-                    </span>
-                  </span>
-                ) : (
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-dashed border-border-dashed bg-surface text-slate text-xs font-medium">
-                    <span className="w-1.5 h-1.5 rounded-full bg-slate/50" />
-                    <span className="font-mono text-xs uppercase tracking-wider">
-                      NO ABHA
-                    </span>
-                  </span>
-                )}
-              </div>
+
+              {queueStatus === "Waiting" && (
+                <button
+                  type="button"
+                  onClick={() => handleStatusChange("In consultation")}
+                  disabled={statusUpdating}
+                  className="px-5 py-2.5 rounded-xl bg-blue text-white text-xs font-mono uppercase tracking-wider font-semibold hover:bg-blue/90 transition-colors disabled:opacity-50"
+                >
+                  {statusUpdating ? "Updating…" : "Start Consultation"}
+                </button>
+              )}
+
+              {queueStatus === "In consultation" && (
+                <div className="flex items-center gap-2">
+                  <QueueStatusBadge status="In consultation" />
+                  <button
+                    type="button"
+                    onClick={() => handleStatusChange("Done")}
+                    disabled={statusUpdating}
+                    className="px-4 py-2 rounded-xl border border-border bg-surface text-xs font-mono uppercase tracking-wider text-navy-muted hover:bg-panel transition-colors disabled:opacity-50"
+                  >
+                    {statusUpdating ? "Saving…" : "Next Patient / Mark Done"}
+                  </button>
+                </div>
+              )}
+
+              {queueStatus === "Done" && (
+                <div className="flex items-center gap-2">
+                  <QueueStatusBadge status="Done" />
+                  <Link
+                    href="/"
+                    className="text-xs text-blue hover:underline font-medium"
+                  >
+                    &larr; Back to queue
+                  </Link>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -295,7 +343,7 @@ export default function PatientConsultationPage() {
               </h2>
             </div>
 
-            {/* Consent Status Pill per Section 9 */}
+            {/* Consent Status Pill */}
             <div>
               {consent?.status === "GRANTED" ? (
                 <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-border bg-panel text-navy text-xs font-semibold">
@@ -309,7 +357,7 @@ export default function PatientConsultationPage() {
               ) : consent?.status === "REQUESTED" ? (
                 <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-amber-300 bg-amber-50 text-amber-800 text-xs font-mono uppercase tracking-wider">
                   <span className="w-2 h-2 rounded-full bg-amber-500 animate-ping" />
-                  CONSENT REQUESTED &bull; AWAITING PATIENT APPROVAL
+                  CONSENT REQUESTED &bull; AWAITING PATIENT
                 </span>
               ) : consent?.status === "DENIED" ? (
                 <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-red-200 bg-red-50 text-red-700 text-xs font-mono uppercase tracking-wider">
@@ -346,7 +394,7 @@ export default function PatientConsultationPage() {
                   Purpose: <strong className="text-navy">Care Management (CAREMGT)</strong> &bull; Validity: <strong className="text-navy">24 Hours</strong> &bull; Scope: Outpatient Consults, Labs, Prescriptions.
                 </p>
                 <p className="text-[11px] text-slate">
-                  ABDM security rule: Doctor can only request access; approval must be granted on the patient&apos;s phone.
+                  A consent request will be sent to the patient&apos;s ABHA app. It auto-resolves in 20–90 s if the patient doesn&apos;t act (70% approve, 15% deny, 15% expire).
                 </p>
               </div>
 
@@ -366,10 +414,10 @@ export default function PatientConsultationPage() {
                   Consent Request Sent to Patient&apos;s ABHA App
                 </p>
                 <p className="text-xs text-amber-800 mt-1">
-                  Sent to <code className="font-mono">{patient.abhaAddress}</code> &bull; Expires in 24 hours. Waiting for patient to approve on their device.
+                  Sent to <code className="font-mono">{patient.abhaAddress}</code> &bull; Expires in 24 hours.
                 </p>
                 <p className="text-[11px] text-amber-700/80 mt-1">
-                  This page polls automatically and will unlock records once approval is received.
+                  Auto-resolves in 20–90 s if patient doesn&apos;t act (70% approve · 15% deny · 15% expire). This page polls automatically.
                 </p>
               </div>
 
@@ -443,7 +491,7 @@ export default function PatientConsultationPage() {
               </div>
             </div>
           ) : (
-            // GRANTED Action Controls (Demo tools)
+            // GRANTED Action Controls
             <div className="flex flex-wrap items-center justify-between gap-3 text-xs pt-2">
               <span className="text-navy-muted">
                 Sharing records across {facilityCount} linked facility (HIP) under consent ID <code className="font-mono text-navy font-bold">{consent.id}</code>
@@ -472,7 +520,7 @@ export default function PatientConsultationPage() {
           )}
         </div>
 
-        {/* Raw List of Received Records (Rendered ONLY after GRANTED) */}
+        {/* Records — Staged per-facility (shown only after GRANTED) */}
         {consent?.status === "GRANTED" && (
           <section className="bg-surface rounded-2xl border border-border shadow-sm overflow-hidden animate-in fade-in duration-300">
             <div className="px-6 py-4 border-b border-border bg-panel/50 flex flex-wrap items-center justify-between gap-2">
@@ -485,13 +533,48 @@ export default function PatientConsultationPage() {
                   NRCeS ABDM FHIR R4 Bundles
                 </span>
               </div>
-              <span className="font-mono text-xs uppercase tracking-wider text-slate">
-                NO AI SUMMARY (MILESTONE 2 SCOPE)
-              </span>
+
+              <div className="flex items-center gap-2">
+                {/* Timed out facility notice */}
+                {timedOutCount > 0 && (
+                  <span className="font-mono text-[11px] uppercase tracking-wider px-2.5 py-1 rounded-full border border-amber-300 bg-amber-50 text-amber-800">
+                    {timedOutCount} facilit{timedOutCount === 1 ? "y" : "ies"} didn&apos;t respond
+                  </span>
+                )}
+
+                {/* Pending facilities loading indicator */}
+                {pendingFacilities.length > 0 && (
+                  <span className="inline-flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-wider text-slate">
+                    <span className="w-2 h-2 rounded-full bg-slate/40 animate-pulse" />
+                    {pendingFacilities.length} facilit{pendingFacilities.length === 1 ? "y" : "ies"} loading…
+                  </span>
+                )}
+
+                <span className="font-mono text-xs uppercase tracking-wider text-slate">
+                  NO AI SUMMARY (MILESTONE 2 SCOPE)
+                </span>
+              </div>
             </div>
 
-            {/* If patient is "ABHA, no records" or records array is empty */}
-            {records.length === 0 ? (
+            {/* Per-facility pending skeletons */}
+            {pendingFacilities.length > 0 && (
+              <div className="px-6 py-3 border-b border-border bg-panel/20 space-y-2">
+                {pendingFacilities.map((f) => (
+                  <div
+                    key={f}
+                    className="flex items-center gap-3 text-xs text-slate"
+                  >
+                    <span className="w-2 h-2 rounded-full bg-slate/30 animate-pulse shrink-0" />
+                    <span>
+                      Waiting for <span className="font-medium text-navy">{f}</span>…
+                    </span>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Record rows */}
+            {records.length === 0 && pendingFacilities.length === 0 ? (
               <div className="p-8 text-center">
                 <div className="max-w-md mx-auto p-6 rounded-2xl border border-dashed border-border-dashed bg-panel/30">
                   <span className="w-8 h-8 rounded-full bg-panel text-slate flex items-center justify-center font-bold text-sm mx-auto mb-2">
@@ -531,13 +614,17 @@ export default function PatientConsultationPage() {
                           <span className="font-mono text-[11px] uppercase tracking-wider text-slate block">
                             FACILITY
                           </span>
-                          <span className="font-medium text-navy">{rec.facility}</span>
+                          <span className="font-medium text-navy">
+                            {rec.facility}
+                          </span>
                         </div>
                         <div>
                           <span className="font-mono text-[11px] uppercase tracking-wider text-slate block">
                             RECORD DATE
                           </span>
-                          <span className="font-medium text-navy">{rec.date}</span>
+                          <span className="font-medium text-navy">
+                            {rec.date}
+                          </span>
                         </div>
                       </div>
                     </div>

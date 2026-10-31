@@ -1,8 +1,16 @@
 interface DoctorSidebarProps {
   totalPatients: number;
+  waitingCount?: number;
+  inConsultCount?: number;
+  doneCount?: number;
 }
 
-export default function DoctorSidebar({ totalPatients }: DoctorSidebarProps) {
+export default function DoctorSidebar({
+  totalPatients,
+  waitingCount = 0,
+  inConsultCount = 0,
+  doneCount = 0,
+}: DoctorSidebarProps) {
   return (
     <aside className="space-y-6">
       {/* Doctor Profile Card */}
@@ -55,19 +63,41 @@ export default function DoctorSidebar({ totalPatients }: DoctorSidebarProps) {
           </div>
         </div>
 
-        {/* OPD Queue Status */}
-        <div className="mt-4 p-4 rounded-xl bg-navy text-surface flex items-center justify-between">
-          <div>
-            <span className="font-mono text-[11px] uppercase tracking-wider text-slate block">
-              ACTIVE QUEUE
-            </span>
-            <span className="text-xl font-bold text-surface mt-0.5 block">
-              {totalPatients} Patients
-            </span>
-          </div>
-          <span className="font-mono text-[11px] uppercase tracking-wider px-2.5 py-1 rounded-full bg-blue text-white font-medium">
-            ROOM 1
+        {/* OPD Queue Status — now broken down by lifecycle */}
+        <div className="mt-4 p-4 rounded-xl bg-navy text-surface">
+          <span className="font-mono text-[11px] uppercase tracking-wider text-slate block">
+            ACTIVE QUEUE
           </span>
+          <span className="text-xl font-bold text-surface mt-0.5 block">
+            {totalPatients} Patients
+          </span>
+
+          <div className="mt-3 pt-3 border-t border-navy-muted/30 grid grid-cols-3 gap-2 text-center">
+            <div>
+              <span className="text-sm font-bold text-surface block">
+                {waitingCount}
+              </span>
+              <span className="font-mono text-[10px] uppercase tracking-wider text-slate">
+                Waiting
+              </span>
+            </div>
+            <div>
+              <span className="text-sm font-bold text-amber-300 block">
+                {inConsultCount}
+              </span>
+              <span className="font-mono text-[10px] uppercase tracking-wider text-slate">
+                In consult
+              </span>
+            </div>
+            <div>
+              <span className="text-sm font-bold text-slate block">
+                {doneCount}
+              </span>
+              <span className="font-mono text-[10px] uppercase tracking-wider text-slate">
+                Done
+              </span>
+            </div>
+          </div>
         </div>
       </div>
     </aside>

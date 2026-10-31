@@ -1,0 +1,262 @@
+{
+  "resourceType": "Bundle",
+  "id": "bundle-persona-5",
+  "meta": {
+    "versionId": "1",
+    "lastUpdatedOffsetDays": 0,
+    "profile": [
+      "https://nrces.in/ndhm/fhir/r4/StructureDefinition/DocumentBundle"
+    ]
+  },
+  "identifier": {
+    "system": "https://abdm.gov.in/bundle",
+    "value": "bnd-p5-91-5555-9988-5005"
+  },
+  "type": "collection",
+  "timestampOffsetDays": -45,
+  "_comment": "Persona 5: Anand Verma, 60, type 2 diabetes. Conflicting medicines across 2 facilities within 90 days (Glimepiride at -60d vs Gliclazide at -45d, triggers Rule R6). Scanned discharge summary PDF with no structured data. Clinical values marked TODO-VERIFY.",
+  "entry": [
+    {
+      "fullUrl": "urn:uuid:p5-patient",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "p5-patient",
+        "sourceId": "rec-p5-patient",
+        "facility": "CHC Shirur (HIP-MH-PUN-001)",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Patient"
+          ]
+        },
+        "identifier": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "https://nrces.in/ndhm/fhir/r4/CodeSystem/ndhm-identifier-type-code",
+                  "code": "ABHA",
+                  "display": "Ayushman Bharat Health Account Number"
+                }
+              ]
+            },
+            "system": "https://healthid.ndhm.gov.in",
+            "value": "91-5555-9988-5005"
+          },
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "https://nrces.in/ndhm/fhir/r4/CodeSystem/ndhm-identifier-type-code",
+                  "code": "ABHA-Address",
+                  "display": "ABHA Address"
+                }
+              ]
+            },
+            "system": "https://healthid.ndhm.gov.in",
+            "value": "anand.verma@sbx"
+          }
+        ],
+        "name": [
+          {
+            "use": "official",
+            "text": "Anand Verma",
+            "family": "Verma",
+            "given": ["Anand"]
+          }
+        ],
+        "gender": "male",
+        "birthDateOffsetYears": -60,
+        "_birthDateNote": "TODO-VERIFY: Age 60 as per spec persona 5"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:p5-cond-t2dm",
+      "resource": {
+        "resourceType": "Condition",
+        "id": "p5-cond-t2dm",
+        "sourceId": "rec-p5-cond-t2dm",
+        "facility": "CHC Shirur (HIP-MH-PUN-001)",
+        "recordedDateOffsetDays": -60,
+        "clinicalStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+              "code": "active"
+            }
+          ]
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "44054006",
+              "display": "Type 2 diabetes mellitus"
+            }
+          ],
+          "text": "Type 2 Diabetes Mellitus (TODO-VERIFY)"
+        },
+        "subject": {
+          "reference": "Patient/p5-patient"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:p5-enc-1",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "p5-enc-1",
+        "sourceId": "rec-p5-enc-1",
+        "facility": "CHC Shirur (HIP-MH-PUN-001)",
+        "status": "finished",
+        "periodOffsetDays": -60,
+        "reasonCode": [
+          {
+            "text": "NCD Clinic Outpatient Consultation - Glycemic Control (TODO-VERIFY)"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:p5-obs-hba1c",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "p5-obs-hba1c",
+        "sourceId": "rec-p5-obs-hba1c",
+        "facility": "CHC Shirur (HIP-MH-PUN-001)",
+        "status": "final",
+        "effectiveDateTimeOffsetDays": -60,
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "4548-4",
+              "display": "Hemoglobin A1c/Hemoglobin.total in Blood"
+            }
+          ],
+          "text": "HbA1c"
+        },
+        "valueQuantity": {
+          "value": 7.6,
+          "unit": "%",
+          "system": "http://unitsofmeasure.org",
+          "code": "%"
+        },
+        "note": [
+          {
+            "text": "TODO-VERIFY: HbA1c 7.6% at CHC Shirur (-60d)"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:p5-med-glimepiride",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "p5-med-glimepiride",
+        "sourceId": "rec-p5-med-glimepiride",
+        "facility": "CHC Shirur (HIP-MH-PUN-001)",
+        "status": "active",
+        "authoredOnOffsetDays": -60,
+        "medicationCodeableConcept": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "386966008",
+              "display": "Glimepiride"
+            }
+          ],
+          "text": "Tab Glimepiride 1 mg (TODO-VERIFY)"
+        },
+        "dosageInstruction": [
+          {
+            "text": "1 tablet once daily before breakfast (OD)",
+            "timing": {
+              "code": {
+                "text": "OD"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:p5-enc-2",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "p5-enc-2",
+        "sourceId": "rec-p5-enc-2",
+        "facility": "Aundh District Hospital, Pune (HIP-MH-PUN-010)",
+        "status": "finished",
+        "periodOffsetDays": -45,
+        "reasonCode": [
+          {
+            "text": "Medicine OPD Consultation - Uncontrolled Blood Sugar (TODO-VERIFY)"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:p5-med-gliclazide",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "p5-med-gliclazide",
+        "sourceId": "rec-p5-med-gliclazide",
+        "facility": "Aundh District Hospital, Pune (HIP-MH-PUN-010)",
+        "status": "active",
+        "authoredOnOffsetDays": -45,
+        "medicationCodeableConcept": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "386967004",
+              "display": "Gliclazide"
+            }
+          ],
+          "text": "Tab Gliclazide 40 mg (TODO-VERIFY)"
+        },
+        "dosageInstruction": [
+          {
+            "text": "1 tablet once daily before breakfast (OD) (TODO-VERIFY: prescribed with no mention of earlier Glimepiride from CHC Shirur; triggers Rule R6 Conflicting records across facilities within 90 days)",
+            "timing": {
+              "code": {
+                "text": "OD"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:p5-doc-rubyhall",
+      "resource": {
+        "resourceType": "DocumentReference",
+        "id": "p5-doc-rubyhall",
+        "sourceId": "rec-p5-doc-rubyhall",
+        "facility": "Ruby Hall Clinic, Pune (HIP-MH-PUN-099)",
+        "status": "current",
+        "dateOffsetDays": -200,
+        "type": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "18842-5",
+              "display": "Discharge summary"
+            }
+          ],
+          "text": "Discharge Summary (Scanned Document) (TODO-VERIFY)"
+        },
+        "description": "TODO-VERIFY: Scanned discharge summary PDF from private hospital at -200d as a HealthDocumentRecord with no structured data (unparseable document)",
+        "content": [
+          {
+            "attachment": {
+              "contentType": "application/pdf",
+              "title": "Discharge_Summary_Ruby_Hall_Clinic_Scanned.pdf",
+              "size": 2458000,
+              "_unstructuredNotice": "Scanned document not summarised – view original required"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -16,6 +16,8 @@ export interface PatientQueueItem {
   recordCount: number;
   hasRecords: boolean;
   recordFile?: string;
+  /** Lifecycle status for the OPD queue. Defaults to "Waiting". */
+  queueStatus: "Waiting" | "In consultation" | "Done";
 }
 
 /**
@@ -46,6 +48,7 @@ export function formatClinicalDate(isoDateStr: string): string {
 
 /**
  * Loads all patients in today's OPD queue from /data/patients.json
+ * Back-fills queueStatus to "Waiting" for legacy records that lack the field.
  */
 export function getOpdQueue(): PatientQueueItem[] {
   const filePath = path.join(process.cwd(), "data", "patients.json");
@@ -53,7 +56,32 @@ export function getOpdQueue(): PatientQueueItem[] {
     return [];
   }
   const fileContent = fs.readFileSync(filePath, "utf-8");
-  return JSON.parse(fileContent) as PatientQueueItem[];
+  const raw = JSON.parse(fileContent) as PatientQueueItem[];
+  return raw.map((p) => ({
+    ...p,
+    queueStatus: p.queueStatus ?? "Waiting",
+  }));
+}
+
+/**
+ * Writes the full patient queue back to /data/patients.json.
+ */
+export function saveOpdQueue(patients: PatientQueueItem[]): void {
+  const filePath = path.join(process.cwd(), "data", "patients.json");
+  fs.writeFileSync(filePath, JSON.stringify(patients, null, 2), "utf-8");
+}
+
+/**
+ * Returns the next available OPD token number (e.g. "OPD-26").
+ */
+export function getNextTokenNumber(): string {
+  const queue = getOpdQueue();
+  if (queue.length === 0) return "OPD-01";
+  const nums = queue
+    .map((p) => parseInt(p.tokenNumber.replace("OPD-", ""), 10))
+    .filter((n) => !isNaN(n));
+  const max = Math.max(0, ...nums);
+  return `OPD-${String(max + 1).padStart(2, "0")}`;
 }
 
 /**
