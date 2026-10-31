@@ -39,7 +39,7 @@ CDSCO medical-device regulation; out of scope.)
 ## 2. Prototype scope (capstone, deadline 1 Nov)
 
 ### In scope
-1. **OPD queue** – today's patients, with ABHA number/address lookup.
+1. **OPD queue** – today's patients, with ABHA number/address lookup. ABHA is mandatory for regular OPD patients; emergency patients may be added without ABHA and linked later.
 2. **Mock ABDM consent flow (HIU role)** – doctor-side request + separate simulated
    "patient phone" screen to approve/deny. Doctor can only request, never grant.
 3. **Record fetch** – records from 1–3 mock facilities (HIPs) per patient, as FHIR bundles.

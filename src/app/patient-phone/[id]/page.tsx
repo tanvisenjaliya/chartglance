@@ -4,7 +4,7 @@ import { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { ConsentRecord } from "@/lib/abdm-mock";
-import { PatientQueueItem } from "@/lib/records";
+import { PatientQueueItem } from "@/lib/queue-utils";
 
 export default function PatientPhonePage() {
   const params = useParams();

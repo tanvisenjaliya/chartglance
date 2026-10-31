@@ -1,4 +1,4 @@
-import { FacilityMetadata } from "@/lib/records";
+import { FacilityMetadata } from "@/lib/queue-utils";
 
 interface DoctorSidebarProps {
   totalPatients: number;

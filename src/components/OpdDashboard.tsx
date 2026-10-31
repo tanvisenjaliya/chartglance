@@ -3,11 +3,12 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { PatientQueueItem, FacilityMetadata } from "@/lib/records";
-import KpiBar, { FilterType } from "./KpiBar";
+import { PatientQueueItem, FacilityMetadata, sortQueueLive } from "@/lib/queue-utils";
+import KpiBar, { FilterType, isInfant, isSenior } from "./KpiBar";
 import DoctorSidebar from "./DoctorSidebar";
 import QueueStatusBadge from "./QueueStatusBadge";
 import DemoModeBanner from "./DemoModeBanner";
+import EmergencyPatientModal from "./EmergencyPatientModal";
 
 interface OpdDashboardProps {
   initialPatients: PatientQueueItem[];
@@ -23,13 +24,37 @@ export default function OpdDashboard({
   },
 }: OpdDashboardProps) {
   const router = useRouter();
-  const [patients, setPatients] = useState<PatientQueueItem[]>(initialPatients);
+  const [patients, setPatients] = useState<PatientQueueItem[]>(() =>
+    sortQueueLive(initialPatients)
+  );
   const [activeFilter, setActiveFilter] = useState<FilterType>("all");
+  const [isEmergencyModalOpen, setIsEmergencyModalOpen] = useState(false);
 
   // Filter logic
   const filteredPatients = patients.filter((patient) => {
     if (activeFilter === "all") return true;
-    return patient.dataStatus === activeFilter;
+    if (activeFilter === "emergency") {
+      return (
+        Boolean(patient.isEmergency) ||
+        patient.visitType === "Emergency" ||
+        Boolean(patient.tokenNumber && patient.tokenNumber.startsWith("E"))
+      );
+    }
+    if (activeFilter === "infants-seniors") {
+      return isInfant(patient.age) || isSenior(patient.age);
+    }
+    if (activeFilter === "infants") return isInfant(patient.age);
+    if (activeFilter === "seniors") return isSenior(patient.age);
+    if (activeFilter === "male") {
+      return patient.gender === "Male" || patient.gender === "M";
+    }
+    if (activeFilter === "female") {
+      return patient.gender === "Female" || patient.gender === "F";
+    }
+    if (activeFilter === "other-gender") {
+      return patient.gender === "Other" || patient.gender === "O";
+    }
+    return true;
   });
 
   const currentDateFormatted = new Date().toLocaleDateString("en-IN", {
@@ -39,12 +64,14 @@ export default function OpdDashboard({
     year: "numeric",
   });
 
-  // Next patient: first Waiting patient
+  // Next patient: first emergency waiting, or first regular waiting patient
   const nextWaiting = patients.find((p) => p.queueStatus === "Waiting");
 
-  // Counts for sidebar display
+  // Counts for live summary
   const waitingCount = patients.filter((p) => p.queueStatus === "Waiting").length;
-  const inConsultCount = patients.filter((p) => p.queueStatus === "In consultation").length;
+  const inConsultCount = patients.filter(
+    (p) => p.queueStatus === "In consultation"
+  ).length;
   const doneCount = patients.filter((p) => p.queueStatus === "Done").length;
 
   const handleNextPatient = () => {
@@ -57,21 +84,39 @@ export default function OpdDashboard({
     patientId: string,
     newStatus: "Waiting" | "In consultation" | "Done"
   ) => {
-    setPatients((prev) =>
-      prev.map((p) =>
-        p.id === patientId ? { ...p, queueStatus: newStatus } : p
-      )
-    );
+    const now = Date.now();
+    setPatients((prev) => {
+      const updated = prev.map((p) => {
+        if (p.id !== patientId) return p;
+        return {
+          ...p,
+          queueStatus: newStatus,
+          completedTimestamp: newStatus === "Done" ? now : undefined,
+        };
+      });
+      return sortQueueLive(updated);
+    });
+
     try {
       await fetch(`/api/patients/${patientId}/status`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ status: newStatus }),
+        body: JSON.stringify({
+          status: newStatus,
+          completedTimestamp: newStatus === "Done" ? now : undefined,
+        }),
       });
     } catch {
       const res = await fetch("/api/patients");
-      if (res.ok) setPatients(await res.json());
+      if (res.ok) {
+        const data = await res.json();
+        setPatients(sortQueueLive(data));
+      }
     }
+  };
+
+  const handleEmergencyPatientAdded = (newPatient: PatientQueueItem) => {
+    setPatients((prev) => sortQueueLive([newPatient, ...prev]));
   };
 
   return (
@@ -117,7 +162,7 @@ export default function OpdDashboard({
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           {/* Left Column: OPD Queue & KPIs (8 cols) */}
           <div className="lg:col-span-8 space-y-6">
-            {/* KPI Metrics & Records Status Filter */}
+            {/* KPI Metrics */}
             <KpiBar
               patients={patients}
               activeFilter={activeFilter}
@@ -158,12 +203,15 @@ export default function OpdDashboard({
                     </button>
                   )}
 
-                  <Link
-                    href="/register"
-                    className="px-3 py-1.5 rounded-lg border border-border bg-panel text-navy-muted text-xs font-mono uppercase tracking-wider font-semibold hover:bg-border/60 transition-colors"
+                  {/* Red Emergency Patient button replacing + Register */}
+                  <button
+                    type="button"
+                    onClick={() => setIsEmergencyModalOpen(true)}
+                    className="px-3 py-1.5 rounded-lg bg-red-600 text-white text-xs font-mono uppercase tracking-wider font-bold hover:bg-red-700 shadow-sm transition-colors flex items-center gap-1.5"
                   >
-                    + Register
-                  </Link>
+                    <span className="w-2 h-2 rounded-full bg-white animate-pulse" />
+                    + Emergency patient
+                  </button>
                 </div>
               </div>
 
@@ -172,24 +220,34 @@ export default function OpdDashboard({
                 {filteredPatients.length === 0 ? (
                   <div className="p-12 text-center">
                     <p className="text-sm font-semibold text-navy">
-                      No patients found with status &quot;{activeFilter}&quot;
+                      No patients match filter &quot;{activeFilter}&quot;
                     </p>
                     <button
                       type="button"
                       onClick={() => setActiveFilter("all")}
                       className="mt-2 text-xs font-semibold text-blue hover:underline"
                     >
-                      Reset filter to view all patients
+                      Reset filter to view all {patients.length} patients
                     </button>
                   </div>
                 ) : (
                   filteredPatients.map((patient) => {
                     const isDone = patient.queueStatus === "Done";
+                    const isConsult = patient.queueStatus === "In consultation";
+                    const isEmergency = Boolean(patient.isEmergency) || patient.tokenNumber.startsWith("E");
+                    const hasNoAbha = patient.hasAbha === false || !patient.abhaNumber;
+
                     return (
                       <div
                         key={patient.id}
                         className={`p-6 transition-all group ${
-                          isDone ? "opacity-60" : "hover:bg-panel/40"
+                          isDone
+                            ? "opacity-50 bg-slate-50/50"
+                            : isEmergency
+                            ? "bg-red-50/30 hover:bg-red-50/60 border-l-4 border-l-red-500"
+                            : isConsult
+                            ? "bg-blue/5 hover:bg-blue/10 border-l-4 border-l-blue"
+                            : "hover:bg-panel/40"
                         }`}
                       >
                         <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
@@ -199,11 +257,19 @@ export default function OpdDashboard({
                             className="flex items-start gap-4 flex-1 min-w-0"
                           >
                             {/* Token Badge */}
-                            <div className="shrink-0 flex flex-col items-center justify-center w-14 h-14 rounded-xl border bg-panel border-border text-navy group-hover:border-blue/50 transition-colors">
-                              <span className="font-mono text-xs uppercase tracking-wider text-slate">
+                            <div
+                              className={`shrink-0 flex flex-col items-center justify-center w-14 h-14 rounded-xl border text-navy transition-colors ${
+                                isEmergency
+                                  ? "bg-red-100/70 border-red-300 text-red-800"
+                                  : isConsult
+                                  ? "bg-blue/10 border-blue/40 text-blue font-bold"
+                                  : "bg-panel border-border group-hover:border-blue/50"
+                              }`}
+                            >
+                              <span className="font-mono text-[10px] uppercase tracking-wider text-slate">
                                 TOKEN
                               </span>
-                              <span className="text-sm font-bold text-navy">
+                              <span className="text-sm font-bold">
                                 {patient.tokenNumber.replace("OPD-", "")}
                               </span>
                             </div>
@@ -226,6 +292,21 @@ export default function OpdDashboard({
                                   status={patient.queueStatus ?? "Waiting"}
                                   compact
                                 />
+
+                                {/* Emergency Badge showing reason */}
+                                {isEmergency && (
+                                  <span className="px-2 py-0.5 text-xs font-semibold rounded bg-red-100 text-red-800 border border-red-200 flex items-center gap-1">
+                                    <span className="w-1.5 h-1.5 rounded-full bg-red-600 animate-pulse" />
+                                    EMERGENCY: {patient.emergencyReason || patient.complaint || "Immediate attention"}
+                                  </span>
+                                )}
+
+                                {/* Grey No ABHA Badge */}
+                                {hasNoAbha && (
+                                  <span className="px-2 py-0.5 text-xs font-medium rounded bg-gray-100 text-gray-700 border border-gray-300">
+                                    No ABHA
+                                  </span>
+                                )}
                               </div>
 
                               {/* Chief Complaint */}
@@ -240,25 +321,33 @@ export default function OpdDashboard({
                                 </div>
                               )}
 
-                              {/* ABHA Details */}
+                              {/* ABHA Details or Unlinked Notice */}
                               <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs">
-                                <div className="flex items-center gap-1.5">
-                                  <span className="font-mono text-xs uppercase tracking-wider text-slate">
-                                    ABHA NO:
-                                  </span>
-                                  <span className="text-navy font-medium">
-                                    {patient.abhaNumber}
-                                  </span>
-                                </div>
+                                {!hasNoAbha ? (
+                                  <>
+                                    <div className="flex items-center gap-1.5">
+                                      <span className="font-mono text-xs uppercase tracking-wider text-slate">
+                                        ABHA NO:
+                                      </span>
+                                      <span className="text-navy font-medium">
+                                        {patient.abhaNumber}
+                                      </span>
+                                    </div>
 
-                                <div className="flex items-center gap-1.5">
-                                  <span className="font-mono text-xs uppercase tracking-wider text-slate">
-                                    ABHA ID:
-                                  </span>
-                                  <span className="text-navy-muted">
-                                    {patient.abhaAddress}
-                                  </span>
-                                </div>
+                                    <div className="flex items-center gap-1.5">
+                                      <span className="font-mono text-xs uppercase tracking-wider text-slate">
+                                        ABHA ID:
+                                      </span>
+                                      <span className="text-navy-muted font-mono">
+                                        {patient.abhaAddress}
+                                      </span>
+                                    </div>
+                                  </>
+                                ) : (
+                                  <div className="text-xs text-amber-700 font-mono">
+                                    No ABHA linked &bull; Pending post-stabilization lookup
+                                  </div>
+                                )}
 
                                 <div className="flex items-center gap-1.5 text-slate">
                                   <span className="font-mono text-xs uppercase tracking-wider">
@@ -272,7 +361,11 @@ export default function OpdDashboard({
 
                           {/* Right side: data status badge + status controls */}
                           <div className="flex flex-col items-start md:items-end gap-2 shrink-0">
-                            {patient.dataStatus === "Records available" ? (
+                            {hasNoAbha ? (
+                              <div className="flex items-center gap-1.5 px-3 py-1 rounded-full border border-gray-200 bg-gray-50 text-gray-600 text-xs font-mono">
+                                <span>No records available</span>
+                              </div>
+                            ) : patient.dataStatus === "Records available" ? (
                               <div className="flex items-center gap-2 px-3 py-1.5 rounded-full border border-border bg-panel text-navy text-xs font-semibold">
                                 <svg
                                   className="w-3.5 h-3.5 text-blue"
@@ -363,6 +456,13 @@ export default function OpdDashboard({
           </div>
         </div>
       </main>
+
+      {/* Emergency Admission Modal */}
+      <EmergencyPatientModal
+        isOpen={isEmergencyModalOpen}
+        onClose={() => setIsEmergencyModalOpen(false)}
+        onPatientAdded={handleEmergencyPatientAdded}
+      />
 
       {/* Footer */}
       <footer className="mt-12 border-t border-border bg-surface py-6 px-6">

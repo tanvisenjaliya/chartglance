@@ -1,38 +1,12 @@
 import fs from "fs";
 import path from "path";
 
-export interface PatientQueueItem {
-  id: string;
-  tokenNumber: string;
-  name: string;
-  age: string | number;
-  gender: "Male" | "Female" | "Other" | "M" | "F" | "O";
-  abhaNumber: string;
-  abhaAddress: string;
-  arrivalTime: string;
-  visitType: "Follow-up" | "New Visit";
-  chiefComplaint: string;
-  complaint?: string;
-  dataStatus: "Records available" | "ABHA, no records";
-  recordCount: number;
-  hasRecords: boolean;
-  recordsFile?: string;
-  village?: string;
-  district?: string;
-  state?: string;
-  nativePlace?: string | null;
-  facilities?: string[];
-  isDemoPersona?: boolean;
-  personaNumber?: number | null;
-  /** Lifecycle status for the OPD queue. Defaults to "Waiting". */
-  queueStatus: "Waiting" | "In consultation" | "Done";
-}
-
-export interface FacilityMetadata {
-  facilityName: string;
-  district: string;
-  state: string;
-}
+export * from "./queue-utils";
+import {
+  PatientQueueItem,
+  FacilityMetadata,
+  sortQueueLive,
+} from "./queue-utils";
 
 /**
  * Resolves all {{today...}} date tokens using the formula from README.md.
@@ -82,6 +56,7 @@ export function formatGender(gender: string): "Male" | "Female" | "Other" {
  */
 export function formatAge(age: string | number): string {
   if (typeof age === "number") return `${age}`;
+  if (typeof age === "string" && age.endsWith("m")) return age;
   return age.replace(/[^\d]/g, "") || String(age);
 }
 
@@ -131,10 +106,11 @@ export function getAllRegistryPatients(): PatientQueueItem[] {
       name: p.name as string,
       age: formatAge(p.age as string | number),
       gender: formatGender(p.gender as string),
-      abhaNumber: p.abhaNumber as string,
-      abhaAddress: p.abhaAddress as string,
+      abhaNumber: (p.abhaNumber as string) || "",
+      abhaAddress: (p.abhaAddress as string) || "",
+      hasAbha: Boolean(p.abhaNumber && (p.abhaNumber as string) !== "—"),
       arrivalTime: (p.arrivalTime as string) || "09:00",
-      visitType: (p.visitType as "Follow-up" | "New Visit") || "New Visit",
+      visitType: (p.visitType as "Follow-up" | "New Visit" | "Emergency") || "New Visit",
       chiefComplaint: (p.complaint as string) || (p.chiefComplaint as string) || "",
       complaint: p.complaint as string,
       dataStatus: ((p.recordCount as number) > 0 ? "Records available" : "ABHA, no records") as "Records available" | "ABHA, no records",
@@ -156,7 +132,7 @@ export function getAllRegistryPatients(): PatientQueueItem[] {
 }
 
 /**
- * Loads today's OPD queue from data/todays-queue.json
+ * Loads today's OPD queue from data/todays-queue.json, applying live sort
  */
 export function getOpdQueue(): PatientQueueItem[] {
   const filePath = path.join(process.cwd(), "data", "todays-queue.json");
@@ -166,23 +142,31 @@ export function getOpdQueue(): PatientQueueItem[] {
   try {
     const raw = fs.readFileSync(filePath, "utf-8");
     const list = JSON.parse(resolveDates(raw)) as Record<string, unknown>[];
-    return list.map((p) => ({
+    const normalized: PatientQueueItem[] = list.map((p, idx) => ({
       ...p,
       id: p.id as string,
-      tokenNumber: (p.tokenNumber as string) || "OPD-01",
+      tokenNumber: (p.tokenNumber as string) || `OPD-${String(idx + 1).padStart(2, "0")}`,
       name: p.name as string,
       age: formatAge(p.age as string | number),
       gender: formatGender(p.gender as string),
-      abhaNumber: p.abhaNumber as string,
-      abhaAddress: p.abhaAddress as string,
+      abhaNumber: (p.abhaNumber as string) || "",
+      abhaAddress: (p.abhaAddress as string) || "",
+      hasAbha: typeof p.hasAbha === "boolean" ? p.hasAbha : Boolean(p.abhaNumber && p.abhaNumber !== "—"),
+      isEmergency: Boolean(p.isEmergency),
+      emergencyReason: p.emergencyReason as string | undefined,
+      mobileNumber: p.mobileNumber as string | undefined,
       arrivalTime: (p.arrivalTime as string) || "09:00",
-      visitType: (p.visitType as "Follow-up" | "New Visit") || "New Visit",
+      arrivalTimestamp: (p.arrivalTimestamp as number) || (Date.now() - (idx * 60000)),
+      completedTimestamp: p.completedTimestamp as number | undefined,
+      visitType: (p.visitType as "Follow-up" | "New Visit" | "Emergency") || (p.isEmergency ? "Emergency" : "New Visit"),
       chiefComplaint: (p.complaint as string) || (p.chiefComplaint as string) || "",
       dataStatus: ((p.recordCount as number) > 0 ? "Records available" : "ABHA, no records") as "Records available" | "ABHA, no records",
       recordCount: (p.recordCount as number) || 0,
       hasRecords: ((p.recordCount as number) || 0) > 0,
       queueStatus: (p.queueStatus as "Waiting" | "In consultation" | "Done") || "Waiting",
     }));
+
+    return sortQueueLive(normalized);
   } catch {
     return [];
   }
@@ -197,12 +181,26 @@ export function saveOpdQueue(patients: PatientQueueItem[]): void {
 }
 
 /**
+ * Returns the next available emergency token (e.g. "E1", "E2", "E3")
+ */
+export function getNextEmergencyToken(): string {
+  const queue = getOpdQueue();
+  const emergencyNums = queue
+    .filter((p) => p.isEmergency || p.tokenNumber.startsWith("E"))
+    .map((p) => parseInt(p.tokenNumber.replace("E", ""), 10))
+    .filter((n) => !isNaN(n));
+  const max = Math.max(0, ...emergencyNums);
+  return `E${max + 1}`;
+}
+
+/**
  * Returns the next available OPD token number (e.g. "OPD-11")
  */
 export function getNextTokenNumber(): string {
   const queue = getOpdQueue();
   if (queue.length === 0) return "OPD-01";
   const nums = queue
+    .filter((p) => !p.isEmergency && p.tokenNumber.startsWith("OPD-"))
     .map((p) => parseInt(p.tokenNumber.replace("OPD-", ""), 10))
     .filter((n) => !isNaN(n));
   const max = Math.max(0, ...nums);

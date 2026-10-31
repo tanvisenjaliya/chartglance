@@ -4,7 +4,7 @@ import { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { ConsentRecord, CompositionRecord } from "@/lib/abdm-mock";
-import { PatientQueueItem } from "@/lib/records";
+import { PatientQueueItem } from "@/lib/queue-utils";
 import { ConsultationNote } from "@/lib/notes-store";
 import QueueStatusBadge from "@/components/QueueStatusBadge";
 import DemoModeBanner from "@/components/DemoModeBanner";
@@ -30,6 +30,13 @@ export default function PatientConsultationPage() {
 
   // Local Notes state
   const [previousNotes, setPreviousNotes] = useState<ConsultationNote[]>([]);
+
+  // Link ABHA modal state
+  const [isLinkAbhaOpen, setIsLinkAbhaOpen] = useState(false);
+  const [linkIdentifier, setLinkIdentifier] = useState("");
+  const [linkLoading, setLinkLoading] = useState(false);
+  const [linkError, setLinkError] = useState("");
+  const [linkSuccess, setLinkSuccess] = useState(false);
 
   // 1. Fetch patient details
   const loadPatient = useCallback(async () => {
@@ -203,6 +210,52 @@ export default function PatientConsultationPage() {
     }
   };
 
+  const handleLinkAbha = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!linkIdentifier.trim()) {
+      setLinkError("Please enter an ABHA number or address");
+      return;
+    }
+    setLinkLoading(true);
+    setLinkError("");
+    try {
+      const lookupRes = await fetch(
+        `/api/abdm/lookup?identifier=${encodeURIComponent(linkIdentifier.trim())}`
+      );
+      const lookupData = await lookupRes.json();
+
+      let abhaNum = linkIdentifier.trim();
+      let abhaAddr = `${linkIdentifier.trim().toLowerCase().replace(/[^a-z0-9]/g, "")}@sbx`;
+      if (lookupRes.ok && lookupData.abhaNumber) {
+        abhaNum = lookupData.abhaNumber;
+        abhaAddr = lookupData.abhaAddress || abhaAddr;
+      }
+
+      const res = await fetch(`/api/patients/${patientId}/link-abha`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ abhaNumber: abhaNum, abhaAddress: abhaAddr }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setLinkError(data.error || "Failed to link ABHA");
+        return;
+      }
+
+      setLinkSuccess(true);
+      await loadPatient();
+      await fetchConsentStatus();
+      setTimeout(() => {
+        setIsLinkAbhaOpen(false);
+        setLinkSuccess(false);
+      }, 500);
+    } catch {
+      setLinkError("Network error while linking ABHA");
+    } finally {
+      setLinkLoading(false);
+    }
+  };
+
   if (loadingPatient) {
     return (
       <div className="min-h-screen bg-panel flex items-center justify-center p-6 text-navy">
@@ -229,6 +282,8 @@ export default function PatientConsultationPage() {
   }
 
   const queueStatus = patient.queueStatus ?? "Waiting";
+  const isEmergency = Boolean(patient.isEmergency) || patient.tokenNumber.startsWith("E");
+  const hasNoAbha = patient.hasAbha === false || !patient.abhaNumber;
 
   return (
     <div className="min-h-screen bg-panel text-navy font-sans">
@@ -265,11 +320,17 @@ export default function PatientConsultationPage() {
         <div className="bg-surface rounded-2xl border border-border p-6 shadow-sm">
           <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
             <div className="flex items-start gap-4">
-              <div className="shrink-0 flex flex-col items-center justify-center w-14 h-14 rounded-xl border bg-panel border-border text-navy">
+              <div
+                className={`shrink-0 flex flex-col items-center justify-center w-14 h-14 rounded-xl border text-navy ${
+                  isEmergency
+                    ? "bg-red-100/80 border-red-300 text-red-800"
+                    : "bg-panel border-border"
+                }`}
+              >
                 <span className="font-mono text-xs uppercase tracking-wider text-slate">
                   TOKEN
                 </span>
-                <span className="text-sm font-bold text-navy">
+                <span className="text-sm font-bold">
                   {patient.tokenNumber.replace("OPD-", "")}
                 </span>
               </div>
@@ -288,6 +349,19 @@ export default function PatientConsultationPage() {
                     </span>
                   )}
                   <QueueStatusBadge status={queueStatus} />
+
+                  {isEmergency && (
+                    <span className="px-2 py-0.5 text-xs font-semibold rounded bg-red-100 text-red-800 border border-red-200 flex items-center gap-1">
+                      <span className="w-1.5 h-1.5 rounded-full bg-red-600 animate-pulse" />
+                      EMERGENCY: {patient.emergencyReason || patient.complaint || "Immediate attention"}
+                    </span>
+                  )}
+
+                  {hasNoAbha && (
+                    <span className="px-2 py-0.5 text-xs font-medium rounded bg-gray-100 text-gray-700 border border-gray-300">
+                      No ABHA
+                    </span>
+                  )}
                 </div>
 
                 {(patient.chiefComplaint || patient.complaint) && (
@@ -301,23 +375,41 @@ export default function PatientConsultationPage() {
 
                 {/* Identifiers */}
                 <div className="mt-2 flex flex-wrap items-center gap-x-5 gap-y-1 text-xs">
-                  <div className="flex items-center gap-1.5">
-                    <span className="font-mono text-xs uppercase tracking-wider text-slate">
-                      ABHA NO:
-                    </span>
-                    <span className="text-navy font-medium">
-                      {patient.abhaNumber}
-                    </span>
-                  </div>
+                  {!hasNoAbha ? (
+                    <>
+                      <div className="flex items-center gap-1.5">
+                        <span className="font-mono text-xs uppercase tracking-wider text-slate">
+                          ABHA NO:
+                        </span>
+                        <span className="text-navy font-medium">
+                          {patient.abhaNumber}
+                        </span>
+                      </div>
 
-                  <div className="flex items-center gap-1.5">
-                    <span className="font-mono text-xs uppercase tracking-wider text-slate">
-                      ABHA ID:
-                    </span>
-                    <span className="text-navy-muted">
-                      {patient.abhaAddress}
-                    </span>
-                  </div>
+                      <div className="flex items-center gap-1.5">
+                        <span className="font-mono text-xs uppercase tracking-wider text-slate">
+                          ABHA ID:
+                        </span>
+                        <span className="text-navy-muted font-mono">
+                          {patient.abhaAddress}
+                        </span>
+                      </div>
+                    </>
+                  ) : (
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs text-amber-700 font-mono">
+                        No ABHA linked &bull; Admitted under emergency intake
+                      </span>
+                      <a
+                        href="https://abha.abdm.gov.in/abha/v3"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-xs text-blue hover:underline font-semibold flex items-center gap-1"
+                      >
+                        Link ABHA &rarr;
+                      </a>
+                    </div>
+                  )}
 
                   <div className="flex items-center gap-1.5 text-slate">
                     <span className="font-mono text-xs uppercase tracking-wider">
@@ -395,8 +487,45 @@ export default function PatientConsultationPage() {
           onAddendumAdded={fetchPreviousNotes}
         />
 
-        {/* ABDM Consent Flow Section */}
-        <div className="bg-surface rounded-2xl border border-border p-6 shadow-sm space-y-6">
+        {/* ABDM Consent Flow Section (or No ABHA Linked Panel) */}
+        {hasNoAbha ? (
+          <div className="bg-surface rounded-2xl border border-border p-6 shadow-sm space-y-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-border gap-3">
+              <div>
+                <span className="font-mono text-xs uppercase tracking-wider text-slate font-semibold">
+                  ABDM IDENTITY STATUS
+                </span>
+                <h2 className="text-lg font-bold text-navy mt-0.5">
+                  No ABHA linked: no records available
+                </h2>
+              </div>
+              <div className="flex items-center gap-3">
+                <button
+                  type="button"
+                  onClick={() => setIsLinkAbhaOpen(true)}
+                  className="px-3 py-2 border border-border bg-panel hover:bg-border/60 text-slate hover:text-navy text-xs font-mono uppercase tracking-wider rounded-xl transition-colors"
+                  title="Lookup and link from simulated registry"
+                >
+                  Enter Mock ABHA
+                </button>
+                <a
+                  href="https://abha.abdm.gov.in/abha/v3"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-4 py-2 bg-blue text-white rounded-xl text-xs font-mono uppercase tracking-wider font-bold hover:bg-blue/90 shadow-sm transition-colors inline-flex items-center gap-1.5"
+                >
+                  Link ABHA &rarr;
+                </a>
+              </div>
+            </div>
+            <p className="text-xs text-navy-muted leading-relaxed">
+              This patient arrived as an emergency admission without a verified ABHA number or address.
+              ABDM health records cannot be requested from network facilities until an ABHA identity is linked.
+              You can conduct the consultation and document clinical notes right away, or click <strong>Link ABHA</strong> above to visit the official ABHA portal (<strong>https://abha.abdm.gov.in/abha/v3</strong>) to generate or link an identity.
+            </p>
+          </div>
+        ) : (
+          <div className="bg-surface rounded-2xl border border-border p-6 shadow-sm space-y-6">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-border gap-3">
             <div>
               <div className="flex items-center gap-2">
@@ -579,6 +708,7 @@ export default function PatientConsultationPage() {
             </div>
           )}
         </div>
+        )}
 
         {/* Received Records — Grouped by Composition (Health Record) */}
         {consent?.status === "GRANTED" && (
@@ -732,6 +862,71 @@ export default function PatientConsultationPage() {
           </section>
         )}
       </main>
+
+      {/* Link ABHA Modal */}
+      {isLinkAbhaOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+          <div className="bg-surface rounded-2xl border border-border shadow-2xl max-w-md w-full p-6 animate-in fade-in zoom-in-95">
+            <div className="flex items-center justify-between pb-3 border-b border-border">
+              <h3 className="text-base font-bold text-navy">Link ABHA to Patient</h3>
+              <button
+                type="button"
+                onClick={() => setIsLinkAbhaOpen(false)}
+                className="text-slate hover:text-navy text-xl leading-none"
+              >
+                &times;
+              </button>
+            </div>
+            <form onSubmit={handleLinkAbha} className="mt-4 space-y-4">
+              <div>
+                <label className="block text-xs font-mono uppercase tracking-wider text-navy font-semibold mb-1">
+                  ABHA Number or Address
+                </label>
+                <input
+                  type="text"
+                  required
+                  placeholder="e.g. 91-5555-2031-0006 or rahul.verma@sbx"
+                  value={linkIdentifier}
+                  onChange={(e) => setLinkIdentifier(e.target.value)}
+                  className="w-full px-3 py-2 text-sm border border-border rounded-lg font-mono focus:outline-none focus:ring-2 focus:ring-blue"
+                />
+                <p className="mt-1 text-[11px] text-slate">
+                  Enter patient&apos;s ABHA ID or look up from network registry. Once linked, consent request will initiate automatically.
+                </p>
+              </div>
+
+              {linkError && (
+                <div className="p-2.5 bg-red-50 text-red-700 text-xs rounded-lg border border-red-200">
+                  {linkError}
+                </div>
+              )}
+
+              {linkSuccess && (
+                <div className="p-2.5 bg-green-50 text-green-700 text-xs rounded-lg border border-green-200">
+                  ABHA successfully linked! Starting consent flow...
+                </div>
+              )}
+
+              <div className="flex items-center justify-end gap-2 pt-2 border-t border-border">
+                <button
+                  type="button"
+                  onClick={() => setIsLinkAbhaOpen(false)}
+                  className="px-3 py-1.5 border border-border rounded-lg text-xs font-mono uppercase tracking-wider text-slate hover:bg-panel"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={linkLoading}
+                  className="px-4 py-1.5 bg-blue text-white rounded-lg text-xs font-mono uppercase tracking-wider font-bold hover:bg-blue/90 disabled:opacity-50"
+                >
+                  {linkLoading ? "Linking..." : "Confirm & Link ABHA"}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
