@@ -70,36 +70,11 @@ const PERSONAS: PersonaMeta[] = [
 
 export default function DevPage() {
   const [selectedPersonaId, setSelectedPersonaId] = useState("p1");
-  const [bundleData, setBundleData] = useState<Record<string, unknown> | null>(null);
-  const [_loading, setLoading] = useState(false);
 
   const selectedMeta = PERSONAS.find((p) => p.id === selectedPersonaId) || PERSONAS[0];
 
-  const loadBundle = async (fileName: string) => {
-    setLoading(true);
-    try {
-      const res = await fetch(`/data/records/${fileName}`);
-      if (res.ok) {
-        const data = await res.json();
-        setBundleData(data);
-      } else {
-        // Fallback fetch via API
-        const apiRes = await fetch(`/api/abdm/consent/${selectedPersonaId}`);
-        if (apiRes.ok) {
-          const apiData = await apiRes.json();
-          setBundleData(apiData.recordsData);
-        }
-      }
-    } catch {
-      // Ignore
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const handleSelect = (p: PersonaMeta) => {
     setSelectedPersonaId(p.id);
-    loadBundle(p.fileName);
   };
 
   return (

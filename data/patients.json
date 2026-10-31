@@ -14,7 +14,7 @@
     "recordCount": 4,
     "hasRecords": true,
     "recordFile": "persona-1.json",
-    "queueStatus": "Waiting"
+    "queueStatus": "Done"
   },
   {
     "id": "p2",
@@ -31,7 +31,7 @@
     "recordCount": 6,
     "hasRecords": true,
     "recordFile": "persona-2.json",
-    "queueStatus": "Waiting"
+    "queueStatus": "Done"
   },
   {
     "id": "p3",
@@ -48,7 +48,7 @@
     "recordCount": 8,
     "hasRecords": true,
     "recordFile": "persona-3.json",
-    "queueStatus": "Waiting"
+    "queueStatus": "Done"
   },
   {
     "id": "p4",
@@ -64,7 +64,7 @@
     "dataStatus": "No ABHA",
     "recordCount": 0,
     "hasRecords": false,
-    "queueStatus": "Waiting"
+    "queueStatus": "Done"
   },
   {
     "id": "p5",

@@ -135,7 +135,7 @@ function buildFacilityFetchStates(
   const demo = isDemoMode();
   const rng = seededRandom(hashString(patientId + now));
 
-  return facilities.map((facility, _i) => {
+  return facilities.map((facility) => {
     if (demo) {
       return { facility, scheduledAt: now, status: "received" as const };
     }
