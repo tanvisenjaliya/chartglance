@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { PatientQueueItem } from "@/lib/records";
+import { PatientQueueItem, FacilityMetadata } from "@/lib/records";
 import KpiBar, { FilterType } from "./KpiBar";
 import DoctorSidebar from "./DoctorSidebar";
 import QueueStatusBadge from "./QueueStatusBadge";
@@ -11,9 +11,17 @@ import DemoModeBanner from "./DemoModeBanner";
 
 interface OpdDashboardProps {
   initialPatients: PatientQueueItem[];
+  facility?: FacilityMetadata;
 }
 
-export default function OpdDashboard({ initialPatients }: OpdDashboardProps) {
+export default function OpdDashboard({
+  initialPatients,
+  facility = {
+    facilityName: "PHC Navli (demo)",
+    district: "Anand",
+    state: "Gujarat",
+  },
+}: OpdDashboardProps) {
   const router = useRouter();
   const [patients, setPatients] = useState<PatientQueueItem[]>(initialPatients);
   const [activeFilter, setActiveFilter] = useState<FilterType>("all");
@@ -45,12 +53,10 @@ export default function OpdDashboard({ initialPatients }: OpdDashboardProps) {
     }
   };
 
-  // Optimistic local status update (syncs with server via the consultation page)
   const handleStatusChange = async (
     patientId: string,
     newStatus: "Waiting" | "In consultation" | "Done"
   ) => {
-    // Optimistic update
     setPatients((prev) =>
       prev.map((p) =>
         p.id === patientId ? { ...p, queueStatus: newStatus } : p
@@ -63,7 +69,6 @@ export default function OpdDashboard({ initialPatients }: OpdDashboardProps) {
         body: JSON.stringify({ status: newStatus }),
       });
     } catch {
-      // Revert on error by re-fetching
       const res = await fetch("/api/patients");
       if (res.ok) setPatients(await res.json());
     }
@@ -84,11 +89,11 @@ export default function OpdDashboard({ initialPatients }: OpdDashboardProps) {
                   ChartGlance
                 </h1>
                 <span className="font-mono text-xs uppercase tracking-wider px-2 py-0.5 rounded bg-blue/30 text-blue-200 border border-blue/40">
-                  PHC MANDAVGAN
+                  {facility.facilityName.toUpperCase()}
                 </span>
               </div>
               <p className="text-xs text-slate">
-                Primary Health Centre &bull; OPD Queue
+                Primary Health Centre &bull; {facility.district} District, {facility.state} &bull; Today&apos;s OPD Queue
               </p>
             </div>
           </div>
@@ -125,7 +130,7 @@ export default function OpdDashboard({ initialPatients }: OpdDashboardProps) {
               <div className="px-6 py-4 border-b border-border bg-panel/50 flex flex-wrap items-center justify-between gap-2">
                 <div className="flex items-center gap-2">
                   <span className="font-mono text-xs uppercase tracking-wider font-semibold text-navy">
-                    QUEUE ENTRIES ({filteredPatients.length} OF {patients.length})
+                    TODAY&apos;S QUEUE ({filteredPatients.length} OF {patients.length})
                   </span>
                   {activeFilter !== "all" && (
                     <span className="font-mono text-xs uppercase tracking-wider px-2 py-0.5 rounded-full bg-blue text-white">
@@ -135,7 +140,6 @@ export default function OpdDashboard({ initialPatients }: OpdDashboardProps) {
                 </div>
 
                 <div className="flex items-center gap-3">
-                  {/* Queue status summary */}
                   <div className="hidden sm:flex items-center gap-2 text-[11px] font-mono text-slate">
                     <span>{waitingCount} waiting</span>
                     <span>&bull;</span>
@@ -144,7 +148,6 @@ export default function OpdDashboard({ initialPatients }: OpdDashboardProps) {
                     <span>{doneCount} done</span>
                   </div>
 
-                  {/* Next Patient shortcut */}
                   {nextWaiting && (
                     <button
                       type="button"
@@ -155,7 +158,6 @@ export default function OpdDashboard({ initialPatients }: OpdDashboardProps) {
                     </button>
                   )}
 
-                  {/* Register Patient */}
                   <Link
                     href="/register"
                     className="px-3 py-1.5 rounded-lg border border-border bg-panel text-navy-muted text-xs font-mono uppercase tracking-wider font-semibold hover:bg-border/60 transition-colors"
@@ -186,7 +188,9 @@ export default function OpdDashboard({ initialPatients }: OpdDashboardProps) {
                     return (
                       <div
                         key={patient.id}
-                        className={`p-6 transition-all group ${isDone ? "opacity-60" : "hover:bg-panel/40"}`}
+                        className={`p-6 transition-all group ${
+                          isDone ? "opacity-60" : "hover:bg-panel/40"
+                        }`}
                       >
                         <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
                           {/* Token & Patient Demographics */}
@@ -213,7 +217,11 @@ export default function OpdDashboard({ initialPatients }: OpdDashboardProps) {
                                 <span className="text-sm text-navy-muted">
                                   {patient.age} yrs &bull; {patient.gender}
                                 </span>
-                                {/* Queue status inline badge */}
+                                {patient.village && (
+                                  <span className="font-mono text-xs text-slate">
+                                    &bull; {patient.village}
+                                  </span>
+                                )}
                                 <QueueStatusBadge
                                   status={patient.queueStatus ?? "Waiting"}
                                   compact
@@ -221,13 +229,13 @@ export default function OpdDashboard({ initialPatients }: OpdDashboardProps) {
                               </div>
 
                               {/* Chief Complaint */}
-                              {patient.chiefComplaint && (
+                              {(patient.chiefComplaint || patient.complaint) && (
                                 <div className="mt-1.5 flex items-center gap-1.5 text-xs text-navy">
                                   <span className="font-mono text-xs uppercase tracking-wider text-slate">
                                     COMPLAINT:
                                   </span>
                                   <span className="font-medium">
-                                    {patient.chiefComplaint}
+                                    {patient.chiefComplaint || patient.complaint}
                                   </span>
                                 </div>
                               )}
@@ -264,7 +272,6 @@ export default function OpdDashboard({ initialPatients }: OpdDashboardProps) {
 
                           {/* Right side: data status badge + status controls */}
                           <div className="flex flex-col items-start md:items-end gap-2 shrink-0">
-                            {/* Data Status Badge */}
                             {patient.dataStatus === "Records available" ? (
                               <div className="flex items-center gap-2 px-3 py-1.5 rounded-full border border-border bg-panel text-navy text-xs font-semibold">
                                 <svg
@@ -281,10 +288,10 @@ export default function OpdDashboard({ initialPatients }: OpdDashboardProps) {
                                   />
                                 </svg>
                                 <span className="font-mono text-xs uppercase tracking-wider">
-                                  RECORDS AVAILABLE
+                                  RECORDS AVAILABLE ({patient.recordCount})
                                 </span>
                               </div>
-                            ) : patient.dataStatus === "ABHA, no records" ? (
+                            ) : (
                               <div className="flex items-center gap-2 px-3 py-1.5 rounded-full border border-border bg-surface text-slate text-xs font-medium">
                                 <svg
                                   className="w-3.5 h-3.5 text-slate"
@@ -303,16 +310,8 @@ export default function OpdDashboard({ initialPatients }: OpdDashboardProps) {
                                   ABHA, NO RECORDS
                                 </span>
                               </div>
-                            ) : (
-                              <div className="flex items-center gap-2 px-3 py-1.5 rounded-full border border-dashed border-border-dashed bg-surface text-slate text-xs font-medium">
-                                <span className="w-1.5 h-1.5 rounded-full bg-slate/50" />
-                                <span className="font-mono text-xs uppercase tracking-wider text-slate">
-                                  NO ABHA
-                                </span>
-                              </div>
                             )}
 
-                            {/* Quick status advance controls */}
                             {patient.queueStatus === "Waiting" && (
                               <button
                                 type="button"
@@ -359,6 +358,7 @@ export default function OpdDashboard({ initialPatients }: OpdDashboardProps) {
               waitingCount={waitingCount}
               inConsultCount={inConsultCount}
               doneCount={doneCount}
+              facility={facility}
             />
           </div>
         </div>
@@ -368,9 +368,11 @@ export default function OpdDashboard({ initialPatients }: OpdDashboardProps) {
       <footer className="mt-12 border-t border-border bg-surface py-6 px-6">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate">
           <div>
-            <p>ChartGlance &bull; Ayushman Bharat Digital Mission (ABDM) Clinical Queue Prototype</p>
+            <p>
+              ChartGlance &bull; {facility.facilityName}, {facility.district} ({facility.state})
+            </p>
             <p className="mt-0.5 text-[11px] text-navy-muted">
-              Synthetic data only &bull; Dates stored as dynamic offsets relative to runtime
+              Synthetic data only &bull; Relative dates dynamically resolved at load time
             </p>
           </div>
 

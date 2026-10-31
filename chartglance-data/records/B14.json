@@ -1,0 +1,738 @@
+{
+  "resourceType": "Bundle",
+  "id": "bundle-B14",
+  "type": "collection",
+  "meta": {
+    "tag": [
+      {
+        "code": "SYNTHETIC",
+        "display": "Synthetic demo data. Not a real patient."
+      }
+    ]
+  },
+  "entry": [
+    {
+      "fullUrl": "urn:uuid:b14-rec-8",
+      "resource": {
+        "resourceType": "Composition",
+        "id": "b14-rec-8",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/OPConsultRecord"
+          ]
+        },
+        "status": "final",
+        "type": {
+          "text": "OP consultation"
+        },
+        "title": "OP consultation",
+        "date": "{{today-180d}}",
+        "subject": {
+          "reference": "Patient/B14"
+        },
+        "encounter": {
+          "reference": "Encounter/b14-enc-1"
+        },
+        "author": [
+          {
+            "reference": "Organization/HIP-GJ-AND-101"
+          }
+        ],
+        "custodian": {
+          "reference": "Organization/HIP-GJ-AND-101"
+        },
+        "section": [
+          {
+            "title": "Clinical note",
+            "text": {
+              "status": "generated",
+              "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">HTN x 8 yrs. S. creat 1.9. ? CKD stage 3. USG: bilateral small kidneys. Start telmisartan. Avoid NSAIDs.</div>"
+            },
+            "entry": [
+              {
+                "reference": "Condition/b14-cond-2"
+              },
+              {
+                "reference": "Condition/b14-cond-3"
+              },
+              {
+                "reference": "Observation/b14-obs-4"
+              },
+              {
+                "reference": "Observation/b14-obs-5"
+              },
+              {
+                "reference": "Observation/b14-obs-6"
+              },
+              {
+                "reference": "MedicationRequest/b14-med-7"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b14-rec-14",
+      "resource": {
+        "resourceType": "Composition",
+        "id": "b14-rec-14",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/OPConsultRecord"
+          ]
+        },
+        "status": "final",
+        "type": {
+          "text": "OP consultation"
+        },
+        "title": "OP consultation",
+        "date": "{{today-90d}}",
+        "subject": {
+          "reference": "Patient/B14"
+        },
+        "encounter": {
+          "reference": "Encounter/b14-enc-9"
+        },
+        "author": [
+          {
+            "reference": "Organization/HIP-GJ-AND-001"
+          }
+        ],
+        "custodian": {
+          "reference": "Organization/HIP-GJ-AND-001"
+        },
+        "section": [
+          {
+            "title": "Clinical note",
+            "text": {
+              "status": "generated",
+              "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">BP better. Cont same. Rpt creat 3 mo.</div>"
+            },
+            "entry": [
+              {
+                "reference": "Condition/b14-cond-10"
+              },
+              {
+                "reference": "Observation/b14-obs-11"
+              },
+              {
+                "reference": "Observation/b14-obs-12"
+              },
+              {
+                "reference": "MedicationRequest/b14-med-13"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b14-rec-17",
+      "resource": {
+        "resourceType": "Composition",
+        "id": "b14-rec-17",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/DiagnosticReportRecord"
+          ]
+        },
+        "status": "final",
+        "type": {
+          "text": "Diagnostic report"
+        },
+        "title": "Diagnostic report",
+        "date": "{{today-30d}}",
+        "subject": {
+          "reference": "Patient/B14"
+        },
+        "encounter": {
+          "reference": "Encounter/b14-enc-15"
+        },
+        "author": [
+          {
+            "reference": "Organization/HIP-GJ-AND-001"
+          }
+        ],
+        "custodian": {
+          "reference": "Organization/HIP-GJ-AND-001"
+        },
+        "section": [
+          {
+            "title": "Clinical note",
+            "text": {
+              "status": "generated",
+              "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">S. creatinine 2.3 mg/dL.</div>"
+            },
+            "entry": [
+              {
+                "reference": "Observation/b14-obs-16"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:B14",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "B14",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Patient"
+          ]
+        },
+        "name": [
+          {
+            "text": "Mahendra Prajapati"
+          }
+        ],
+        "gender": "male",
+        "birthDate": "{{today-55y}}",
+        "address": [
+          {
+            "text": "Bhalej, Anand district, Gujarat",
+            "city": "Bhalej",
+            "district": "Anand",
+            "state": "Gujarat",
+            "country": "IN"
+          }
+        ],
+        "identifier": [
+          {
+            "type": {
+              "text": "ABHA number"
+            },
+            "system": "https://healthid.abdm.gov.in",
+            "value": "91-5555-9963-0014"
+          },
+          {
+            "type": {
+              "text": "ABHA address"
+            },
+            "system": "https://healthid.abdm.gov.in",
+            "value": "mahendra.prajapati@sbx"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:HIP-GJ-AND-001",
+      "resource": {
+        "resourceType": "Organization",
+        "id": "HIP-GJ-AND-001",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Organization"
+          ]
+        },
+        "name": "CHC Petlad (demo)",
+        "identifier": [
+          {
+            "system": "https://facility.abdm.gov.in",
+            "value": "HIP-GJ-AND-001"
+          }
+        ],
+        "type": [
+          {
+            "text": "Public CHC"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:HIP-GJ-AND-101",
+      "resource": {
+        "resourceType": "Organization",
+        "id": "HIP-GJ-AND-101",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Organization"
+          ]
+        },
+        "name": "General Hospital Anand (demo)",
+        "identifier": [
+          {
+            "system": "https://facility.abdm.gov.in",
+            "value": "HIP-GJ-AND-101"
+          }
+        ],
+        "type": [
+          {
+            "text": "Public district hospital"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b14-enc-1",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "b14-enc-1",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Encounter"
+          ]
+        },
+        "status": "finished",
+        "class": {
+          "code": "AMB"
+        },
+        "subject": {
+          "reference": "Patient/B14"
+        },
+        "serviceProvider": {
+          "reference": "Organization/HIP-GJ-AND-101"
+        },
+        "period": {
+          "start": "{{today-180d}}"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b14-cond-2",
+      "resource": {
+        "resourceType": "Condition",
+        "id": "b14-cond-2",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Condition"
+          ]
+        },
+        "subject": {
+          "reference": "Patient/B14"
+        },
+        "encounter": {
+          "reference": "Encounter/b14-enc-1"
+        },
+        "code": {
+          "text": "Hypertension",
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "38341003",
+              "display": "Hypertension"
+            }
+          ]
+        },
+        "clinicalStatus": {
+          "text": "active"
+        },
+        "recordedDate": "{{today-180d}}"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b14-cond-3",
+      "resource": {
+        "resourceType": "Condition",
+        "id": "b14-cond-3",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Condition"
+          ]
+        },
+        "subject": {
+          "reference": "Patient/B14"
+        },
+        "encounter": {
+          "reference": "Encounter/b14-enc-1"
+        },
+        "code": {
+          "text": "Chronic kidney disease",
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "709044004",
+              "display": "Chronic kidney disease"
+            }
+          ]
+        },
+        "clinicalStatus": {
+          "text": "active"
+        },
+        "recordedDate": "{{today-180d}}"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b14-obs-4",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "b14-obs-4",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Observation"
+          ]
+        },
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "2160-0",
+              "display": "Serum creatinine"
+            }
+          ],
+          "text": "Serum creatinine"
+        },
+        "subject": {
+          "reference": "Patient/B14"
+        },
+        "encounter": {
+          "reference": "Encounter/b14-enc-1"
+        },
+        "effectiveDateTime": "{{today-180d}}",
+        "performer": [
+          {
+            "reference": "Organization/HIP-GJ-AND-101"
+          }
+        ],
+        "valueQuantity": {
+          "value": 1.9,
+          "unit": "mg/dL"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b14-obs-5",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "b14-obs-5",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Observation"
+          ]
+        },
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "8480-6",
+              "display": "Systolic BP"
+            }
+          ],
+          "text": "Systolic BP"
+        },
+        "subject": {
+          "reference": "Patient/B14"
+        },
+        "encounter": {
+          "reference": "Encounter/b14-enc-1"
+        },
+        "effectiveDateTime": "{{today-180d}}",
+        "performer": [
+          {
+            "reference": "Organization/HIP-GJ-AND-101"
+          }
+        ],
+        "valueQuantity": {
+          "value": 158,
+          "unit": "mmHg"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b14-obs-6",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "b14-obs-6",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Observation"
+          ]
+        },
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "8462-4",
+              "display": "Diastolic BP"
+            }
+          ],
+          "text": "Diastolic BP"
+        },
+        "subject": {
+          "reference": "Patient/B14"
+        },
+        "encounter": {
+          "reference": "Encounter/b14-enc-1"
+        },
+        "effectiveDateTime": "{{today-180d}}",
+        "performer": [
+          {
+            "reference": "Organization/HIP-GJ-AND-101"
+          }
+        ],
+        "valueQuantity": {
+          "value": 96,
+          "unit": "mmHg"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b14-med-7",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "b14-med-7",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/MedicationRequest"
+          ]
+        },
+        "status": "active",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "text": "Telmisartan"
+        },
+        "subject": {
+          "reference": "Patient/B14"
+        },
+        "encounter": {
+          "reference": "Encounter/b14-enc-1"
+        },
+        "authoredOn": "{{today-180d}}",
+        "requester": {
+          "reference": "Organization/HIP-GJ-AND-101"
+        },
+        "dosageInstruction": [
+          {
+            "text": "40 mg OD"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b14-enc-9",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "b14-enc-9",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Encounter"
+          ]
+        },
+        "status": "finished",
+        "class": {
+          "code": "AMB"
+        },
+        "subject": {
+          "reference": "Patient/B14"
+        },
+        "serviceProvider": {
+          "reference": "Organization/HIP-GJ-AND-001"
+        },
+        "period": {
+          "start": "{{today-90d}}"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b14-cond-10",
+      "resource": {
+        "resourceType": "Condition",
+        "id": "b14-cond-10",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Condition"
+          ]
+        },
+        "subject": {
+          "reference": "Patient/B14"
+        },
+        "encounter": {
+          "reference": "Encounter/b14-enc-9"
+        },
+        "code": {
+          "text": "Hypertension",
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "38341003",
+              "display": "Hypertension"
+            }
+          ]
+        },
+        "clinicalStatus": {
+          "text": "active"
+        },
+        "recordedDate": "{{today-90d}}"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b14-obs-11",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "b14-obs-11",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Observation"
+          ]
+        },
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "8480-6",
+              "display": "Systolic BP"
+            }
+          ],
+          "text": "Systolic BP"
+        },
+        "subject": {
+          "reference": "Patient/B14"
+        },
+        "encounter": {
+          "reference": "Encounter/b14-enc-9"
+        },
+        "effectiveDateTime": "{{today-90d}}",
+        "performer": [
+          {
+            "reference": "Organization/HIP-GJ-AND-001"
+          }
+        ],
+        "valueQuantity": {
+          "value": 146,
+          "unit": "mmHg"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b14-obs-12",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "b14-obs-12",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Observation"
+          ]
+        },
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "8462-4",
+              "display": "Diastolic BP"
+            }
+          ],
+          "text": "Diastolic BP"
+        },
+        "subject": {
+          "reference": "Patient/B14"
+        },
+        "encounter": {
+          "reference": "Encounter/b14-enc-9"
+        },
+        "effectiveDateTime": "{{today-90d}}",
+        "performer": [
+          {
+            "reference": "Organization/HIP-GJ-AND-001"
+          }
+        ],
+        "valueQuantity": {
+          "value": 88,
+          "unit": "mmHg"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b14-med-13",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "b14-med-13",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/MedicationRequest"
+          ]
+        },
+        "status": "active",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "text": "Telmisartan"
+        },
+        "subject": {
+          "reference": "Patient/B14"
+        },
+        "encounter": {
+          "reference": "Encounter/b14-enc-9"
+        },
+        "authoredOn": "{{today-90d}}",
+        "requester": {
+          "reference": "Organization/HIP-GJ-AND-001"
+        },
+        "dosageInstruction": [
+          {
+            "text": "40 mg OD"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b14-enc-15",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "b14-enc-15",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Encounter"
+          ]
+        },
+        "status": "finished",
+        "class": {
+          "code": "AMB"
+        },
+        "subject": {
+          "reference": "Patient/B14"
+        },
+        "serviceProvider": {
+          "reference": "Organization/HIP-GJ-AND-001"
+        },
+        "period": {
+          "start": "{{today-30d}}"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b14-obs-16",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "b14-obs-16",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Observation"
+          ]
+        },
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "2160-0",
+              "display": "Serum creatinine"
+            }
+          ],
+          "text": "Serum creatinine"
+        },
+        "subject": {
+          "reference": "Patient/B14"
+        },
+        "encounter": {
+          "reference": "Encounter/b14-enc-15"
+        },
+        "effectiveDateTime": "{{today-30d}}",
+        "performer": [
+          {
+            "reference": "Organization/HIP-GJ-AND-001"
+          }
+        ],
+        "valueQuantity": {
+          "value": 2.3,
+          "unit": "mg/dL"
+        }
+      }
+    }
+  ]
+}

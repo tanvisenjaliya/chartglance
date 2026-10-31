@@ -1,0 +1,211 @@
+{
+  "resourceType": "Bundle",
+  "id": "bundle-B18",
+  "type": "collection",
+  "meta": {
+    "tag": [
+      {
+        "code": "SYNTHETIC",
+        "display": "Synthetic demo data. Not a real patient."
+      }
+    ]
+  },
+  "entry": [
+    {
+      "fullUrl": "urn:uuid:b18-rec-4",
+      "resource": {
+        "resourceType": "Composition",
+        "id": "b18-rec-4",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/DiagnosticReportRecord"
+          ]
+        },
+        "status": "final",
+        "type": {
+          "text": "Diagnostic report"
+        },
+        "title": "Diagnostic report",
+        "date": "{{today-150d}}",
+        "subject": {
+          "reference": "Patient/B18"
+        },
+        "encounter": {
+          "reference": "Encounter/b18-enc-1"
+        },
+        "author": [
+          {
+            "reference": "Organization/HIP-GJ-AND-101"
+          }
+        ],
+        "custodian": {
+          "reference": "Organization/HIP-GJ-AND-101"
+        },
+        "section": [
+          {
+            "title": "Clinical note",
+            "text": {
+              "status": "generated",
+              "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Agate polishing worker x 15 yrs. CXR: bilateral nodular opacities, upper zones. ? silicosis. Sputum for AFB negative. Referred to pulmonology; not attended.</div>"
+            },
+            "entry": [
+              {
+                "reference": "Condition/b18-cond-2"
+              },
+              {
+                "reference": "Appointment/b18-appt-3"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:B18",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "B18",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Patient"
+          ]
+        },
+        "name": [
+          {
+            "text": "Hasmukh Chauhan"
+          }
+        ],
+        "gender": "male",
+        "birthDate": "{{today-46y}}",
+        "address": [
+          {
+            "text": "Khambhat, Anand district, Gujarat",
+            "city": "Khambhat",
+            "district": "Anand",
+            "state": "Gujarat",
+            "country": "IN"
+          }
+        ],
+        "identifier": [
+          {
+            "type": {
+              "text": "ABHA number"
+            },
+            "system": "https://healthid.abdm.gov.in",
+            "value": "91-5555-4318-0018"
+          },
+          {
+            "type": {
+              "text": "ABHA address"
+            },
+            "system": "https://healthid.abdm.gov.in",
+            "value": "hasmukh.chauhan@sbx"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:HIP-GJ-AND-101",
+      "resource": {
+        "resourceType": "Organization",
+        "id": "HIP-GJ-AND-101",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Organization"
+          ]
+        },
+        "name": "General Hospital Anand (demo)",
+        "identifier": [
+          {
+            "system": "https://facility.abdm.gov.in",
+            "value": "HIP-GJ-AND-101"
+          }
+        ],
+        "type": [
+          {
+            "text": "Public district hospital"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b18-enc-1",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "b18-enc-1",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Encounter"
+          ]
+        },
+        "status": "finished",
+        "class": {
+          "code": "AMB"
+        },
+        "subject": {
+          "reference": "Patient/B18"
+        },
+        "serviceProvider": {
+          "reference": "Organization/HIP-GJ-AND-101"
+        },
+        "period": {
+          "start": "{{today-150d}}"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b18-cond-2",
+      "resource": {
+        "resourceType": "Condition",
+        "id": "b18-cond-2",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Condition"
+          ]
+        },
+        "subject": {
+          "reference": "Patient/B18"
+        },
+        "encounter": {
+          "reference": "Encounter/b18-enc-1"
+        },
+        "code": {
+          "text": "Suspected silicosis"
+        },
+        "clinicalStatus": {
+          "text": "active"
+        },
+        "recordedDate": "{{today-150d}}"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b18-appt-3",
+      "resource": {
+        "resourceType": "Appointment",
+        "id": "b18-appt-3",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Appointment"
+          ]
+        },
+        "status": "booked",
+        "description": "Pulmonology referral",
+        "start": "{{today-120d}}",
+        "participant": [
+          {
+            "actor": {
+              "reference": "Patient/B18"
+            },
+            "status": "accepted"
+          },
+          {
+            "actor": {
+              "reference": "Organization/HIP-GJ-AND-101"
+            },
+            "status": "accepted"
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,340 @@
+{
+  "resourceType": "Bundle",
+  "id": "bundle-B06",
+  "type": "collection",
+  "meta": {
+    "tag": [
+      {
+        "code": "SYNTHETIC",
+        "display": "Synthetic demo data. Not a real patient."
+      }
+    ]
+  },
+  "entry": [
+    {
+      "fullUrl": "urn:uuid:b06-rec-7",
+      "resource": {
+        "resourceType": "Composition",
+        "id": "b06-rec-7",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/OPConsultRecord"
+          ]
+        },
+        "status": "final",
+        "type": {
+          "text": "OP consultation"
+        },
+        "title": "OP consultation",
+        "date": "{{today-150d}}",
+        "subject": {
+          "reference": "Patient/B06"
+        },
+        "encounter": {
+          "reference": "Encounter/b06-enc-1"
+        },
+        "author": [
+          {
+            "reference": "Organization/HIP-GJ-AND-001"
+          }
+        ],
+        "custodian": {
+          "reference": "Organization/HIP-GJ-AND-001"
+        },
+        "section": [
+          {
+            "title": "Clinical note",
+            "text": {
+              "status": "generated",
+              "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">HTN, B/L knee OA. BP 156/92. Start amlodipine. Knee exercises. Avoid long-term painkillers.</div>"
+            },
+            "entry": [
+              {
+                "reference": "Condition/b06-cond-2"
+              },
+              {
+                "reference": "Condition/b06-cond-3"
+              },
+              {
+                "reference": "Observation/b06-obs-4"
+              },
+              {
+                "reference": "Observation/b06-obs-5"
+              },
+              {
+                "reference": "MedicationRequest/b06-med-6"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:B06",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "B06",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Patient"
+          ]
+        },
+        "name": [
+          {
+            "text": "Savitaben Solanki"
+          }
+        ],
+        "gender": "female",
+        "birthDate": "{{today-68y}}",
+        "address": [
+          {
+            "text": "Navli, Anand district, Gujarat",
+            "city": "Navli",
+            "district": "Anand",
+            "state": "Gujarat",
+            "country": "IN"
+          }
+        ],
+        "identifier": [
+          {
+            "type": {
+              "text": "ABHA number"
+            },
+            "system": "https://healthid.abdm.gov.in",
+            "value": "91-5555-2031-0006"
+          },
+          {
+            "type": {
+              "text": "ABHA address"
+            },
+            "system": "https://healthid.abdm.gov.in",
+            "value": "savitaben.solanki@sbx"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:HIP-GJ-AND-001",
+      "resource": {
+        "resourceType": "Organization",
+        "id": "HIP-GJ-AND-001",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Organization"
+          ]
+        },
+        "name": "CHC Petlad (demo)",
+        "identifier": [
+          {
+            "system": "https://facility.abdm.gov.in",
+            "value": "HIP-GJ-AND-001"
+          }
+        ],
+        "type": [
+          {
+            "text": "Public CHC"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b06-enc-1",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "b06-enc-1",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Encounter"
+          ]
+        },
+        "status": "finished",
+        "class": {
+          "code": "AMB"
+        },
+        "subject": {
+          "reference": "Patient/B06"
+        },
+        "serviceProvider": {
+          "reference": "Organization/HIP-GJ-AND-001"
+        },
+        "period": {
+          "start": "{{today-150d}}"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b06-cond-2",
+      "resource": {
+        "resourceType": "Condition",
+        "id": "b06-cond-2",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Condition"
+          ]
+        },
+        "subject": {
+          "reference": "Patient/B06"
+        },
+        "encounter": {
+          "reference": "Encounter/b06-enc-1"
+        },
+        "code": {
+          "text": "Hypertension",
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "38341003",
+              "display": "Hypertension"
+            }
+          ]
+        },
+        "clinicalStatus": {
+          "text": "active"
+        },
+        "recordedDate": "{{today-150d}}"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b06-cond-3",
+      "resource": {
+        "resourceType": "Condition",
+        "id": "b06-cond-3",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Condition"
+          ]
+        },
+        "subject": {
+          "reference": "Patient/B06"
+        },
+        "encounter": {
+          "reference": "Encounter/b06-enc-1"
+        },
+        "code": {
+          "text": "Osteoarthritis",
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "396275006",
+              "display": "Osteoarthritis"
+            }
+          ]
+        },
+        "clinicalStatus": {
+          "text": "active"
+        },
+        "recordedDate": "{{today-150d}}"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b06-obs-4",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "b06-obs-4",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Observation"
+          ]
+        },
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "8480-6",
+              "display": "Systolic BP"
+            }
+          ],
+          "text": "Systolic BP"
+        },
+        "subject": {
+          "reference": "Patient/B06"
+        },
+        "encounter": {
+          "reference": "Encounter/b06-enc-1"
+        },
+        "effectiveDateTime": "{{today-150d}}",
+        "performer": [
+          {
+            "reference": "Organization/HIP-GJ-AND-001"
+          }
+        ],
+        "valueQuantity": {
+          "value": 156,
+          "unit": "mmHg"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b06-obs-5",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "b06-obs-5",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Observation"
+          ]
+        },
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "8462-4",
+              "display": "Diastolic BP"
+            }
+          ],
+          "text": "Diastolic BP"
+        },
+        "subject": {
+          "reference": "Patient/B06"
+        },
+        "encounter": {
+          "reference": "Encounter/b06-enc-1"
+        },
+        "effectiveDateTime": "{{today-150d}}",
+        "performer": [
+          {
+            "reference": "Organization/HIP-GJ-AND-001"
+          }
+        ],
+        "valueQuantity": {
+          "value": 92,
+          "unit": "mmHg"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b06-med-6",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "b06-med-6",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/MedicationRequest"
+          ]
+        },
+        "status": "active",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "text": "Amlodipine"
+        },
+        "subject": {
+          "reference": "Patient/B06"
+        },
+        "encounter": {
+          "reference": "Encounter/b06-enc-1"
+        },
+        "authoredOn": "{{today-150d}}",
+        "requester": {
+          "reference": "Organization/HIP-GJ-AND-001"
+        },
+        "dosageInstruction": [
+          {
+            "text": "5 mg OD"
+          }
+        ]
+      }
+    }
+  ]
+}

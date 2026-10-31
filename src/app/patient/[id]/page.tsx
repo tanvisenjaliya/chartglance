@@ -2,47 +2,73 @@
 
 import { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
-import { useParams } from "next/navigation";
-import { ConsentRecord, RawClinicalRecord } from "@/lib/abdm-mock";
+import { useParams, useRouter } from "next/navigation";
+import { ConsentRecord, CompositionRecord } from "@/lib/abdm-mock";
 import { PatientQueueItem } from "@/lib/records";
+import { ConsultationNote } from "@/lib/notes-store";
 import QueueStatusBadge from "@/components/QueueStatusBadge";
 import DemoModeBanner from "@/components/DemoModeBanner";
+import ConsultationNoteBox from "@/components/ConsultationNoteBox";
+import PreviousVisitsList from "@/components/PreviousVisitsList";
 
 export default function PatientConsultationPage() {
   const params = useParams();
+  const router = useRouter();
   const patientId = params.id as string;
 
   const [patient, setPatient] = useState<PatientQueueItem | null>(null);
   const [loadingPatient, setLoadingPatient] = useState(true);
   const [consent, setConsent] = useState<ConsentRecord | null>(null);
-  const [records, setRecords] = useState<RawClinicalRecord[]>([]);
+  const [compositions, setCompositions] = useState<CompositionRecord[]>([]);
   const [facilityCount, setFacilityCount] = useState(0);
   const [pendingFacilities, setPendingFacilities] = useState<string[]>([]);
   const [timedOutCount, setTimedOutCount] = useState(0);
   const [requesting, setRequesting] = useState(false);
   const [actionLoading, setActionLoading] = useState(false);
   const [statusUpdating, setStatusUpdating] = useState(false);
+  const [startingNewVisit, setStartingNewVisit] = useState(false);
 
-  // Fetch patient details
-  useEffect(() => {
-    async function loadPatient() {
-      try {
-        const res = await fetch("/api/patients");
-        if (res.ok) {
-          const list: PatientQueueItem[] = await res.json();
-          const match = list.find((p) => p.id === patientId);
-          setPatient(match || null);
-        }
-      } catch {
-        // Fallback or error
-      } finally {
-        setLoadingPatient(false);
+  // Local Notes state
+  const [previousNotes, setPreviousNotes] = useState<ConsultationNote[]>([]);
+
+  // 1. Fetch patient details
+  const loadPatient = useCallback(async () => {
+    try {
+      const res = await fetch("/api/patients");
+      if (res.ok) {
+        const list: PatientQueueItem[] = await res.json();
+        const match = list.find((p) => p.id === patientId);
+        setPatient(match || null);
       }
+    } catch {
+      // Fallback
+    } finally {
+      setLoadingPatient(false);
     }
-    loadPatient();
   }, [patientId]);
 
-  // Fetch consent status and records
+  useEffect(() => {
+    loadPatient();
+  }, [loadPatient]);
+
+  // 2. Fetch local previous visits (independent of ABDM consent)
+  const fetchPreviousNotes = useCallback(async () => {
+    try {
+      const res = await fetch(`/api/notes?patientId=${patientId}`);
+      if (res.ok) {
+        const data = await res.json();
+        setPreviousNotes(data.notes || []);
+      }
+    } catch {
+      // Ignore
+    }
+  }, [patientId]);
+
+  useEffect(() => {
+    fetchPreviousNotes();
+  }, [fetchPreviousNotes]);
+
+  // 3. Fetch consent status and compositions
   const fetchConsentStatus = useCallback(async () => {
     try {
       const res = await fetch(`/api/abdm/consent/${patientId}`);
@@ -50,7 +76,7 @@ export default function PatientConsultationPage() {
         const data = await res.json();
         setConsent(data.consent);
         if (data.recordsData) {
-          setRecords(data.recordsData.records || []);
+          setCompositions(data.recordsData.compositions || []);
           setFacilityCount(data.recordsData.facilityCount || 0);
           setPendingFacilities(data.recordsData.pendingFacilities || []);
           setTimedOutCount(data.recordsData.timedOutCount || 0);
@@ -65,8 +91,6 @@ export default function PatientConsultationPage() {
     fetchConsentStatus();
   }, [fetchConsentStatus]);
 
-  // Poll when consent is REQUESTED (waiting for patient action or auto-resolution)
-  // Also poll when GRANTED but facilities still pending
   useEffect(() => {
     const shouldPoll =
       consent?.status === "REQUESTED" || pendingFacilities.length > 0;
@@ -77,9 +101,8 @@ export default function PatientConsultationPage() {
     return () => clearInterval(interval);
   }, [consent?.status, pendingFacilities.length, fetchConsentStatus]);
 
-  // Doctor initiates consent request
   const handleRequestRecords = async () => {
-    if (!patient || patient.dataStatus === "No ABHA") return;
+    if (!patient) return;
     setRequesting(true);
     try {
       const res = await fetch("/api/abdm/consent/request", {
@@ -111,7 +134,7 @@ export default function PatientConsultationPage() {
       if (res.ok) {
         const data = await res.json();
         setConsent(data.consent);
-        setRecords([]);
+        setCompositions([]);
         setPendingFacilities([]);
       }
     } finally {
@@ -127,7 +150,7 @@ export default function PatientConsultationPage() {
       });
       if (res.ok) {
         setConsent(null);
-        setRecords([]);
+        setCompositions([]);
         setPendingFacilities([]);
         setTimedOutCount(0);
       }
@@ -136,7 +159,6 @@ export default function PatientConsultationPage() {
     }
   };
 
-  // Queue status lifecycle
   const handleStatusChange = async (
     newStatus: "Waiting" | "In consultation" | "Done"
   ) => {
@@ -159,6 +181,28 @@ export default function PatientConsultationPage() {
     }
   };
 
+  // 4. Start new visit handler for return demo
+  const handleStartNewVisit = async () => {
+    if (!patient) return;
+    setStartingNewVisit(true);
+    try {
+      const res = await fetch(`/api/patients/${patientId}/new-visit`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ complaint: patient.chiefComplaint || "Follow-up visit" }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setPatient(data.patient);
+        router.push("/");
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setStartingNewVisit(false);
+    }
+  };
+
   if (loadingPatient) {
     return (
       <div className="min-h-screen bg-panel flex items-center justify-center p-6 text-navy">
@@ -178,7 +222,6 @@ export default function PatientConsultationPage() {
     );
   }
 
-  // Calculate hours remaining if granted
   let hoursRemaining = 0;
   if (consent?.status === "GRANTED" && consent.expiryDate) {
     const diff = new Date(consent.expiryDate).getTime() - new Date().getTime();
@@ -239,15 +282,20 @@ export default function PatientConsultationPage() {
                   <span className="text-sm text-navy-muted">
                     {patient.age} yrs &bull; {patient.gender}
                   </span>
+                  {patient.village && (
+                    <span className="font-mono text-xs text-slate">
+                      &bull; {patient.village} ({patient.district || "Anand"})
+                    </span>
+                  )}
                   <QueueStatusBadge status={queueStatus} />
                 </div>
 
-                {patient.chiefComplaint && (
+                {(patient.chiefComplaint || patient.complaint) && (
                   <div className="mt-1 flex items-center gap-1.5 text-xs text-navy">
                     <span className="font-mono text-xs uppercase tracking-wider text-slate">
                       COMPLAINT:
                     </span>
-                    <span className="font-medium">{patient.chiefComplaint}</span>
+                    <span className="font-medium">{patient.chiefComplaint || patient.complaint}</span>
                   </div>
                 )}
 
@@ -292,7 +340,7 @@ export default function PatientConsultationPage() {
                   type="button"
                   onClick={() => handleStatusChange("In consultation")}
                   disabled={statusUpdating}
-                  className="px-5 py-2.5 rounded-xl bg-blue text-white text-xs font-mono uppercase tracking-wider font-semibold hover:bg-blue/90 transition-colors disabled:opacity-50"
+                  className="px-5 py-2.5 rounded-xl bg-blue text-white text-xs font-mono uppercase tracking-wider font-semibold hover:bg-blue/90 transition-colors disabled:opacity-50 shadow-sm"
                 >
                   {statusUpdating ? "Updating…" : "Start Consultation"}
                 </button>
@@ -301,23 +349,26 @@ export default function PatientConsultationPage() {
               {queueStatus === "In consultation" && (
                 <div className="flex items-center gap-2">
                   <QueueStatusBadge status="In consultation" />
-                  <button
-                    type="button"
-                    onClick={() => handleStatusChange("Done")}
-                    disabled={statusUpdating}
-                    className="px-4 py-2 rounded-xl border border-border bg-surface text-xs font-mono uppercase tracking-wider text-navy-muted hover:bg-panel transition-colors disabled:opacity-50"
-                  >
-                    {statusUpdating ? "Saving…" : "Next Patient / Mark Done"}
-                  </button>
+                  <span className="text-[11px] text-slate font-mono">
+                    Fill note below to complete
+                  </span>
                 </div>
               )}
 
               {queueStatus === "Done" && (
-                <div className="flex items-center gap-2">
+                <div className="flex flex-wrap items-center gap-2.5">
                   <QueueStatusBadge status="Done" />
+                  <button
+                    type="button"
+                    onClick={handleStartNewVisit}
+                    disabled={startingNewVisit}
+                    className="px-3.5 py-1.5 rounded-xl bg-blue hover:bg-blue/90 text-white font-mono text-xs uppercase tracking-wider font-semibold transition-colors shadow-sm disabled:opacity-50"
+                  >
+                    {startingNewVisit ? "Enqueuing…" : "+ Start New Visit"}
+                  </button>
                   <Link
                     href="/"
-                    className="text-xs text-blue hover:underline font-medium"
+                    className="text-xs text-blue hover:underline font-medium ml-1"
                   >
                     &larr; Back to queue
                   </Link>
@@ -326,6 +377,23 @@ export default function PatientConsultationPage() {
             </div>
           </div>
         </div>
+
+        {/* Consultation Note Box (Shown only when status is "In consultation") */}
+        {queueStatus === "In consultation" && (
+          <ConsultationNoteBox
+            patientId={patient.id}
+            onNoteSaved={() => {
+              loadPatient();
+              fetchPreviousNotes();
+            }}
+          />
+        )}
+
+        {/* Previous Visits at this PHC (Shown for ALL patients, independent of ABDM consent) */}
+        <PreviousVisitsList
+          notes={previousNotes}
+          onAddendumAdded={fetchPreviousNotes}
+        />
 
         {/* ABDM Consent Flow Section */}
         <div className="bg-surface rounded-2xl border border-border p-6 shadow-sm space-y-6">
@@ -376,15 +444,8 @@ export default function PatientConsultationPage() {
             </div>
           </div>
 
-          {/* Consent Interactions by Patient State */}
-          {patient.dataStatus === "No ABHA" ? (
-            <div className="p-4 rounded-xl border border-dashed border-border-dashed bg-panel/30 text-xs text-navy-muted">
-              <p className="font-semibold text-navy">No ABHA registered for this patient</p>
-              <p className="mt-1">
-                Patients without an ABHA identifier cannot participate in federated record sharing via ABDM. Physical paper slips or verbal history must be relied upon.
-              </p>
-            </div>
-          ) : !consent || consent.status === "NOT_REQUESTED" ? (
+          {/* Consent State Controls */}
+          {!consent || consent.status === "NOT_REQUESTED" ? (
             <div className="p-5 rounded-xl border border-border bg-panel/20 flex flex-col md:flex-row md:items-center justify-between gap-4">
               <div className="space-y-1">
                 <p className="text-xs text-navy font-semibold">
@@ -394,7 +455,7 @@ export default function PatientConsultationPage() {
                   Purpose: <strong className="text-navy">Care Management (CAREMGT)</strong> &bull; Validity: <strong className="text-navy">24 Hours</strong> &bull; Scope: Outpatient Consults, Labs, Prescriptions.
                 </p>
                 <p className="text-[11px] text-slate">
-                  A consent request will be sent to the patient&apos;s ABHA app. It auto-resolves in 20–90 s if the patient doesn&apos;t act (70% approve, 15% deny, 15% expire).
+                  A consent request will be sent to the patient&apos;s ABHA app. Auto-simulates approval/denial in 20–90 s if the patient app is not used.
                 </p>
               </div>
 
@@ -417,11 +478,10 @@ export default function PatientConsultationPage() {
                   Sent to <code className="font-mono">{patient.abhaAddress}</code> &bull; Expires in 24 hours.
                 </p>
                 <p className="text-[11px] text-amber-700/80 mt-1">
-                  Auto-resolves in 20–90 s if patient doesn&apos;t act (70% approve · 15% deny · 15% expire). This page polls automatically.
+                  Auto-resolves in 20–90 s if patient does not act. This screen updates automatically.
                 </p>
               </div>
 
-              {/* Patient Phone Simulation Demo Trigger */}
               <div className="shrink-0 flex items-center gap-2">
                 <Link
                   href={`/patient-phone/${patient.id}`}
@@ -520,13 +580,13 @@ export default function PatientConsultationPage() {
           )}
         </div>
 
-        {/* Records — Staged per-facility (shown only after GRANTED) */}
+        {/* Received Records — Grouped by Composition (Health Record) */}
         {consent?.status === "GRANTED" && (
           <section className="bg-surface rounded-2xl border border-border shadow-sm overflow-hidden animate-in fade-in duration-300">
             <div className="px-6 py-4 border-b border-border bg-panel/50 flex flex-wrap items-center justify-between gap-2">
               <div className="flex items-center gap-2">
                 <span className="font-mono text-xs uppercase tracking-wider font-semibold text-navy">
-                  RECEIVED RAW RECORDS ({records.length})
+                  RECEIVED HEALTH RECORDS ({compositions.length})
                 </span>
                 <span className="text-slate text-xs">&bull;</span>
                 <span className="text-xs text-navy-muted">
@@ -535,28 +595,22 @@ export default function PatientConsultationPage() {
               </div>
 
               <div className="flex items-center gap-2">
-                {/* Timed out facility notice */}
                 {timedOutCount > 0 && (
                   <span className="font-mono text-[11px] uppercase tracking-wider px-2.5 py-1 rounded-full border border-amber-300 bg-amber-50 text-amber-800">
                     {timedOutCount} facilit{timedOutCount === 1 ? "y" : "ies"} didn&apos;t respond
                   </span>
                 )}
 
-                {/* Pending facilities loading indicator */}
                 {pendingFacilities.length > 0 && (
                   <span className="inline-flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-wider text-slate">
                     <span className="w-2 h-2 rounded-full bg-slate/40 animate-pulse" />
                     {pendingFacilities.length} facilit{pendingFacilities.length === 1 ? "y" : "ies"} loading…
                   </span>
                 )}
-
-                <span className="font-mono text-xs uppercase tracking-wider text-slate">
-                  NO AI SUMMARY (MILESTONE 2 SCOPE)
-                </span>
               </div>
             </div>
 
-            {/* Per-facility pending skeletons */}
+            {/* Per-facility pending notification */}
             {pendingFacilities.length > 0 && (
               <div className="px-6 py-3 border-b border-border bg-panel/20 space-y-2">
                 {pendingFacilities.map((f) => (
@@ -573,8 +627,8 @@ export default function PatientConsultationPage() {
               </div>
             )}
 
-            {/* Record rows */}
-            {records.length === 0 && pendingFacilities.length === 0 ? (
+            {/* Empty state */}
+            {compositions.length === 0 && pendingFacilities.length === 0 ? (
               <div className="p-8 text-center">
                 <div className="max-w-md mx-auto p-6 rounded-2xl border border-dashed border-border-dashed bg-panel/30">
                   <span className="w-8 h-8 rounded-full bg-panel text-slate flex items-center justify-center font-bold text-sm mx-auto mb-2">
@@ -584,50 +638,93 @@ export default function PatientConsultationPage() {
                     No records found
                   </p>
                   <p className="text-xs text-navy-muted mt-1">
-                    Consent was granted, but no linked digital health records were found across participating health facilities for this ABHA.
+                    Consent was granted, but no digital health records were linked across participating facilities.
                   </p>
                 </div>
               </div>
             ) : (
+              /* Grouped by Composition (Health Record) */
               <div className="divide-y divide-border">
-                {records.map((rec) => (
-                  <div key={rec.id} className="p-5 hover:bg-panel/20 transition-colors">
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                {compositions.map((comp) => (
+                  <div key={comp.id} className="p-6 space-y-4 hover:bg-panel/10 transition-colors">
+                    {/* Composition Header */}
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-border/60">
                       <div className="flex items-center gap-3">
-                        <span className="font-mono text-[11px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded bg-panel border border-border text-navy shrink-0">
-                          {rec.type}
+                        <span className="font-mono text-[11px] font-semibold uppercase tracking-wider px-2.5 py-1 rounded-lg bg-panel border border-border text-blue shrink-0">
+                          {comp.type}
                         </span>
                         <div>
-                          <p className="text-sm font-semibold text-navy">
-                            {rec.display}
-                          </p>
-                          {rec.details && (
-                            <p className="text-xs text-slate mt-0.5">
-                              {rec.details}
-                            </p>
-                          )}
+                          <h4 className="text-base font-bold text-navy tracking-tight">
+                            {comp.title}
+                          </h4>
                         </div>
                       </div>
 
-                      <div className="flex items-center gap-4 text-xs text-navy-muted sm:text-right shrink-0">
+                      <div className="flex items-center gap-5 text-xs text-navy-muted sm:text-right shrink-0">
                         <div>
-                          <span className="font-mono text-[11px] uppercase tracking-wider text-slate block">
+                          <span className="font-mono text-[10px] uppercase tracking-wider text-slate block">
                             FACILITY
                           </span>
-                          <span className="font-medium text-navy">
-                            {rec.facility}
-                          </span>
+                          <span className="font-medium text-navy">{comp.facility}</span>
                         </div>
                         <div>
-                          <span className="font-mono text-[11px] uppercase tracking-wider text-slate block">
-                            RECORD DATE
+                          <span className="font-mono text-[10px] uppercase tracking-wider text-slate block">
+                            DATE
                           </span>
-                          <span className="font-medium text-navy">
-                            {rec.date}
-                          </span>
+                          <span className="font-medium text-navy">{comp.date}</span>
                         </div>
                       </div>
                     </div>
+
+                    {/* Clinical Note if present */}
+                    {comp.clinicalNote && (
+                      <div className="p-3.5 rounded-xl bg-panel/50 border border-border/80 text-xs">
+                        <span className="font-mono text-[10px] uppercase tracking-wider text-slate block mb-1">
+                          CLINICAL NOTE
+                        </span>
+                        <p className="text-navy font-medium leading-relaxed">
+                          {comp.clinicalNote}
+                        </p>
+                      </div>
+                    )}
+
+                    {/* Referenced Clinical Items */}
+                    {comp.items.length > 0 && (
+                      <div className="space-y-2 pt-1">
+                        <span className="font-mono text-[10px] uppercase tracking-wider text-slate block">
+                          RECORD CONTENTS ({comp.items.length})
+                        </span>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                          {comp.items.map((item) => (
+                            <div
+                              key={item.id}
+                              className="p-3 rounded-xl border border-border bg-surface flex flex-col justify-between text-xs"
+                            >
+                              <div>
+                                <div className="flex items-center justify-between gap-2">
+                                  <span className="font-mono text-[10px] uppercase tracking-wider px-1.5 py-0.5 rounded bg-panel text-slate">
+                                    {item.resourceType}
+                                  </span>
+                                  {item.date && (
+                                    <span className="text-[11px] text-slate font-mono">
+                                      {item.date}
+                                    </span>
+                                  )}
+                                </div>
+                                <p className="font-semibold text-navy mt-1.5">
+                                  {item.display}
+                                </p>
+                              </div>
+                              {item.details && (
+                                <p className="text-[11px] text-navy-muted mt-1 pt-1 border-t border-border/40">
+                                  {item.details}
+                                </p>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>

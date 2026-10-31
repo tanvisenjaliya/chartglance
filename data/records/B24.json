@@ -1,0 +1,214 @@
+{
+  "resourceType": "Bundle",
+  "id": "bundle-B24",
+  "type": "collection",
+  "meta": {
+    "tag": [
+      {
+        "code": "SYNTHETIC",
+        "display": "Synthetic demo data. Not a real patient."
+      }
+    ]
+  },
+  "entry": [
+    {
+      "fullUrl": "urn:uuid:b24-rec-4",
+      "resource": {
+        "resourceType": "Composition",
+        "id": "b24-rec-4",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/OPConsultRecord"
+          ]
+        },
+        "status": "final",
+        "type": {
+          "text": "OP consultation"
+        },
+        "title": "OP consultation",
+        "date": "{{today-100d}}",
+        "subject": {
+          "reference": "Patient/B24"
+        },
+        "encounter": {
+          "reference": "Encounter/b24-enc-1"
+        },
+        "author": [
+          {
+            "reference": "Organization/HIP-GJ-AND-042"
+          }
+        ],
+        "custodian": {
+          "reference": "Organization/HIP-GJ-AND-042"
+        },
+        "section": [
+          {
+            "title": "Clinical note",
+            "text": {
+              "status": "generated",
+              "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Fever, body ache x 2d. Throat congested. Symptomatic Rx.</div>"
+            },
+            "entry": [
+              {
+                "reference": "Condition/b24-cond-2"
+              },
+              {
+                "reference": "MedicationRequest/b24-med-3"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:B24",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "B24",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Patient"
+          ]
+        },
+        "name": [
+          {
+            "text": "Kiran Soni"
+          }
+        ],
+        "gender": "other",
+        "birthDate": "{{today-30y}}",
+        "address": [
+          {
+            "text": "Anand, Anand district, Gujarat",
+            "city": "Anand",
+            "district": "Anand",
+            "state": "Gujarat",
+            "country": "IN"
+          }
+        ],
+        "identifier": [
+          {
+            "type": {
+              "text": "ABHA number"
+            },
+            "system": "https://healthid.abdm.gov.in",
+            "value": "91-5555-9852-0024"
+          },
+          {
+            "type": {
+              "text": "ABHA address"
+            },
+            "system": "https://healthid.abdm.gov.in",
+            "value": "kiran.soni@sbx"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:HIP-GJ-AND-042",
+      "resource": {
+        "resourceType": "Organization",
+        "id": "HIP-GJ-AND-042",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Organization"
+          ]
+        },
+        "name": "PHC Navli (demo)",
+        "identifier": [
+          {
+            "system": "https://facility.abdm.gov.in",
+            "value": "HIP-GJ-AND-042"
+          }
+        ],
+        "type": [
+          {
+            "text": "Public PHC"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b24-enc-1",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "b24-enc-1",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Encounter"
+          ]
+        },
+        "status": "finished",
+        "class": {
+          "code": "AMB"
+        },
+        "subject": {
+          "reference": "Patient/B24"
+        },
+        "serviceProvider": {
+          "reference": "Organization/HIP-GJ-AND-042"
+        },
+        "period": {
+          "start": "{{today-100d}}"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b24-cond-2",
+      "resource": {
+        "resourceType": "Condition",
+        "id": "b24-cond-2",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Condition"
+          ]
+        },
+        "subject": {
+          "reference": "Patient/B24"
+        },
+        "encounter": {
+          "reference": "Encounter/b24-enc-1"
+        },
+        "code": {
+          "text": "Viral fever"
+        },
+        "clinicalStatus": {
+          "text": "active"
+        },
+        "recordedDate": "{{today-100d}}"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b24-med-3",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "b24-med-3",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/MedicationRequest"
+          ]
+        },
+        "status": "active",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "text": "Paracetamol"
+        },
+        "subject": {
+          "reference": "Patient/B24"
+        },
+        "encounter": {
+          "reference": "Encounter/b24-enc-1"
+        },
+        "authoredOn": "{{today-100d}}",
+        "requester": {
+          "reference": "Organization/HIP-GJ-AND-042"
+        },
+        "dosageInstruction": [
+          {
+            "text": "500 mg TDS x 3 days"
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,372 @@
+{
+  "resourceType": "Bundle",
+  "id": "bundle-B10",
+  "type": "collection",
+  "meta": {
+    "tag": [
+      {
+        "code": "SYNTHETIC",
+        "display": "Synthetic demo data. Not a real patient."
+      }
+    ]
+  },
+  "entry": [
+    {
+      "fullUrl": "urn:uuid:b10-rec-8",
+      "resource": {
+        "resourceType": "Composition",
+        "id": "b10-rec-8",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/DischargeSummaryRecord"
+          ]
+        },
+        "status": "final",
+        "type": {
+          "text": "Discharge summary"
+        },
+        "title": "Discharge summary",
+        "date": "{{today-60d}}",
+        "subject": {
+          "reference": "Patient/B10"
+        },
+        "encounter": {
+          "reference": "Encounter/b10-enc-1"
+        },
+        "author": [
+          {
+            "reference": "Organization/HIP-GJ-AND-101"
+          }
+        ],
+        "custodian": {
+          "reference": "Organization/HIP-GJ-AND-101"
+        },
+        "section": [
+          {
+            "title": "Clinical note",
+            "text": {
+              "status": "generated",
+              "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Ex-smoker (bidi, 30 yrs, quit 5 yrs). Admitted with AECOPD, SpO2 88% RA. Treated nebs, steroids, abx. Disch stable on tiotropium. Review 1 mo.</div>"
+            },
+            "entry": [
+              {
+                "reference": "Condition/b10-cond-2"
+              },
+              {
+                "reference": "Observation/b10-obs-3"
+              },
+              {
+                "reference": "Observation/b10-obs-4"
+              },
+              {
+                "reference": "MedicationRequest/b10-med-5"
+              },
+              {
+                "reference": "MedicationRequest/b10-med-6"
+              },
+              {
+                "reference": "Appointment/b10-appt-7"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:B10",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "B10",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Patient"
+          ]
+        },
+        "name": [
+          {
+            "text": "Ishwarbhai Makwana"
+          }
+        ],
+        "gender": "male",
+        "birthDate": "{{today-72y}}",
+        "address": [
+          {
+            "text": "Umreth, Anand district, Gujarat",
+            "city": "Umreth",
+            "district": "Anand",
+            "state": "Gujarat",
+            "country": "IN"
+          }
+        ],
+        "identifier": [
+          {
+            "type": {
+              "text": "ABHA number"
+            },
+            "system": "https://healthid.abdm.gov.in",
+            "value": "91-5555-6630-0010"
+          },
+          {
+            "type": {
+              "text": "ABHA address"
+            },
+            "system": "https://healthid.abdm.gov.in",
+            "value": "ishwar.makwana@sbx"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:HIP-GJ-AND-101",
+      "resource": {
+        "resourceType": "Organization",
+        "id": "HIP-GJ-AND-101",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Organization"
+          ]
+        },
+        "name": "General Hospital Anand (demo)",
+        "identifier": [
+          {
+            "system": "https://facility.abdm.gov.in",
+            "value": "HIP-GJ-AND-101"
+          }
+        ],
+        "type": [
+          {
+            "text": "Public district hospital"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b10-enc-1",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "b10-enc-1",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Encounter"
+          ]
+        },
+        "status": "finished",
+        "class": {
+          "code": "IMP"
+        },
+        "subject": {
+          "reference": "Patient/B10"
+        },
+        "serviceProvider": {
+          "reference": "Organization/HIP-GJ-AND-101"
+        },
+        "period": {
+          "start": "{{today-60d}}"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b10-cond-2",
+      "resource": {
+        "resourceType": "Condition",
+        "id": "b10-cond-2",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Condition"
+          ]
+        },
+        "subject": {
+          "reference": "Patient/B10"
+        },
+        "encounter": {
+          "reference": "Encounter/b10-enc-1"
+        },
+        "code": {
+          "text": "COPD",
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "13645005",
+              "display": "COPD"
+            }
+          ]
+        },
+        "clinicalStatus": {
+          "text": "active"
+        },
+        "recordedDate": "{{today-60d}}"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b10-obs-3",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "b10-obs-3",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Observation"
+          ]
+        },
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "59408-5",
+              "display": "SpO2"
+            }
+          ],
+          "text": "SpO2"
+        },
+        "subject": {
+          "reference": "Patient/B10"
+        },
+        "encounter": {
+          "reference": "Encounter/b10-enc-1"
+        },
+        "effectiveDateTime": "{{today-60d}}",
+        "performer": [
+          {
+            "reference": "Organization/HIP-GJ-AND-101"
+          }
+        ],
+        "valueQuantity": {
+          "value": 88,
+          "unit": "%"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b10-obs-4",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "b10-obs-4",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Observation"
+          ]
+        },
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "29463-7",
+              "display": "Body weight"
+            }
+          ],
+          "text": "Body weight"
+        },
+        "subject": {
+          "reference": "Patient/B10"
+        },
+        "encounter": {
+          "reference": "Encounter/b10-enc-1"
+        },
+        "effectiveDateTime": "{{today-60d}}",
+        "performer": [
+          {
+            "reference": "Organization/HIP-GJ-AND-101"
+          }
+        ],
+        "valueQuantity": {
+          "value": 54,
+          "unit": "kg"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b10-med-5",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "b10-med-5",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/MedicationRequest"
+          ]
+        },
+        "status": "active",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "text": "Tiotropium inhaler"
+        },
+        "subject": {
+          "reference": "Patient/B10"
+        },
+        "encounter": {
+          "reference": "Encounter/b10-enc-1"
+        },
+        "authoredOn": "{{today-60d}}",
+        "requester": {
+          "reference": "Organization/HIP-GJ-AND-101"
+        },
+        "dosageInstruction": [
+          {
+            "text": "18 mcg OD"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b10-med-6",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "b10-med-6",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/MedicationRequest"
+          ]
+        },
+        "status": "active",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "text": "Salbutamol inhaler"
+        },
+        "subject": {
+          "reference": "Patient/B10"
+        },
+        "encounter": {
+          "reference": "Encounter/b10-enc-1"
+        },
+        "authoredOn": "{{today-60d}}",
+        "requester": {
+          "reference": "Organization/HIP-GJ-AND-101"
+        },
+        "dosageInstruction": [
+          {
+            "text": "2 puffs SOS"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b10-appt-7",
+      "resource": {
+        "resourceType": "Appointment",
+        "id": "b10-appt-7",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Appointment"
+          ]
+        },
+        "status": "booked",
+        "description": "COPD review after discharge",
+        "start": "{{today-30d}}",
+        "participant": [
+          {
+            "actor": {
+              "reference": "Patient/B10"
+            },
+            "status": "accepted"
+          },
+          {
+            "actor": {
+              "reference": "Organization/HIP-GJ-AND-101"
+            },
+            "status": "accepted"
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,295 @@
+{
+  "resourceType": "Bundle",
+  "id": "bundle-B11",
+  "type": "collection",
+  "meta": {
+    "tag": [
+      {
+        "code": "SYNTHETIC",
+        "display": "Synthetic demo data. Not a real patient."
+      }
+    ]
+  },
+  "entry": [
+    {
+      "fullUrl": "urn:uuid:b11-rec-6",
+      "resource": {
+        "resourceType": "Composition",
+        "id": "b11-rec-6",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/DiagnosticReportRecord"
+          ]
+        },
+        "status": "final",
+        "type": {
+          "text": "Diagnostic report"
+        },
+        "title": "Diagnostic report",
+        "date": "{{today-120d}}",
+        "subject": {
+          "reference": "Patient/B11"
+        },
+        "encounter": {
+          "reference": "Encounter/b11-enc-1"
+        },
+        "author": [
+          {
+            "reference": "Organization/HIP-GJ-AND-001"
+          }
+        ],
+        "custodian": {
+          "reference": "Organization/HIP-GJ-AND-001"
+        },
+        "section": [
+          {
+            "title": "Clinical note",
+            "text": {
+              "status": "generated",
+              "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">TSH 8.9. Started T. Thyroxine 50 mcg. Rpt TSH 6-8 wks.</div>"
+            },
+            "entry": [
+              {
+                "reference": "Condition/b11-cond-2"
+              },
+              {
+                "reference": "Observation/b11-obs-3"
+              },
+              {
+                "reference": "MedicationRequest/b11-med-4"
+              },
+              {
+                "reference": "Appointment/b11-appt-5"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:B11",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "B11",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Patient"
+          ]
+        },
+        "name": [
+          {
+            "text": "Nirali Joshi"
+          }
+        ],
+        "gender": "female",
+        "birthDate": "{{today-34y}}",
+        "address": [
+          {
+            "text": "Karamsad, Anand district, Gujarat",
+            "city": "Karamsad",
+            "district": "Anand",
+            "state": "Gujarat",
+            "country": "IN"
+          }
+        ],
+        "identifier": [
+          {
+            "type": {
+              "text": "ABHA number"
+            },
+            "system": "https://healthid.abdm.gov.in",
+            "value": "91-5555-7741-0011"
+          },
+          {
+            "type": {
+              "text": "ABHA address"
+            },
+            "system": "https://healthid.abdm.gov.in",
+            "value": "nirali.joshi@sbx"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:HIP-GJ-AND-001",
+      "resource": {
+        "resourceType": "Organization",
+        "id": "HIP-GJ-AND-001",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Organization"
+          ]
+        },
+        "name": "CHC Petlad (demo)",
+        "identifier": [
+          {
+            "system": "https://facility.abdm.gov.in",
+            "value": "HIP-GJ-AND-001"
+          }
+        ],
+        "type": [
+          {
+            "text": "Public CHC"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b11-enc-1",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "b11-enc-1",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Encounter"
+          ]
+        },
+        "status": "finished",
+        "class": {
+          "code": "AMB"
+        },
+        "subject": {
+          "reference": "Patient/B11"
+        },
+        "serviceProvider": {
+          "reference": "Organization/HIP-GJ-AND-001"
+        },
+        "period": {
+          "start": "{{today-120d}}"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b11-cond-2",
+      "resource": {
+        "resourceType": "Condition",
+        "id": "b11-cond-2",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Condition"
+          ]
+        },
+        "subject": {
+          "reference": "Patient/B11"
+        },
+        "encounter": {
+          "reference": "Encounter/b11-enc-1"
+        },
+        "code": {
+          "text": "Hypothyroidism",
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "40930008",
+              "display": "Hypothyroidism"
+            }
+          ]
+        },
+        "clinicalStatus": {
+          "text": "active"
+        },
+        "recordedDate": "{{today-120d}}"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b11-obs-3",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "b11-obs-3",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Observation"
+          ]
+        },
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "3016-3",
+              "display": "TSH"
+            }
+          ],
+          "text": "TSH"
+        },
+        "subject": {
+          "reference": "Patient/B11"
+        },
+        "encounter": {
+          "reference": "Encounter/b11-enc-1"
+        },
+        "effectiveDateTime": "{{today-120d}}",
+        "performer": [
+          {
+            "reference": "Organization/HIP-GJ-AND-001"
+          }
+        ],
+        "valueQuantity": {
+          "value": 8.9,
+          "unit": "mIU/L"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b11-med-4",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "b11-med-4",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/MedicationRequest"
+          ]
+        },
+        "status": "active",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "text": "Levothyroxine"
+        },
+        "subject": {
+          "reference": "Patient/B11"
+        },
+        "encounter": {
+          "reference": "Encounter/b11-enc-1"
+        },
+        "authoredOn": "{{today-120d}}",
+        "requester": {
+          "reference": "Organization/HIP-GJ-AND-001"
+        },
+        "dosageInstruction": [
+          {
+            "text": "50 mcg OD (empty stomach)"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b11-appt-5",
+      "resource": {
+        "resourceType": "Appointment",
+        "id": "b11-appt-5",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Appointment"
+          ]
+        },
+        "status": "booked",
+        "description": "Repeat TSH test",
+        "start": "{{today-70d}}",
+        "participant": [
+          {
+            "actor": {
+              "reference": "Patient/B11"
+            },
+            "status": "accepted"
+          },
+          {
+            "actor": {
+              "reference": "Organization/HIP-GJ-AND-001"
+            },
+            "status": "accepted"
+          }
+        ]
+      }
+    }
+  ]
+}

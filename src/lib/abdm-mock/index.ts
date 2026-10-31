@@ -1,6 +1,10 @@
 import fs from "fs";
 import path from "path";
-import { resolveOffsetDate, formatClinicalDate } from "@/lib/records";
+import {
+  formatClinicalDate,
+  getClinicFacility,
+  getPatientRecordBundle,
+} from "@/lib/records";
 import {
   CONSENT_PROBABILITIES,
   RECORD_FETCH_DELAY_RANGE,
@@ -23,7 +27,7 @@ export type ConsentStatus =
 
 export interface FacilityFetchState {
   facility: string;
-  /** Wall-clock ms at which this facility's records are "received" */
+  /** Wall-clock ms at which this facility's records are received */
   scheduledAt: number;
   status: "pending" | "received" | "timeout";
 }
@@ -45,16 +49,37 @@ export interface ConsentRecord {
   status: ConsentStatus;
   createdAt: string;
   updatedAt: string;
-  /**
-   * Auto-simulation fields: pre-computed at request time.
-   * null means the patient-phone screen was used (or consent resolved already).
-   */
   simulation?: {
     outcome: "GRANTED" | "DENIED" | "EXPIRED";
-    resolveAt: number; // wall-clock ms
+    resolveAt: number;
   };
-  /** Per-facility staged fetch state; populated when consent is GRANTED. */
   facilityFetch?: FacilityFetchState[];
+}
+
+/**
+ * Child item referenced inside a Composition section
+ */
+export interface ClinicalRecordItem {
+  id: string;
+  resourceType: string;
+  display: string;
+  details?: string;
+  date?: string;
+  rawDate?: string;
+}
+
+/**
+ * High-level Health Record representing an ABDM Composition
+ */
+export interface CompositionRecord {
+  id: string;
+  type: string;
+  title: string;
+  facility: string;
+  date: string;
+  rawDate: string;
+  clinicalNote?: string;
+  items: ClinicalRecordItem[];
 }
 
 export interface RawClinicalRecord {
@@ -68,7 +93,7 @@ export interface RawClinicalRecord {
 }
 
 // ---------------------------------------------------------------------------
-// Helpers
+// Consents Storage
 // ---------------------------------------------------------------------------
 
 const CONSENTS_FILE = path.join(process.cwd(), "data", "consents.json");
@@ -90,10 +115,6 @@ function saveConsents(data: Record<string, ConsentRecord>) {
   fs.writeFileSync(CONSENTS_FILE, JSON.stringify(data, null, 2), "utf-8");
 }
 
-/**
- * Seeded random for deterministic facility-fetch scheduling.
- * Uses a simple LCG per consent id hash so different patients get different timings.
- */
 function seededRandom(seed: number): () => number {
   let s = seed;
   return () => {
@@ -110,10 +131,6 @@ function hashString(str: string): number {
   return Math.abs(h);
 }
 
-/**
- * Pick a weighted outcome from the CONSENT_PROBABILITIES config.
- * Uses a seeded value (not Math.random) so results are reproducible per consent id.
- */
 function pickSimulatedOutcome(
   rngValue: number
 ): "GRANTED" | "DENIED" | "EXPIRED" {
@@ -123,10 +140,6 @@ function pickSimulatedOutcome(
   return "EXPIRED";
 }
 
-/**
- * Builds the per-facility staged fetch state for a patient.
- * In Demo Mode: all facilities marked as "received" with scheduledAt = now.
- */
 function buildFacilityFetchStates(
   patientId: string,
   facilities: string[],
@@ -142,7 +155,6 @@ function buildFacilityFetchStates(
     const [minS, maxS] = RECORD_FETCH_DELAY_RANGE;
     const delaySec = minS + rng() * (maxS - minS);
     const scheduledAt = now + delaySec * 1000;
-    // 10% chance timeout — use a second draw per facility
     const isTimeout = rng() < FACILITY_TIMEOUT_RATE;
     return {
       facility,
@@ -153,180 +165,217 @@ function buildFacilityFetchStates(
 }
 
 // ---------------------------------------------------------------------------
-// FHIR record parsing (unchanged logic, extracted for reuse)
+// FHIR Bundle Composition-Grouped Parser
 // ---------------------------------------------------------------------------
 
-function parseBundleIntoRecords(bundle: {
-  entry?: Array<{ resource?: Record<string, unknown> }>;
-}): { records: RawClinicalRecord[]; facilities: Set<string> } {
-  const rawRecords: RawClinicalRecord[] = [];
-  const facilities = new Set<string>();
+function cleanHtmlDiv(div?: string): string {
+  if (!div) return "";
+  return div.replace(/<[^>]*>/g, "").trim();
+}
 
-  for (const entry of bundle.entry || []) {
+/**
+ * Maps profile URL to user-friendly ABDM record category
+ */
+function mapProfileToRecordType(profileUrl?: string, title?: string): string {
+  if (profileUrl) {
+    if (profileUrl.includes("OPConsultRecord")) return "OP Consultation";
+    if (profileUrl.includes("PrescriptionRecord")) return "Prescription Record";
+    if (profileUrl.includes("DiagnosticReportRecord")) return "Diagnostic Report";
+    if (profileUrl.includes("DischargeSummaryRecord")) return "Discharge Summary";
+    if (profileUrl.includes("ImmunizationRecord")) return "Immunization Record";
+    if (profileUrl.includes("HealthDocumentRecord")) return "Health Document";
+  }
+  return title || "Health Record";
+}
+
+/**
+ * Extracts item display and details from referenced resource
+ */
+function parseChildResource(res: Record<string, unknown>): ClinicalRecordItem {
+  const resourceType = res.resourceType as string;
+  const id = (res.id as string) || `res-${Date.now()}`;
+  let display = resourceType;
+  let details = "";
+  let date = "";
+
+  if (resourceType === "Condition") {
+    const code = res.code as { text?: string } | undefined;
+    display = `Condition: ${code?.text || "Medical Condition"}`;
+    const clinStatus = (res.clinicalStatus as { coding?: Array<{ code?: string }> })?.coding?.[0]?.code;
+    const recorded = res.recordedDate as string | undefined;
+    if (recorded) {
+      date = formatClinicalDate(recorded);
+    }
+    details = `Status: ${clinStatus || "active"}`;
+  } else if (resourceType === "Observation") {
+    const code = res.code as { text?: string } | undefined;
+    display = code?.text || "Clinical Observation";
+    const vq = res.valueQuantity as { value?: number; unit?: string } | undefined;
+    const vs = res.valueString as string | undefined;
+    if (vq) {
+      display = `${display}: ${vq.value} ${vq.unit || ""}`;
+    } else if (vs) {
+      display = `${display}: ${vs}`;
+    } else if (Array.isArray(res.component)) {
+      interface Comp {
+        code?: { coding?: Array<{ code?: string }> };
+        valueQuantity?: { value?: number };
+      }
+      const comps = res.component as Comp[];
+      const sys = comps.find((c) => c.code?.coding?.[0]?.code === "8480-6")?.valueQuantity?.value;
+      const dia = comps.find((c) => c.code?.coding?.[0]?.code === "8462-4")?.valueQuantity?.value;
+      if (sys && dia) display = `${display}: ${sys}/${dia} mmHg`;
+    }
+    const note = (res.note as Array<{ text?: string }>)?.[0]?.text;
+    if (note) details = note.replace(/\s*\(TODO-VERIFY[^)]*\)/g, "").replace(/TODO-VERIFY:?\s*/g, "");
+    const eff = res.effectiveDateTime as string | undefined;
+    if (eff) date = formatClinicalDate(eff);
+  } else if (resourceType === "MedicationRequest") {
+    const med = res.medicationCodeableConcept as { text?: string } | undefined;
+    display = med?.text || "Medication Order";
+    const dosage = (res.dosageInstruction as Array<{ text?: string }>)?.[0]?.text;
+    if (dosage) details = dosage.replace(/\s*\(TODO-VERIFY[^)]*\)/g, "").replace(/TODO-VERIFY:?\s*/g, "");
+    const authored = res.authoredOn as string | undefined;
+    if (authored) date = formatClinicalDate(authored);
+  } else if (resourceType === "MedicationDispense") {
+    const med = res.medicationCodeableConcept as { text?: string } | undefined;
+    display = med?.text || "Medication Dispense";
+    const days = (res.daysSupply as { value?: number })?.value ?? 30;
+    details = `${days} days supply dispensed`;
+    const handed = res.whenHandedOver as string | undefined;
+    if (handed) date = formatClinicalDate(handed);
+  } else if (resourceType === "Immunization") {
+    const vaccine = res.vaccineCode as { text?: string } | undefined;
+    display = vaccine?.text || "Immunization";
+    const note = (res.note as Array<{ text?: string }>)?.[0]?.text;
+    if (note) details = note;
+    const occ = res.occurrenceDateTime as string | undefined;
+    if (occ) date = formatClinicalDate(occ);
+  } else if (resourceType === "DocumentReference") {
+    const type = res.type as { text?: string } | undefined;
+    display = type?.text || "Scanned Health Document";
+    details = (res.description as string) || "Unstructured document scan (PDF)";
+    const d = res.date as string | undefined;
+    if (d) date = formatClinicalDate(d);
+  } else if (resourceType === "Appointment") {
+    const srv = (res.serviceType as Array<{ text?: string }>)?.[0]?.text;
+    display = srv || "Scheduled Follow-up Appointment";
+    const status = res.status as string;
+    details = `Appointment status: ${status}`;
+    const start = res.start as string | undefined;
+    if (start) date = formatClinicalDate(start);
+  }
+
+  // Strip any lingering developer notes from details
+  details = details
+    .replace(/\s*\(TODO-VERIFY[^)]*\)/g, "")
+    .replace(/TODO-VERIFY:?\s*/g, "")
+    .replace(/\s*\(-?\d+[dmy]\)/g, "")
+    .trim();
+
+  return {
+    id,
+    resourceType,
+    display,
+    details: details || undefined,
+    date: date || undefined,
+    rawDate: (res.date || res.effectiveDateTime || res.authoredOn || res.whenHandedOver || res.recordedDate || res.start) as string | undefined,
+  };
+}
+
+/**
+ * Parses a FHIR bundle into structured Compositions and facilities map
+ */
+function parseBundleIntoCompositions(bundle: Record<string, unknown>): {
+  compositions: CompositionRecord[];
+  allFacilities: Set<string>;
+} {
+  const entries = (bundle.entry as Array<{ resource?: Record<string, unknown> }>) || [];
+  const resourceMap = new Map<string, Record<string, unknown>>();
+  const orgMap = new Map<string, string>();
+  const allFacilities = new Set<string>();
+
+  // Index resources & organizations
+  for (const entry of entries) {
     const res = entry.resource;
     if (!res) continue;
-
-    const facility =
-      (res.facility as string) || "CHC Shirur (HIP-MH-PUN-001)";
-    facilities.add(facility);
-
-    if (res.resourceType === "Encounter") {
-      const resolved = resolveOffsetDate((res.periodOffsetDays as number) ?? 0);
-      rawRecords.push({
-        id: res.id as string,
-        sourceId: res.sourceId as string,
-        type: "OPConsultation",
-        facility,
-        date: formatClinicalDate(resolved),
-        display:
-          ((res.reasonCode as Array<{ text?: string }>)?.[0]?.text) ||
-          "Outpatient Clinical Consultation",
-        details: "Clinical consult record",
-      });
-    } else if (res.resourceType === "Observation") {
-      const resolved = resolveOffsetDate(
-        (res.effectiveDateTimeOffsetDays as number) ?? 0
-      );
-      let display = (res.code as { text?: string })?.text || "Clinical Lab Observation";
-      let details = "";
-      const vq = res.valueQuantity as { value?: number; unit?: string } | undefined;
-      const vs = res.valueString as string | undefined;
-      if (vq) {
-        display = `${display}: ${vq.value} ${vq.unit}`;
-      } else if (vs) {
-        display = `${display}: ${vs}`;
-      } else if (Array.isArray(res.component)) {
-        interface ObsComp {
-          code?: { coding?: Array<{ code?: string }> };
-          valueQuantity?: { value?: number };
-        }
-        const comps = res.component as ObsComp[];
-        const sys = comps.find(
-          (c) => c.code?.coding?.[0]?.code === "8480-6"
-        )?.valueQuantity?.value;
-        const dia = comps.find(
-          (c) => c.code?.coding?.[0]?.code === "8462-4"
-        )?.valueQuantity?.value;
-        display = `${display}: ${sys}/${dia} mmHg`;
-      }
-      if ((res.note as Array<{ text?: string }>)?.[0]?.text) {
-        details = (res.note as Array<{ text: string }>)[0].text;
-      }
-      rawRecords.push({
-        id: res.id as string,
-        sourceId: res.sourceId as string,
-        type: "DiagnosticReport",
-        facility,
-        date: formatClinicalDate(resolved),
-        display,
-        details,
-      });
-    } else if (res.resourceType === "MedicationRequest") {
-      const resolved = resolveOffsetDate(
-        (res.authoredOnOffsetDays as number) ?? 0
-      );
-      rawRecords.push({
-        id: res.id as string,
-        sourceId: res.sourceId as string,
-        type: "Prescription",
-        facility,
-        date: formatClinicalDate(resolved),
-        display:
-          (res.medicationCodeableConcept as { text?: string })?.text ||
-          "Medication Order",
-        details: (res.dosageInstruction as Array<{ text?: string }>)?.[0]?.text,
-      });
-    } else if (res.resourceType === "MedicationDispense") {
-      const resolved = resolveOffsetDate(
-        (res.whenHandedOverOffsetDays as number) ?? 0
-      );
-      rawRecords.push({
-        id: res.id as string,
-        sourceId: res.sourceId as string,
-        type: "Prescription",
-        facility,
-        date: formatClinicalDate(resolved),
-        display:
-          (res.medicationCodeableConcept as { text?: string })?.text ||
-          "Dispensed Medication",
-        details: `${(res.daysSupply as { value?: number })?.value ?? 30} days supply dispensed`,
-      });
-    } else if (res.resourceType === "Immunization") {
-      const resolved = resolveOffsetDate(
-        (res.occurrenceDateTimeOffsetDays as number) ?? 0
-      );
-      rawRecords.push({
-        id: res.id as string,
-        sourceId: res.sourceId as string,
-        type: "ImmunizationRecord",
-        facility,
-        date: formatClinicalDate(resolved),
-        display: (res.vaccineCode as { text?: string })?.text || "Immunization",
-        details:
-          (res.note as Array<{ text?: string }>)?.[0]?.text ||
-          "Completed vaccine administration",
-      });
-    } else if (res.resourceType === "DocumentReference") {
-      const resolved = resolveOffsetDate((res.dateOffsetDays as number) ?? 0);
-      rawRecords.push({
-        id: res.id as string,
-        sourceId: res.sourceId as string,
-        type: "HealthDocument",
-        facility,
-        date: formatClinicalDate(resolved),
-        display:
-          (res.type as { text?: string })?.text || "Scanned Health Document",
-        details:
-          (res.description as string) ||
-          (res.content as Array<{ attachment?: { title?: string } }>)?.[0]
-            ?.attachment?.title ||
-          "Unstructured document scan",
-      });
-    } else if (res.resourceType === "Appointment") {
-      const resolved = resolveOffsetDate(
-        (res.scheduledDateOffsetDays as number) ?? 0
-      );
-      rawRecords.push({
-        id: res.id as string,
-        sourceId: res.sourceId as string,
-        type: "OPConsultation",
-        facility,
-        date: formatClinicalDate(resolved),
-        display:
-          (res.serviceType as Array<{ text?: string }>)?.[0]?.text ||
-          "Scheduled Consultation",
-        details: `Status: ${res.status as string} · ${(res.description as string) || ""}`,
-      });
-    } else if (res.resourceType === "Condition") {
-      const resolved = resolveOffsetDate(
-        (res.recordedDateOffsetDays as number) ?? 0
-      );
-      rawRecords.push({
-        id: res.id as string,
-        sourceId: res.sourceId as string,
-        type: "HealthDocument",
-        facility,
-        date: formatClinicalDate(resolved),
-        display: `Condition: ${(res.code as { text?: string })?.text || "Medical Condition"}`,
-        details: `Status: ${(res.clinicalStatus as { coding?: Array<{ code?: string }> })?.coding?.[0]?.code || "active"}`,
-      });
+    const key = `${res.resourceType}/${res.id}`;
+    resourceMap.set(key, res);
+    if (res.resourceType === "Organization") {
+      const orgId = res.id as string;
+      const orgName = (res.name as string) || "Public Health Facility";
+      orgMap.set(orgId, orgName);
+      orgMap.set(`Organization/${orgId}`, orgName);
     }
   }
 
-  return { records: rawRecords, facilities };
+  const compositions: CompositionRecord[] = [];
+
+  for (const entry of entries) {
+    const res = entry.resource;
+    if (!res || res.resourceType !== "Composition") continue;
+
+    const profileUrl = (res.meta as { profile?: string[] })?.profile?.[0];
+    const type = mapProfileToRecordType(profileUrl, res.title as string);
+    const rawDate = (res.date as string) || new Date().toISOString().slice(0, 10);
+    const date = formatClinicalDate(rawDate);
+
+    // Resolve author / custodian facility name
+    const authorRef = (res.author as Array<{ reference?: string }>)?.[0]?.reference;
+    const custodianRef = (res.custodian as { reference?: string })?.reference;
+    const refKey = authorRef || custodianRef || "";
+    let facilityName: string | undefined = orgMap.get(refKey) || (res.facility as string | undefined);
+
+    if (!facilityName && refKey) {
+      const cleanId = refKey.replace("Organization/", "");
+      facilityName = orgMap.get(cleanId);
+    }
+    if (!facilityName) {
+      facilityName = "PHC Navli (demo)";
+    }
+    allFacilities.add(facilityName);
+
+    // Clinical note
+    const section = (res.section as Array<{ title?: string; text?: { div?: string }; entry?: Array<{ reference?: string }> }>)?.[0];
+    let clinicalNote = cleanHtmlDiv(section?.text?.div);
+    clinicalNote = clinicalNote
+      .replace(/\s*\(TODO-VERIFY[^)]*\)/g, "")
+      .replace(/TODO-VERIFY:?\s*/g, "")
+      .replace(/\s*\(-?\d+[dmy]\)/g, "")
+      .trim();
+
+    // Referenced items
+    const items: ClinicalRecordItem[] = [];
+    if (section?.entry && Array.isArray(section.entry)) {
+      for (const itemRef of section.entry) {
+        if (!itemRef.reference) continue;
+        const targetRes = resourceMap.get(itemRef.reference);
+        if (targetRes) {
+          items.push(parseChildResource(targetRes));
+        }
+      }
+    }
+
+    compositions.push({
+      id: res.id as string,
+      type,
+      title: (res.title as string) || type,
+      facility: facilityName,
+      date,
+      rawDate,
+      clinicalNote: clinicalNote || undefined,
+      items,
+    });
+  }
+
+  return { compositions, allFacilities };
 }
 
 // ---------------------------------------------------------------------------
-// abdmClient — the one interface to swap for real ABDM integration
+// ABDM Client
 // ---------------------------------------------------------------------------
 
 export const abdmClient = {
-  /**
-   * Retrieves the current consent record for a patient.
-   * - Auto-evaluates real-time 24h expiration.
-   * - Applies auto-simulation outcome when the simulated delay has elapsed
-   *   AND the patient-phone screen has NOT resolved the consent manually.
-   */
   getConsent(patientId: string): ConsentRecord | null {
     const store = ensureConsentsFile();
     const consent = store[patientId];
@@ -335,7 +384,6 @@ export const abdmClient = {
     const now = Date.now();
     let changed = false;
 
-    // Apply auto-simulation if still REQUESTED and simulation is pending
     if (
       consent.status === "REQUESTED" &&
       consent.simulation &&
@@ -344,13 +392,11 @@ export const abdmClient = {
       const outcome = consent.simulation.outcome;
       consent.status = outcome;
       consent.updatedAt = new Date(now).toISOString();
-      consent.simulation = undefined; // consumed
+      consent.simulation = undefined;
 
       if (outcome === "GRANTED") {
-        // Set 24h expiry from resolution moment
         const expiry = new Date(now + 24 * 60 * 60 * 1000);
         consent.expiryDate = expiry.toISOString();
-        // Initialise per-facility staged fetch
         const allFacilities = this._getFacilitiesForPatient(patientId);
         consent.facilityFetch = buildFacilityFetchStates(
           patientId,
@@ -363,7 +409,6 @@ export const abdmClient = {
       changed = true;
     }
 
-    // Check real 24h expiry if currently GRANTED
     if (consent.status === "GRANTED") {
       const exp = new Date(consent.expiryDate).getTime();
       if (now > exp) {
@@ -381,11 +426,6 @@ export const abdmClient = {
     return consent;
   },
 
-  /**
-   * Creates a mock consent request (doctor-side, HIU role).
-   * - Status: REQUESTED
-   * - Pre-computes auto-simulation outcome and delay (unless Demo Mode)
-   */
   createConsentRequest(
     patientId: string,
     abhaNumber: string,
@@ -399,22 +439,23 @@ export const abdmClient = {
       .split("T")[0];
     const toDate = now.toISOString().split("T")[0];
 
-    // Pre-compute simulation
+    const clinic = getClinicFacility();
+    const requesterFacility = `${clinic.facilityName} (HIU-GJ-AND-042)`;
+
     const rng = seededRandom(hashString(patientId + now.getTime()));
     const rngVal = rng();
 
     let simulation: ConsentRecord["simulation"];
     if (isDemoMode()) {
-      // Demo mode: resolve immediately as GRANTED
       simulation = {
         outcome: "GRANTED",
-        resolveAt: now.getTime(), // instant
+        resolveAt: now.getTime(),
       };
     } else {
       const [minS, maxS] = AUTO_CONSENT_DELAY_RANGE;
       const delaySec = minS + rngVal * (maxS - minS);
       simulation = {
-        outcome: pickSimulatedOutcome(rng()), // second draw for outcome
+        outcome: pickSimulatedOutcome(rng()),
         resolveAt: now.getTime() + delaySec * 1000,
       };
     }
@@ -425,7 +466,7 @@ export const abdmClient = {
       abhaNumber,
       abhaAddress,
       requesterName: "Dr. Aditi Sharma",
-      requesterFacility: "PHC Mandavgan (HIU-MH-PUN-042)",
+      requesterFacility,
       purpose: "CAREMGT",
       hiTypes: [
         "OPConsultation",
@@ -446,10 +487,6 @@ export const abdmClient = {
     return consent;
   },
 
-  /**
-   * Approves consent — called ONLY from the patient phone screen.
-   * Clears any pending simulation and immediately sets GRANTED.
-   */
   approveConsent(patientId: string): ConsentRecord {
     const store = ensureConsentsFile();
     const consent = store[patientId];
@@ -463,9 +500,8 @@ export const abdmClient = {
     consent.status = "GRANTED";
     consent.expiryDate = expiry.toISOString();
     consent.updatedAt = new Date(now).toISOString();
-    consent.simulation = undefined; // patient acted; cancel auto-simulation
+    consent.simulation = undefined;
 
-    // Initialise staged fetch
     const allFacilities = this._getFacilitiesForPatient(patientId);
     consent.facilityFetch = buildFacilityFetchStates(
       patientId,
@@ -478,9 +514,6 @@ export const abdmClient = {
     return consent;
   },
 
-  /**
-   * Denies consent — called ONLY from the patient phone screen.
-   */
   denyConsent(patientId: string): ConsentRecord {
     const store = ensureConsentsFile();
     const consent = store[patientId];
@@ -497,7 +530,6 @@ export const abdmClient = {
     return consent;
   },
 
-  /** Simulates immediate expiry. */
   expireConsent(patientId: string): ConsentRecord {
     const store = ensureConsentsFile();
     const consent = store[patientId];
@@ -515,62 +547,25 @@ export const abdmClient = {
     return consent;
   },
 
-  /** Resets consent to NOT_REQUESTED for demo repetition. */
   resetConsent(patientId: string): void {
     const store = ensureConsentsFile();
     delete store[patientId];
     saveConsents(store);
   },
 
-  // ---------------------------------------------------------------------------
-  // Record fetch — staged per-facility
-  // ---------------------------------------------------------------------------
-
-  /**
-   * Returns all facilities that have records for this patient.
-   * Used internally to set up facilityFetch states.
-   */
   _getFacilitiesForPatient(patientId: string): string[] {
-    const recordsFilePath = this._getRecordsPath(patientId);
-    if (!recordsFilePath) return [];
-    if (!fs.existsSync(recordsFilePath)) return [];
-
-    const bundle = JSON.parse(fs.readFileSync(recordsFilePath, "utf-8"));
-    const facilities = new Set<string>();
-    for (const entry of bundle.entry || []) {
-      const res = entry.resource;
-      if (!res) continue;
-      facilities.add(
-        (res.facility as string) || "CHC Shirur (HIP-MH-PUN-001)"
-      );
-    }
-    return Array.from(facilities);
-  },
-
-  _getRecordsPath(patientId: string): string | null {
-    const personaFileMap: Record<string, string> = {
-      p1: "persona-1.json",
-      p2: "persona-2.json",
-      p3: "persona-3.json",
-      p5: "persona-5.json",
-    };
-    const targetFile = personaFileMap[patientId];
-    if (!targetFile) return null;
-    return path.join(process.cwd(), "data", "records", targetFile);
+    const bundle = getPatientRecordBundle(patientId);
+    if (!bundle) return ["PHC Navli (demo)"];
+    const { allFacilities } = parseBundleIntoCompositions(bundle);
+    return Array.from(allFacilities);
   },
 
   /**
-   * Staged record fetch — called on each poll while GRANTED.
-   *
-   * Advances facilityFetch states where the scheduled time has elapsed.
-   * Returns:
-   * - `records`: records from facilities whose status is now "received"
-   * - `pendingFacilities`: facilities still loading
-   * - `timedOutCount`: number of facilities that timed out
-   * - `facilityCount`: total facilities (received + timed out, not pending)
+   * Staged fetch delivering composition-grouped records
    */
   fetchRecordsStaged(patientId: string): {
-    records: RawClinicalRecord[];
+    compositions: CompositionRecord[];
+    records: RawClinicalRecord[]; // Flat legacy fallback
     hasRecords: boolean;
     facilityCount: number;
     pendingFacilities: string[];
@@ -579,6 +574,7 @@ export const abdmClient = {
     const consent = this.getConsent(patientId);
     if (!consent || consent.status !== "GRANTED") {
       return {
+        compositions: [],
         records: [],
         hasRecords: false,
         facilityCount: 0,
@@ -587,9 +583,10 @@ export const abdmClient = {
       };
     }
 
-    const recordsFilePath = this._getRecordsPath(patientId);
-    if (!recordsFilePath || !fs.existsSync(recordsFilePath)) {
+    const bundle = getPatientRecordBundle(patientId);
+    if (!bundle) {
       return {
+        compositions: [],
         records: [],
         hasRecords: false,
         facilityCount: 0,
@@ -598,7 +595,6 @@ export const abdmClient = {
       };
     }
 
-    // If facilityFetch wasn't initialised (edge case), build it now
     const store = ensureConsentsFile();
     if (!store[patientId].facilityFetch) {
       const allFacilities = this._getFacilitiesForPatient(patientId);
@@ -614,7 +610,6 @@ export const abdmClient = {
     const fetchStates = store[patientId].facilityFetch!;
     let changed = false;
 
-    // Advance "pending" → "received" (timeouts stay as-is since they're pre-set)
     for (const state of fetchStates) {
       if (state.status === "pending" && now >= state.scheduledAt) {
         state.status = "received";
@@ -637,47 +632,34 @@ export const abdmClient = {
       .map((s) => s.facility);
     const timedOutCount = fetchStates.filter((s) => s.status === "timeout").length;
 
-    // Parse bundle and filter to received facilities only
-    const bundle = JSON.parse(fs.readFileSync(recordsFilePath, "utf-8"));
-    const { records } = parseBundleIntoRecords(bundle);
-    const filteredRecords = records.filter((r) =>
-      receivedFacilities.has(r.facility)
+    const { compositions } = parseBundleIntoCompositions(bundle);
+    const filteredCompositions = compositions.filter((c) =>
+      receivedFacilities.has(c.facility)
     );
 
+    // Also build a flat raw records array for backward compatibility
+    const flatRecords: RawClinicalRecord[] = [];
+    for (const comp of filteredCompositions) {
+      for (const item of comp.items) {
+        flatRecords.push({
+          id: item.id,
+          sourceId: item.id,
+          type: comp.type,
+          facility: comp.facility,
+          date: item.date || comp.date,
+          display: item.display,
+          details: item.details,
+        });
+      }
+    }
+
     return {
-      records: filteredRecords,
-      hasRecords: filteredRecords.length > 0,
+      compositions: filteredCompositions,
+      records: flatRecords,
+      hasRecords: filteredCompositions.length > 0,
       facilityCount: receivedFacilities.size + timedOutCount,
       pendingFacilities,
       timedOutCount,
-    };
-  },
-
-  /**
-   * Legacy synchronous fetch — kept for compatibility. Returns all records immediately.
-   * @deprecated Use fetchRecordsStaged() instead.
-   */
-  fetchRecords(patientId: string): {
-    records: RawClinicalRecord[];
-    hasRecords: boolean;
-    facilityCount: number;
-  } {
-    const consent = this.getConsent(patientId);
-    if (!consent || consent.status !== "GRANTED") {
-      return { records: [], hasRecords: false, facilityCount: 0 };
-    }
-
-    const recordsFilePath = this._getRecordsPath(patientId);
-    if (!recordsFilePath || !fs.existsSync(recordsFilePath)) {
-      return { records: [], hasRecords: false, facilityCount: 0 };
-    }
-
-    const bundle = JSON.parse(fs.readFileSync(recordsFilePath, "utf-8"));
-    const { records, facilities } = parseBundleIntoRecords(bundle);
-    return {
-      records,
-      hasRecords: records.length > 0,
-      facilityCount: facilities.size,
     };
   },
 };

@@ -1,0 +1,457 @@
+{
+  "resourceType": "Bundle",
+  "id": "bundle-B09",
+  "type": "collection",
+  "meta": {
+    "tag": [
+      {
+        "code": "SYNTHETIC",
+        "display": "Synthetic demo data. Not a real patient."
+      }
+    ]
+  },
+  "entry": [
+    {
+      "fullUrl": "urn:uuid:b09-rec-7",
+      "resource": {
+        "resourceType": "Composition",
+        "id": "b09-rec-7",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/DischargeSummaryRecord"
+          ]
+        },
+        "status": "final",
+        "type": {
+          "text": "Discharge summary"
+        },
+        "title": "Discharge summary",
+        "date": "{{today-75d}}",
+        "subject": {
+          "reference": "Patient/B09"
+        },
+        "encounter": {
+          "reference": "Encounter/b09-enc-1"
+        },
+        "author": [
+          {
+            "reference": "Organization/HIP-GJ-AND-101"
+          }
+        ],
+        "custodian": {
+          "reference": "Organization/HIP-GJ-AND-101"
+        },
+        "section": [
+          {
+            "title": "Clinical note",
+            "text": {
+              "status": "generated",
+              "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">k/c/o SCD (HbSS), native Narmada dist. Adm 4 days with vaso-occlusive crisis. IV fluids, analgesia. Started hydroxyurea. Adv hydration. CBC monthly.</div>"
+            },
+            "entry": [
+              {
+                "reference": "Condition/b09-cond-2"
+              },
+              {
+                "reference": "Observation/b09-obs-3"
+              },
+              {
+                "reference": "MedicationRequest/b09-med-4"
+              },
+              {
+                "reference": "MedicationRequest/b09-med-5"
+              },
+              {
+                "reference": "Appointment/b09-appt-6"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b09-rec-10",
+      "resource": {
+        "resourceType": "Composition",
+        "id": "b09-rec-10",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/DiagnosticReportRecord"
+          ]
+        },
+        "status": "final",
+        "type": {
+          "text": "Diagnostic report"
+        },
+        "title": "Diagnostic report",
+        "date": "{{today-40d}}",
+        "subject": {
+          "reference": "Patient/B09"
+        },
+        "encounter": {
+          "reference": "Encounter/b09-enc-8"
+        },
+        "author": [
+          {
+            "reference": "Organization/HIP-GJ-AND-001"
+          }
+        ],
+        "custodian": {
+          "reference": "Organization/HIP-GJ-AND-001"
+        },
+        "section": [
+          {
+            "title": "Clinical note",
+            "text": {
+              "status": "generated",
+              "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">CBC: Hb 8.4. WBC, platelets within normal limits.</div>"
+            },
+            "entry": [
+              {
+                "reference": "Observation/b09-obs-9"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:B09",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "B09",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Patient"
+          ]
+        },
+        "name": [
+          {
+            "text": "Dineshbhai Vasava"
+          }
+        ],
+        "gender": "male",
+        "birthDate": "{{today-19y}}",
+        "address": [
+          {
+            "text": "Petlad, Anand district, Gujarat",
+            "city": "Petlad",
+            "district": "Anand",
+            "state": "Gujarat",
+            "country": "IN"
+          }
+        ],
+        "identifier": [
+          {
+            "type": {
+              "text": "ABHA number"
+            },
+            "system": "https://healthid.abdm.gov.in",
+            "value": "91-5555-4307-0009"
+          },
+          {
+            "type": {
+              "text": "ABHA address"
+            },
+            "system": "https://healthid.abdm.gov.in",
+            "value": "dinesh.vasava@sbx"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:HIP-GJ-AND-001",
+      "resource": {
+        "resourceType": "Organization",
+        "id": "HIP-GJ-AND-001",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Organization"
+          ]
+        },
+        "name": "CHC Petlad (demo)",
+        "identifier": [
+          {
+            "system": "https://facility.abdm.gov.in",
+            "value": "HIP-GJ-AND-001"
+          }
+        ],
+        "type": [
+          {
+            "text": "Public CHC"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:HIP-GJ-AND-101",
+      "resource": {
+        "resourceType": "Organization",
+        "id": "HIP-GJ-AND-101",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Organization"
+          ]
+        },
+        "name": "General Hospital Anand (demo)",
+        "identifier": [
+          {
+            "system": "https://facility.abdm.gov.in",
+            "value": "HIP-GJ-AND-101"
+          }
+        ],
+        "type": [
+          {
+            "text": "Public district hospital"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b09-enc-1",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "b09-enc-1",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Encounter"
+          ]
+        },
+        "status": "finished",
+        "class": {
+          "code": "IMP"
+        },
+        "subject": {
+          "reference": "Patient/B09"
+        },
+        "serviceProvider": {
+          "reference": "Organization/HIP-GJ-AND-101"
+        },
+        "period": {
+          "start": "{{today-75d}}"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b09-cond-2",
+      "resource": {
+        "resourceType": "Condition",
+        "id": "b09-cond-2",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Condition"
+          ]
+        },
+        "subject": {
+          "reference": "Patient/B09"
+        },
+        "encounter": {
+          "reference": "Encounter/b09-enc-1"
+        },
+        "code": {
+          "text": "Sickle cell disease (HbSS)"
+        },
+        "clinicalStatus": {
+          "text": "active"
+        },
+        "recordedDate": "{{today-75d}}"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b09-obs-3",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "b09-obs-3",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Observation"
+          ]
+        },
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "718-7",
+              "display": "Haemoglobin"
+            }
+          ],
+          "text": "Haemoglobin"
+        },
+        "subject": {
+          "reference": "Patient/B09"
+        },
+        "encounter": {
+          "reference": "Encounter/b09-enc-1"
+        },
+        "effectiveDateTime": "{{today-75d}}",
+        "performer": [
+          {
+            "reference": "Organization/HIP-GJ-AND-101"
+          }
+        ],
+        "valueQuantity": {
+          "value": 7.9,
+          "unit": "g/dL"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b09-med-4",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "b09-med-4",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/MedicationRequest"
+          ]
+        },
+        "status": "active",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "text": "Hydroxyurea"
+        },
+        "subject": {
+          "reference": "Patient/B09"
+        },
+        "encounter": {
+          "reference": "Encounter/b09-enc-1"
+        },
+        "authoredOn": "{{today-75d}}",
+        "requester": {
+          "reference": "Organization/HIP-GJ-AND-101"
+        },
+        "dosageInstruction": [
+          {
+            "text": "500 mg OD"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b09-med-5",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "b09-med-5",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/MedicationRequest"
+          ]
+        },
+        "status": "active",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "text": "Folic acid"
+        },
+        "subject": {
+          "reference": "Patient/B09"
+        },
+        "encounter": {
+          "reference": "Encounter/b09-enc-1"
+        },
+        "authoredOn": "{{today-75d}}",
+        "requester": {
+          "reference": "Organization/HIP-GJ-AND-101"
+        },
+        "dosageInstruction": [
+          {
+            "text": "5 mg OD"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b09-appt-6",
+      "resource": {
+        "resourceType": "Appointment",
+        "id": "b09-appt-6",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Appointment"
+          ]
+        },
+        "status": "booked",
+        "description": "Monthly CBC",
+        "start": "{{today-45d}}",
+        "participant": [
+          {
+            "actor": {
+              "reference": "Patient/B09"
+            },
+            "status": "accepted"
+          },
+          {
+            "actor": {
+              "reference": "Organization/HIP-GJ-AND-101"
+            },
+            "status": "accepted"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b09-enc-8",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "b09-enc-8",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Encounter"
+          ]
+        },
+        "status": "finished",
+        "class": {
+          "code": "AMB"
+        },
+        "subject": {
+          "reference": "Patient/B09"
+        },
+        "serviceProvider": {
+          "reference": "Organization/HIP-GJ-AND-001"
+        },
+        "period": {
+          "start": "{{today-40d}}"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b09-obs-9",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "b09-obs-9",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Observation"
+          ]
+        },
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "718-7",
+              "display": "Haemoglobin"
+            }
+          ],
+          "text": "Haemoglobin"
+        },
+        "subject": {
+          "reference": "Patient/B09"
+        },
+        "encounter": {
+          "reference": "Encounter/b09-enc-8"
+        },
+        "effectiveDateTime": "{{today-40d}}",
+        "performer": [
+          {
+            "reference": "Organization/HIP-GJ-AND-001"
+          }
+        ],
+        "valueQuantity": {
+          "value": 8.4,
+          "unit": "g/dL"
+        }
+      }
+    }
+  ]
+}

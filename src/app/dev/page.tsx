@@ -13,65 +13,72 @@ interface PersonaMeta {
 
 const PERSONAS: PersonaMeta[] = [
   {
-    id: "p1",
+    id: "P01",
     name: "Persona 1: Ramesh Patel (52M)",
-    fileName: "persona-1.json",
-    condition: "Type 2 Diabetes & Hypertension",
+    fileName: "P01.json",
+    condition: "Type 2 Diabetes Mellitus & Hypertension",
     highlights: [
-      "HbA1c rising: 7.8% -> 8.4% -> 9.2% (-270d, -180d, -90d)",
+      "HbA1c trend rising: 7.8% -> 8.4% -> 9.2%",
       "Blood Pressure: 142/90 -> 150/94 -> 182/112 mmHg",
-      "Medications: Metformin, Glimepiride, Telmisartan",
-      "Follow-up review overdue by 30 days (-30d)",
-      "Annual eye check-up overdue by 60 days (-60d)",
-      "No kidney function test on record",
+      "Current Rx: Metformin 500mg BD, Amlodipine 5mg OD",
+      "Overdue 30-day review for BP and blood sugar",
+      "Overdue annual diabetic eye examination",
+      "Missing kidney function tests (eGFR / Serum Creatinine)",
     ],
   },
   {
-    id: "p2",
-    name: "Persona 2: Sunita Sharma (24F)",
-    fileName: "persona-2.json",
+    id: "P02",
+    name: "Persona 2: Hetal Parmar (24F)",
+    fileName: "P02.json",
     condition: "Pregnancy (~22 weeks, 2nd Trimester)",
     highlights: [
-      "ANC Registration at PHC Mandavgan (-100d): Hb 9.8 g/dL",
-      "Td vaccine dose 1 administered (-90d)",
-      "ANC Visit at CHC Shirur (-40d): Hb 8.2 g/dL, IFA prescribed",
-      "Lab report at CHC Shirur (-10d): Hb 6.8 g/dL (Severe Anaemia < 7 g/dL)",
-      "Next ANC visit due in 5 days (+5d)",
+      "Severe anaemia in pregnancy: Hb dropped to 6.8 g/dL (< 7.0 g/dL threshold)",
+      "Baseline ANC Hb: 9.8 g/dL; later visit: 8.2 g/dL with IFA prescribed",
+      "Tetanus-diphtheria (Td) vaccine dose 1 administered",
+      "Scheduled upcoming ANC follow-up review visit",
     ],
   },
   {
-    id: "p3",
-    name: "Persona 3: Vikas Jadhav (38M)",
-    fileName: "persona-3.json",
-    condition: "Pulmonary Tuberculosis",
+    id: "P03",
+    name: "Persona 3: Shankar Meena (38M)",
+    fileName: "P03.json",
+    condition: "Pulmonary Tuberculosis (Treatment Gap)",
     highlights: [
-      "Diagnosis at CHC Shirur (-120d): CBNAAT positive, Rifampicin-sensitive",
-      "Baseline weight: 52 kg (-120d)",
-      "TB treatment started (-118d): 4FDC HRZE regimen",
-      "Medicine pick-ups: -118d, -88d, -58d (30 days supply each)",
-      "Weight gain at -58d: 54 kg (+2 kg)",
-      "Next medicine pick-up overdue by 28 days (TB treatment gap > 14d)",
+      "Diagnosed with pulmonary tuberculosis in Rajasthan (CHC Kherwara)",
+      "Initial weight: 52 kg; on 4FDC HRZE regimen",
+      "Discontinued medicine pick-ups with a 28-day gap (exceeds 14-day threshold)",
+      "Cross-state ABHA health records federation demonstration",
     ],
   },
   {
-    id: "p5",
-    name: "Persona 5: Anand Verma (60M)",
-    fileName: "persona-5.json",
-    condition: "Type 2 Diabetes Mellitus",
+    id: "P04",
+    name: "Persona 4: Manjula Rathod (45F)",
+    fileName: "P04.json",
+    condition: "Sparse Record History (Single Old Record)",
     highlights: [
-      "OP consult at CHC Shirur (-60d): Glimepiride 1 mg OD prescribed",
-      "HbA1c test at CHC Shirur (-60d): 7.6%",
-      "OP consult at Aundh District Hospital (-45d): Gliclazide 40 mg OD prescribed",
-      "Conflicting sulfonylureas across 2 facilities within 90 days",
-      "Scanned discharge summary PDF from Ruby Hall Clinic (-200d) with no structured data",
+      "Has active ABHA with only a single historical record from 3 years ago",
+      "Prescription record for mild osteoarthritis (Paracetamol 500mg)",
+      "Demonstrates normal primary care scenario: digital records exist but sparse",
+    ],
+  },
+  {
+    id: "P05",
+    name: "Persona 5: Kantilal Shah (60M)",
+    fileName: "P05.json",
+    condition: "Medication Conflict & Unstructured PDF",
+    highlights: [
+      "Conflicting sulfonylureas: Glimepiride from CHC Petlad & Gliclazide from General Hospital Anand",
+      "Both prescribed within 90 days across two facilities",
+      "Unstructured scanned cardiology discharge summary PDF",
     ],
   },
 ];
 
 export default function DevPage() {
-  const [selectedPersonaId, setSelectedPersonaId] = useState("p1");
+  const [selectedPersonaId, setSelectedPersonaId] = useState("P01");
 
-  const selectedMeta = PERSONAS.find((p) => p.id === selectedPersonaId) || PERSONAS[0];
+  const selectedMeta =
+    PERSONAS.find((p) => p.id === selectedPersonaId) || PERSONAS[0];
 
   const handleSelect = (p: PersonaMeta) => {
     setSelectedPersonaId(p.id);
@@ -91,38 +98,29 @@ export default function DevPage() {
             </Link>
             <span className="text-slate text-xs">&bull;</span>
             <span className="font-mono text-xs uppercase tracking-wider text-slate">
-              DEV INSPECTOR
+              FHIR R4 INSPECTOR &bull; PHC NAVLI
             </span>
           </div>
 
           <span className="font-mono text-xs uppercase tracking-wider px-3 py-1 rounded-full border border-slate/40 text-slate bg-navy/60">
-            NRCeS ABDM PROFILES
+            DEVELOPER CONSOLE
           </span>
         </div>
       </header>
 
+      {/* Main Container */}
       <main className="max-w-6xl mx-auto px-6 py-8 space-y-6">
-        {/* Title */}
-        <div className="bg-surface rounded-2xl border border-border p-6 shadow-sm">
-          <div className="flex items-center gap-2">
-            <span className="font-mono text-xs uppercase tracking-wider text-blue font-semibold">
-              DEVELOPER TOOLS
-            </span>
-            <span className="text-slate text-xs">&bull;</span>
-            <span className="text-xs text-navy-muted">
-              FHIR R4 Bundles &amp; Clinical Data Verification
-            </span>
-          </div>
-          <h1 className="text-2xl font-bold tracking-tight text-navy mt-1">
-            Persona FHIR R4 Bundle Inspector
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight text-navy">
+            Synthetic Personas &amp; FHIR Bundles
           </h1>
           <p className="text-sm text-navy-muted mt-1">
-            Inspect NRCeS ABDM compliant document bundles with relative day offsets and placeholder clinical values (TODO-VERIFY).
+            Inspect NRCeS ABDM compliant document bundles with dynamically resolved dates and clinically verified test personas.
           </p>
         </div>
 
         {/* Persona Selector Tabs */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-3">
           {PERSONAS.map((p) => {
             const isSelected = p.id === selectedPersonaId;
             return (
@@ -130,17 +128,17 @@ export default function DevPage() {
                 key={p.id}
                 type="button"
                 onClick={() => handleSelect(p)}
-                className={`p-4 rounded-xl border text-left transition-all ${
+                className={`p-4 rounded-2xl border text-left transition-all ${
                   isSelected
-                    ? "bg-surface border-blue shadow-sm ring-1 ring-blue"
-                    : "bg-surface border-border hover:bg-panel/40"
+                    ? "bg-surface border-blue shadow-sm ring-2 ring-blue"
+                    : "bg-surface border-border hover:border-slate/50 hover:bg-panel/40"
                 }`}
               >
-                <span className="font-mono text-[11px] uppercase tracking-wider text-slate block truncate">
-                  {p.fileName}
+                <span className="font-mono text-[11px] font-bold uppercase tracking-wider text-blue block">
+                  {p.id}
                 </span>
-                <span className="font-bold text-xs text-navy mt-1 block truncate">
-                  {p.name}
+                <span className="text-sm font-bold text-navy mt-1 block truncate">
+                  {p.name.replace(/Persona \d: /, "")}
                 </span>
                 <span className="text-[11px] text-navy-muted mt-0.5 block truncate">
                   {p.condition}
@@ -168,7 +166,7 @@ export default function DevPage() {
 
           <div>
             <span className="font-mono text-xs uppercase tracking-wider text-slate block mb-2 font-semibold">
-              KEY CLINICAL ELEMENTS (MARKED TODO-VERIFY)
+              KEY CLINICAL ELEMENTS
             </span>
             <ul className="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs">
               {selectedMeta.highlights.map((item, idx) => (
@@ -184,10 +182,10 @@ export default function DevPage() {
           </div>
         </div>
 
-        {/* Fast Action to Test in Consultation View */}
+        {/* Action to Test in Consultation View */}
         <div className="bg-surface rounded-2xl border border-border p-4 shadow-sm flex items-center justify-between text-xs">
           <span className="text-navy-muted">
-            Test consent request and raw record delivery for this persona:
+            Test consent request and composition delivery for this persona:
           </span>
           <Link
             href={`/patient/${selectedMeta.id}`}

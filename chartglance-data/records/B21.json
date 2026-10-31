@@ -1,0 +1,253 @@
+{
+  "resourceType": "Bundle",
+  "id": "bundle-B21",
+  "type": "collection",
+  "meta": {
+    "tag": [
+      {
+        "code": "SYNTHETIC",
+        "display": "Synthetic demo data. Not a real patient."
+      }
+    ]
+  },
+  "entry": [
+    {
+      "fullUrl": "urn:uuid:b21-rec-5",
+      "resource": {
+        "resourceType": "Composition",
+        "id": "b21-rec-5",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/OPConsultRecord"
+          ]
+        },
+        "status": "final",
+        "type": {
+          "text": "OP consultation"
+        },
+        "title": "OP consultation",
+        "date": "{{today-240d}}",
+        "subject": {
+          "reference": "Patient/B21"
+        },
+        "encounter": {
+          "reference": "Encounter/b21-enc-1"
+        },
+        "author": [
+          {
+            "reference": "Organization/HIP-GJ-AND-101"
+          }
+        ],
+        "custodian": {
+          "reference": "Organization/HIP-GJ-AND-101"
+        },
+        "section": [
+          {
+            "title": "Clinical note",
+            "text": {
+              "status": "generated",
+              "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Neuro OPD. GTCS x 2 episodes. EEG abnormal. Started Na valproate 500 BD. Seizure-free review 6 mo.</div>"
+            },
+            "entry": [
+              {
+                "reference": "Condition/b21-cond-2"
+              },
+              {
+                "reference": "MedicationRequest/b21-med-3"
+              },
+              {
+                "reference": "Appointment/b21-appt-4"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:B21",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "B21",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Patient"
+          ]
+        },
+        "name": [
+          {
+            "text": "Priya Trivedi"
+          }
+        ],
+        "gender": "female",
+        "birthDate": "{{today-22y}}",
+        "address": [
+          {
+            "text": "Vidyanagar, Anand district, Gujarat",
+            "city": "Vidyanagar",
+            "district": "Anand",
+            "state": "Gujarat",
+            "country": "IN"
+          }
+        ],
+        "identifier": [
+          {
+            "type": {
+              "text": "ABHA number"
+            },
+            "system": "https://healthid.abdm.gov.in",
+            "value": "91-5555-7630-0021"
+          },
+          {
+            "type": {
+              "text": "ABHA address"
+            },
+            "system": "https://healthid.abdm.gov.in",
+            "value": "priya.trivedi@sbx"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:HIP-GJ-AND-101",
+      "resource": {
+        "resourceType": "Organization",
+        "id": "HIP-GJ-AND-101",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Organization"
+          ]
+        },
+        "name": "General Hospital Anand (demo)",
+        "identifier": [
+          {
+            "system": "https://facility.abdm.gov.in",
+            "value": "HIP-GJ-AND-101"
+          }
+        ],
+        "type": [
+          {
+            "text": "Public district hospital"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b21-enc-1",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "b21-enc-1",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Encounter"
+          ]
+        },
+        "status": "finished",
+        "class": {
+          "code": "AMB"
+        },
+        "subject": {
+          "reference": "Patient/B21"
+        },
+        "serviceProvider": {
+          "reference": "Organization/HIP-GJ-AND-101"
+        },
+        "period": {
+          "start": "{{today-240d}}"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b21-cond-2",
+      "resource": {
+        "resourceType": "Condition",
+        "id": "b21-cond-2",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Condition"
+          ]
+        },
+        "subject": {
+          "reference": "Patient/B21"
+        },
+        "encounter": {
+          "reference": "Encounter/b21-enc-1"
+        },
+        "code": {
+          "text": "Epilepsy",
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "84757009",
+              "display": "Epilepsy"
+            }
+          ]
+        },
+        "clinicalStatus": {
+          "text": "active"
+        },
+        "recordedDate": "{{today-240d}}"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b21-med-3",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "b21-med-3",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/MedicationRequest"
+          ]
+        },
+        "status": "active",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "text": "Sodium valproate"
+        },
+        "subject": {
+          "reference": "Patient/B21"
+        },
+        "encounter": {
+          "reference": "Encounter/b21-enc-1"
+        },
+        "authoredOn": "{{today-240d}}",
+        "requester": {
+          "reference": "Organization/HIP-GJ-AND-101"
+        },
+        "dosageInstruction": [
+          {
+            "text": "500 mg BD"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b21-appt-4",
+      "resource": {
+        "resourceType": "Appointment",
+        "id": "b21-appt-4",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Appointment"
+          ]
+        },
+        "status": "booked",
+        "description": "Neurology review",
+        "start": "{{today-60d}}",
+        "participant": [
+          {
+            "actor": {
+              "reference": "Patient/B21"
+            },
+            "status": "accepted"
+          },
+          {
+            "actor": {
+              "reference": "Organization/HIP-GJ-AND-101"
+            },
+            "status": "accepted"
+          }
+        ]
+      }
+    }
+  ]
+}

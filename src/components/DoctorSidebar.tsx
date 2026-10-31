@@ -1,8 +1,11 @@
+import { FacilityMetadata } from "@/lib/records";
+
 interface DoctorSidebarProps {
   totalPatients: number;
   waitingCount?: number;
   inConsultCount?: number;
   doneCount?: number;
+  facility?: FacilityMetadata;
 }
 
 export default function DoctorSidebar({
@@ -10,6 +13,11 @@ export default function DoctorSidebar({
   waitingCount = 0,
   inConsultCount = 0,
   doneCount = 0,
+  facility = {
+    facilityName: "PHC Navli (demo)",
+    district: "Anand",
+    state: "Gujarat",
+  },
 }: DoctorSidebarProps) {
   return (
     <aside className="space-y-6">
@@ -47,9 +55,11 @@ export default function DoctorSidebar({
               FACILITY
             </span>
             <span className="font-semibold text-navy mt-1 block truncate">
-              PHC Mandavgan
+              {facility.facilityName}
             </span>
-            <span className="text-[11px] text-navy-muted">Shirur Block</span>
+            <span className="text-[11px] text-navy-muted">
+              {facility.district} District
+            </span>
           </div>
 
           <div className="p-3 rounded-xl bg-panel border border-border">
@@ -63,10 +73,10 @@ export default function DoctorSidebar({
           </div>
         </div>
 
-        {/* OPD Queue Status — now broken down by lifecycle */}
+        {/* OPD Queue Status */}
         <div className="mt-4 p-4 rounded-xl bg-navy text-surface">
           <span className="font-mono text-[11px] uppercase tracking-wider text-slate block">
-            ACTIVE QUEUE
+            TODAY&apos;S ACTIVE QUEUE
           </span>
           <span className="text-xl font-bold text-surface mt-0.5 block">
             {totalPatients} Patients

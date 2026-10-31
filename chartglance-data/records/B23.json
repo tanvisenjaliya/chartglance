@@ -1,0 +1,214 @@
+{
+  "resourceType": "Bundle",
+  "id": "bundle-B23",
+  "type": "collection",
+  "meta": {
+    "tag": [
+      {
+        "code": "SYNTHETIC",
+        "display": "Synthetic demo data. Not a real patient."
+      }
+    ]
+  },
+  "entry": [
+    {
+      "fullUrl": "urn:uuid:b23-rec-4",
+      "resource": {
+        "resourceType": "Composition",
+        "id": "b23-rec-4",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/OPConsultRecord"
+          ]
+        },
+        "status": "final",
+        "type": {
+          "text": "OP consultation"
+        },
+        "title": "OP consultation",
+        "date": "{{today-600d}}",
+        "subject": {
+          "reference": "Patient/B23"
+        },
+        "encounter": {
+          "reference": "Encounter/b23-enc-1"
+        },
+        "author": [
+          {
+            "reference": "Organization/HIP-GJ-AND-042"
+          }
+        ],
+        "custodian": {
+          "reference": "Organization/HIP-GJ-AND-042"
+        },
+        "section": [
+          {
+            "title": "Clinical note",
+            "text": {
+              "status": "generated",
+              "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Itchy papules, finger webs. Family members also itching. Permethrin to all family members.</div>"
+            },
+            "entry": [
+              {
+                "reference": "Condition/b23-cond-2"
+              },
+              {
+                "reference": "MedicationRequest/b23-med-3"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:B23",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "B23",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Patient"
+          ]
+        },
+        "name": [
+          {
+            "text": "Geeta Vaghela"
+          }
+        ],
+        "gender": "female",
+        "birthDate": "{{today-31y}}",
+        "address": [
+          {
+            "text": "Navli, Anand district, Gujarat",
+            "city": "Navli",
+            "district": "Anand",
+            "state": "Gujarat",
+            "country": "IN"
+          }
+        ],
+        "identifier": [
+          {
+            "type": {
+              "text": "ABHA number"
+            },
+            "system": "https://healthid.abdm.gov.in",
+            "value": "91-5555-1852-0023"
+          },
+          {
+            "type": {
+              "text": "ABHA address"
+            },
+            "system": "https://healthid.abdm.gov.in",
+            "value": "geeta.vaghela@sbx"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:HIP-GJ-AND-042",
+      "resource": {
+        "resourceType": "Organization",
+        "id": "HIP-GJ-AND-042",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Organization"
+          ]
+        },
+        "name": "PHC Navli (demo)",
+        "identifier": [
+          {
+            "system": "https://facility.abdm.gov.in",
+            "value": "HIP-GJ-AND-042"
+          }
+        ],
+        "type": [
+          {
+            "text": "Public PHC"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b23-enc-1",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "b23-enc-1",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Encounter"
+          ]
+        },
+        "status": "finished",
+        "class": {
+          "code": "AMB"
+        },
+        "subject": {
+          "reference": "Patient/B23"
+        },
+        "serviceProvider": {
+          "reference": "Organization/HIP-GJ-AND-042"
+        },
+        "period": {
+          "start": "{{today-600d}}"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b23-cond-2",
+      "resource": {
+        "resourceType": "Condition",
+        "id": "b23-cond-2",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Condition"
+          ]
+        },
+        "subject": {
+          "reference": "Patient/B23"
+        },
+        "encounter": {
+          "reference": "Encounter/b23-enc-1"
+        },
+        "code": {
+          "text": "Scabies"
+        },
+        "clinicalStatus": {
+          "text": "active"
+        },
+        "recordedDate": "{{today-600d}}"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b23-med-3",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "b23-med-3",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/MedicationRequest"
+          ]
+        },
+        "status": "active",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "text": "Permethrin 5% cream"
+        },
+        "subject": {
+          "reference": "Patient/B23"
+        },
+        "encounter": {
+          "reference": "Encounter/b23-enc-1"
+        },
+        "authoredOn": "{{today-600d}}",
+        "requester": {
+          "reference": "Organization/HIP-GJ-AND-042"
+        },
+        "dosageInstruction": [
+          {
+            "text": "Apply once Repeat after 7 days"
+          }
+        ]
+      }
+    }
+  ]
+}

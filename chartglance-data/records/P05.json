@@ -1,0 +1,634 @@
+{
+  "resourceType": "Bundle",
+  "id": "bundle-P05",
+  "type": "collection",
+  "meta": {
+    "tag": [
+      {
+        "code": "SYNTHETIC",
+        "display": "Synthetic demo data. Not a real patient."
+      }
+    ]
+  },
+  "entry": [
+    {
+      "fullUrl": "urn:uuid:p05-rec-3",
+      "resource": {
+        "resourceType": "Composition",
+        "id": "p05-rec-3",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/HealthDocumentRecord"
+          ]
+        },
+        "status": "final",
+        "type": {
+          "text": "Scanned health document"
+        },
+        "title": "Scanned health document",
+        "date": "{{today-200d}}",
+        "subject": {
+          "reference": "Patient/P05"
+        },
+        "encounter": {
+          "reference": "Encounter/p05-enc-1"
+        },
+        "author": [
+          {
+            "reference": "Organization/HIP-GJ-AND-207"
+          }
+        ],
+        "custodian": {
+          "reference": "Organization/HIP-GJ-AND-207"
+        },
+        "section": [
+          {
+            "title": "Clinical note",
+            "text": {
+              "status": "generated",
+              "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Scanned document. No structured data. Content not machine-readable.</div>"
+            },
+            "entry": [
+              {
+                "reference": "DocumentReference/p05-doc-2"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:p05-rec-9",
+      "resource": {
+        "resourceType": "Composition",
+        "id": "p05-rec-9",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/OPConsultRecord"
+          ]
+        },
+        "status": "final",
+        "type": {
+          "text": "OP consultation"
+        },
+        "title": "OP consultation",
+        "date": "{{today-60d}}",
+        "subject": {
+          "reference": "Patient/P05"
+        },
+        "encounter": {
+          "reference": "Encounter/p05-enc-4"
+        },
+        "author": [
+          {
+            "reference": "Organization/HIP-GJ-AND-001"
+          }
+        ],
+        "custodian": {
+          "reference": "Organization/HIP-GJ-AND-001"
+        },
+        "section": [
+          {
+            "title": "Clinical note",
+            "text": {
+              "status": "generated",
+              "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">T2DM, newly started on OHA. T. Glimepiride 1mg OD before bkfst. Review 1 mo.</div>"
+            },
+            "entry": [
+              {
+                "reference": "Condition/p05-cond-5"
+              },
+              {
+                "reference": "Observation/p05-obs-6"
+              },
+              {
+                "reference": "Observation/p05-obs-7"
+              },
+              {
+                "reference": "MedicationRequest/p05-med-8"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:p05-rec-14",
+      "resource": {
+        "resourceType": "Composition",
+        "id": "p05-rec-14",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/OPConsultRecord"
+          ]
+        },
+        "status": "final",
+        "type": {
+          "text": "OP consultation"
+        },
+        "title": "OP consultation",
+        "date": "{{today-45d}}",
+        "subject": {
+          "reference": "Patient/P05"
+        },
+        "encounter": {
+          "reference": "Encounter/p05-enc-10"
+        },
+        "author": [
+          {
+            "reference": "Organization/HIP-GJ-AND-101"
+          }
+        ],
+        "custodian": {
+          "reference": "Organization/HIP-GJ-AND-101"
+        },
+        "section": [
+          {
+            "title": "Clinical note",
+            "text": {
+              "status": "generated",
+              "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">c/o high sugars. Pt unable to tell current meds. Started T. Gliclazide 40 BD.</div>"
+            },
+            "entry": [
+              {
+                "reference": "Condition/p05-cond-11"
+              },
+              {
+                "reference": "Observation/p05-obs-12"
+              },
+              {
+                "reference": "MedicationRequest/p05-med-13"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:P05",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "P05",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Patient"
+          ]
+        },
+        "name": [
+          {
+            "text": "Kantilal Shah"
+          }
+        ],
+        "gender": "male",
+        "birthDate": "{{today-60y}}",
+        "address": [
+          {
+            "text": "Sojitra, Anand district, Gujarat",
+            "city": "Sojitra",
+            "district": "Anand",
+            "state": "Gujarat",
+            "country": "IN"
+          }
+        ],
+        "identifier": [
+          {
+            "type": {
+              "text": "ABHA number"
+            },
+            "system": "https://healthid.abdm.gov.in",
+            "value": "91-5555-9988-5005"
+          },
+          {
+            "type": {
+              "text": "ABHA address"
+            },
+            "system": "https://healthid.abdm.gov.in",
+            "value": "kantilal.shah@sbx"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:HIP-GJ-AND-001",
+      "resource": {
+        "resourceType": "Organization",
+        "id": "HIP-GJ-AND-001",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Organization"
+          ]
+        },
+        "name": "CHC Petlad (demo)",
+        "identifier": [
+          {
+            "system": "https://facility.abdm.gov.in",
+            "value": "HIP-GJ-AND-001"
+          }
+        ],
+        "type": [
+          {
+            "text": "Public CHC"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:HIP-GJ-AND-101",
+      "resource": {
+        "resourceType": "Organization",
+        "id": "HIP-GJ-AND-101",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Organization"
+          ]
+        },
+        "name": "General Hospital Anand (demo)",
+        "identifier": [
+          {
+            "system": "https://facility.abdm.gov.in",
+            "value": "HIP-GJ-AND-101"
+          }
+        ],
+        "type": [
+          {
+            "text": "Public district hospital"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:HIP-GJ-AND-207",
+      "resource": {
+        "resourceType": "Organization",
+        "id": "HIP-GJ-AND-207",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Organization"
+          ]
+        },
+        "name": "Shiv Care Hospital, Anand (fictional)",
+        "identifier": [
+          {
+            "system": "https://facility.abdm.gov.in",
+            "value": "HIP-GJ-AND-207"
+          }
+        ],
+        "type": [
+          {
+            "text": "Private hospital"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:p05-enc-1",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "p05-enc-1",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Encounter"
+          ]
+        },
+        "status": "finished",
+        "class": {
+          "code": "AMB"
+        },
+        "subject": {
+          "reference": "Patient/P05"
+        },
+        "serviceProvider": {
+          "reference": "Organization/HIP-GJ-AND-207"
+        },
+        "period": {
+          "start": "{{today-200d}}"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:p05-doc-2",
+      "resource": {
+        "resourceType": "DocumentReference",
+        "id": "p05-doc-2",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/DocumentReference"
+          ]
+        },
+        "status": "current",
+        "type": {
+          "text": "Discharge summary (scanned PDF, handwritten)"
+        },
+        "subject": {
+          "reference": "Patient/P05"
+        },
+        "date": "{{today-200d}}",
+        "content": [
+          {
+            "attachment": {
+              "contentType": "application/pdf",
+              "title": "Discharge summary (scanned PDF, handwritten)",
+              "data": null
+            }
+          }
+        ],
+        "description": "Scanned PDF; not machine-readable in this prototype"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:p05-enc-4",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "p05-enc-4",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Encounter"
+          ]
+        },
+        "status": "finished",
+        "class": {
+          "code": "AMB"
+        },
+        "subject": {
+          "reference": "Patient/P05"
+        },
+        "serviceProvider": {
+          "reference": "Organization/HIP-GJ-AND-001"
+        },
+        "period": {
+          "start": "{{today-60d}}"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:p05-cond-5",
+      "resource": {
+        "resourceType": "Condition",
+        "id": "p05-cond-5",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Condition"
+          ]
+        },
+        "subject": {
+          "reference": "Patient/P05"
+        },
+        "encounter": {
+          "reference": "Encounter/p05-enc-4"
+        },
+        "code": {
+          "text": "Type 2 diabetes mellitus",
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "44054006",
+              "display": "Type 2 diabetes mellitus"
+            }
+          ]
+        },
+        "clinicalStatus": {
+          "text": "active"
+        },
+        "recordedDate": "{{today-60d}}"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:p05-obs-6",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "p05-obs-6",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Observation"
+          ]
+        },
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "4548-4",
+              "display": "HbA1c"
+            }
+          ],
+          "text": "HbA1c"
+        },
+        "subject": {
+          "reference": "Patient/P05"
+        },
+        "encounter": {
+          "reference": "Encounter/p05-enc-4"
+        },
+        "effectiveDateTime": "{{today-60d}}",
+        "performer": [
+          {
+            "reference": "Organization/HIP-GJ-AND-001"
+          }
+        ],
+        "valueQuantity": {
+          "value": 7.6,
+          "unit": "%"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:p05-obs-7",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "p05-obs-7",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Observation"
+          ]
+        },
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "1558-6",
+              "display": "Fasting blood glucose"
+            }
+          ],
+          "text": "Fasting blood glucose"
+        },
+        "subject": {
+          "reference": "Patient/P05"
+        },
+        "encounter": {
+          "reference": "Encounter/p05-enc-4"
+        },
+        "effectiveDateTime": "{{today-60d}}",
+        "performer": [
+          {
+            "reference": "Organization/HIP-GJ-AND-001"
+          }
+        ],
+        "valueQuantity": {
+          "value": 156,
+          "unit": "mg/dL"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:p05-med-8",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "p05-med-8",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/MedicationRequest"
+          ]
+        },
+        "status": "active",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "text": "Glimepiride"
+        },
+        "subject": {
+          "reference": "Patient/P05"
+        },
+        "encounter": {
+          "reference": "Encounter/p05-enc-4"
+        },
+        "authoredOn": "{{today-60d}}",
+        "requester": {
+          "reference": "Organization/HIP-GJ-AND-001"
+        },
+        "dosageInstruction": [
+          {
+            "text": "1 mg OD"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:p05-enc-10",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "p05-enc-10",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Encounter"
+          ]
+        },
+        "status": "finished",
+        "class": {
+          "code": "AMB"
+        },
+        "subject": {
+          "reference": "Patient/P05"
+        },
+        "serviceProvider": {
+          "reference": "Organization/HIP-GJ-AND-101"
+        },
+        "period": {
+          "start": "{{today-45d}}"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:p05-cond-11",
+      "resource": {
+        "resourceType": "Condition",
+        "id": "p05-cond-11",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Condition"
+          ]
+        },
+        "subject": {
+          "reference": "Patient/P05"
+        },
+        "encounter": {
+          "reference": "Encounter/p05-enc-10"
+        },
+        "code": {
+          "text": "Type 2 diabetes mellitus",
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "44054006",
+              "display": "Type 2 diabetes mellitus"
+            }
+          ]
+        },
+        "clinicalStatus": {
+          "text": "active"
+        },
+        "recordedDate": "{{today-45d}}"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:p05-obs-12",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "p05-obs-12",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Observation"
+          ]
+        },
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "1558-6",
+              "display": "Fasting blood glucose"
+            }
+          ],
+          "text": "Fasting blood glucose"
+        },
+        "subject": {
+          "reference": "Patient/P05"
+        },
+        "encounter": {
+          "reference": "Encounter/p05-enc-10"
+        },
+        "effectiveDateTime": "{{today-45d}}",
+        "performer": [
+          {
+            "reference": "Organization/HIP-GJ-AND-101"
+          }
+        ],
+        "valueQuantity": {
+          "value": 148,
+          "unit": "mg/dL"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:p05-med-13",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "p05-med-13",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/MedicationRequest"
+          ]
+        },
+        "status": "active",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "text": "Gliclazide"
+        },
+        "subject": {
+          "reference": "Patient/P05"
+        },
+        "encounter": {
+          "reference": "Encounter/p05-enc-10"
+        },
+        "authoredOn": "{{today-45d}}",
+        "requester": {
+          "reference": "Organization/HIP-GJ-AND-101"
+        },
+        "dosageInstruction": [
+          {
+            "text": "40 mg BD"
+          }
+        ]
+      }
+    }
+  ]
+}

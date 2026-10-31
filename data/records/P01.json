@@ -1,0 +1,1257 @@
+{
+  "resourceType": "Bundle",
+  "id": "bundle-P01",
+  "type": "collection",
+  "meta": {
+    "tag": [
+      {
+        "code": "SYNTHETIC",
+        "display": "Synthetic demo data. Not a real patient."
+      }
+    ]
+  },
+  "entry": [
+    {
+      "fullUrl": "urn:uuid:p01-rec-10",
+      "resource": {
+        "resourceType": "Composition",
+        "id": "p01-rec-10",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/OPConsultRecord"
+          ]
+        },
+        "status": "final",
+        "type": {
+          "text": "OP consultation"
+        },
+        "title": "OP consultation",
+        "date": "{{today-270d}}",
+        "subject": {
+          "reference": "Patient/P01"
+        },
+        "encounter": {
+          "reference": "Encounter/p01-enc-1"
+        },
+        "author": [
+          {
+            "reference": "Organization/HIP-GJ-AND-001"
+          }
+        ],
+        "custodian": {
+          "reference": "Organization/HIP-GJ-AND-001"
+        },
+        "section": [
+          {
+            "title": "Clinical note",
+            "text": {
+              "status": "generated",
+              "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">k/c/o T2DM x 4 yrs, HTN x 2 yrs. c/o occasional tiredness. On T. Metformin 500 BD, T. Amlo 5 OD. Adv diet, walk. Review 3 mo.</div>"
+            },
+            "entry": [
+              {
+                "reference": "Condition/p01-cond-2"
+              },
+              {
+                "reference": "Condition/p01-cond-3"
+              },
+              {
+                "reference": "Observation/p01-obs-4"
+              },
+              {
+                "reference": "Observation/p01-obs-5"
+              },
+              {
+                "reference": "Observation/p01-obs-6"
+              },
+              {
+                "reference": "Observation/p01-obs-7"
+              },
+              {
+                "reference": "MedicationRequest/p01-med-8"
+              },
+              {
+                "reference": "MedicationRequest/p01-med-9"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:p01-rec-19",
+      "resource": {
+        "resourceType": "Composition",
+        "id": "p01-rec-19",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/OPConsultRecord"
+          ]
+        },
+        "status": "final",
+        "type": {
+          "text": "OP consultation"
+        },
+        "title": "OP consultation",
+        "date": "{{today-180d}}",
+        "subject": {
+          "reference": "Patient/P01"
+        },
+        "encounter": {
+          "reference": "Encounter/p01-enc-11"
+        },
+        "author": [
+          {
+            "reference": "Organization/HIP-GJ-AND-042"
+          }
+        ],
+        "custodian": {
+          "reference": "Organization/HIP-GJ-AND-042"
+        },
+        "section": [
+          {
+            "title": "Clinical note",
+            "text": {
+              "status": "generated",
+              "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Sugar f/u. HbA1c 8.4 (prev 7.8). Pt admits irregular meds. Counselled. Cont same Rx. Annual eye check adv.</div>"
+            },
+            "entry": [
+              {
+                "reference": "Condition/p01-cond-12"
+              },
+              {
+                "reference": "Condition/p01-cond-13"
+              },
+              {
+                "reference": "Observation/p01-obs-14"
+              },
+              {
+                "reference": "Observation/p01-obs-15"
+              },
+              {
+                "reference": "Observation/p01-obs-16"
+              },
+              {
+                "reference": "MedicationRequest/p01-med-17"
+              },
+              {
+                "reference": "MedicationRequest/p01-med-18"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:p01-rec-31",
+      "resource": {
+        "resourceType": "Composition",
+        "id": "p01-rec-31",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/OPConsultRecord"
+          ]
+        },
+        "status": "final",
+        "type": {
+          "text": "OP consultation"
+        },
+        "title": "OP consultation",
+        "date": "{{today-90d}}",
+        "subject": {
+          "reference": "Patient/P01"
+        },
+        "encounter": {
+          "reference": "Encounter/p01-enc-20"
+        },
+        "author": [
+          {
+            "reference": "Organization/HIP-GJ-AND-042"
+          }
+        ],
+        "custodian": {
+          "reference": "Organization/HIP-GJ-AND-042"
+        },
+        "section": [
+          {
+            "title": "Clinical note",
+            "text": {
+              "status": "generated",
+              "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">HbA1c 9.2. BP 182/112. ? non-compliance. Rpt BP after 15 min 176/108. Adv strict compliance. F/u 30 days for BP and sugar.</div>"
+            },
+            "entry": [
+              {
+                "reference": "Condition/p01-cond-21"
+              },
+              {
+                "reference": "Condition/p01-cond-22"
+              },
+              {
+                "reference": "Observation/p01-obs-23"
+              },
+              {
+                "reference": "Observation/p01-obs-24"
+              },
+              {
+                "reference": "Observation/p01-obs-25"
+              },
+              {
+                "reference": "Observation/p01-obs-26"
+              },
+              {
+                "reference": "MedicationRequest/p01-med-27"
+              },
+              {
+                "reference": "MedicationRequest/p01-med-28"
+              },
+              {
+                "reference": "Appointment/p01-appt-29"
+              },
+              {
+                "reference": "Appointment/p01-appt-30"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:P01",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "P01",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Patient"
+          ]
+        },
+        "name": [
+          {
+            "text": "Ramesh Patel"
+          }
+        ],
+        "gender": "male",
+        "birthDate": "{{today-52y}}",
+        "address": [
+          {
+            "text": "Navli, Anand district, Gujarat",
+            "city": "Navli",
+            "district": "Anand",
+            "state": "Gujarat",
+            "country": "IN"
+          }
+        ],
+        "identifier": [
+          {
+            "type": {
+              "text": "ABHA number"
+            },
+            "system": "https://healthid.abdm.gov.in",
+            "value": "91-5555-4321-1001"
+          },
+          {
+            "type": {
+              "text": "ABHA address"
+            },
+            "system": "https://healthid.abdm.gov.in",
+            "value": "ramesh.patel@sbx"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:HIP-GJ-AND-001",
+      "resource": {
+        "resourceType": "Organization",
+        "id": "HIP-GJ-AND-001",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Organization"
+          ]
+        },
+        "name": "CHC Petlad (demo)",
+        "identifier": [
+          {
+            "system": "https://facility.abdm.gov.in",
+            "value": "HIP-GJ-AND-001"
+          }
+        ],
+        "type": [
+          {
+            "text": "Public CHC"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:HIP-GJ-AND-042",
+      "resource": {
+        "resourceType": "Organization",
+        "id": "HIP-GJ-AND-042",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Organization"
+          ]
+        },
+        "name": "PHC Navli (demo)",
+        "identifier": [
+          {
+            "system": "https://facility.abdm.gov.in",
+            "value": "HIP-GJ-AND-042"
+          }
+        ],
+        "type": [
+          {
+            "text": "Public PHC"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:p01-enc-1",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "p01-enc-1",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Encounter"
+          ]
+        },
+        "status": "finished",
+        "class": {
+          "code": "AMB"
+        },
+        "subject": {
+          "reference": "Patient/P01"
+        },
+        "serviceProvider": {
+          "reference": "Organization/HIP-GJ-AND-001"
+        },
+        "period": {
+          "start": "{{today-270d}}"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:p01-cond-2",
+      "resource": {
+        "resourceType": "Condition",
+        "id": "p01-cond-2",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Condition"
+          ]
+        },
+        "subject": {
+          "reference": "Patient/P01"
+        },
+        "encounter": {
+          "reference": "Encounter/p01-enc-1"
+        },
+        "code": {
+          "text": "Type 2 diabetes mellitus",
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "44054006",
+              "display": "Type 2 diabetes mellitus"
+            }
+          ]
+        },
+        "clinicalStatus": {
+          "text": "active"
+        },
+        "recordedDate": "{{today-270d}}"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:p01-cond-3",
+      "resource": {
+        "resourceType": "Condition",
+        "id": "p01-cond-3",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Condition"
+          ]
+        },
+        "subject": {
+          "reference": "Patient/P01"
+        },
+        "encounter": {
+          "reference": "Encounter/p01-enc-1"
+        },
+        "code": {
+          "text": "Hypertension",
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "38341003",
+              "display": "Hypertension"
+            }
+          ]
+        },
+        "clinicalStatus": {
+          "text": "active"
+        },
+        "recordedDate": "{{today-270d}}"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:p01-obs-4",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "p01-obs-4",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Observation"
+          ]
+        },
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "4548-4",
+              "display": "HbA1c"
+            }
+          ],
+          "text": "HbA1c"
+        },
+        "subject": {
+          "reference": "Patient/P01"
+        },
+        "encounter": {
+          "reference": "Encounter/p01-enc-1"
+        },
+        "effectiveDateTime": "{{today-270d}}",
+        "performer": [
+          {
+            "reference": "Organization/HIP-GJ-AND-001"
+          }
+        ],
+        "valueQuantity": {
+          "value": 7.8,
+          "unit": "%"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:p01-obs-5",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "p01-obs-5",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Observation"
+          ]
+        },
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "8480-6",
+              "display": "Systolic BP"
+            }
+          ],
+          "text": "Systolic BP"
+        },
+        "subject": {
+          "reference": "Patient/P01"
+        },
+        "encounter": {
+          "reference": "Encounter/p01-enc-1"
+        },
+        "effectiveDateTime": "{{today-270d}}",
+        "performer": [
+          {
+            "reference": "Organization/HIP-GJ-AND-001"
+          }
+        ],
+        "valueQuantity": {
+          "value": 142,
+          "unit": "mmHg"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:p01-obs-6",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "p01-obs-6",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Observation"
+          ]
+        },
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "8462-4",
+              "display": "Diastolic BP"
+            }
+          ],
+          "text": "Diastolic BP"
+        },
+        "subject": {
+          "reference": "Patient/P01"
+        },
+        "encounter": {
+          "reference": "Encounter/p01-enc-1"
+        },
+        "effectiveDateTime": "{{today-270d}}",
+        "performer": [
+          {
+            "reference": "Organization/HIP-GJ-AND-001"
+          }
+        ],
+        "valueQuantity": {
+          "value": 90,
+          "unit": "mmHg"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:p01-obs-7",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "p01-obs-7",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Observation"
+          ]
+        },
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "29463-7",
+              "display": "Body weight"
+            }
+          ],
+          "text": "Body weight"
+        },
+        "subject": {
+          "reference": "Patient/P01"
+        },
+        "encounter": {
+          "reference": "Encounter/p01-enc-1"
+        },
+        "effectiveDateTime": "{{today-270d}}",
+        "performer": [
+          {
+            "reference": "Organization/HIP-GJ-AND-001"
+          }
+        ],
+        "valueQuantity": {
+          "value": 78,
+          "unit": "kg"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:p01-med-8",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "p01-med-8",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/MedicationRequest"
+          ]
+        },
+        "status": "active",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "text": "Metformin"
+        },
+        "subject": {
+          "reference": "Patient/P01"
+        },
+        "encounter": {
+          "reference": "Encounter/p01-enc-1"
+        },
+        "authoredOn": "{{today-270d}}",
+        "requester": {
+          "reference": "Organization/HIP-GJ-AND-001"
+        },
+        "dosageInstruction": [
+          {
+            "text": "500 mg BD"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:p01-med-9",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "p01-med-9",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/MedicationRequest"
+          ]
+        },
+        "status": "active",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "text": "Amlodipine"
+        },
+        "subject": {
+          "reference": "Patient/P01"
+        },
+        "encounter": {
+          "reference": "Encounter/p01-enc-1"
+        },
+        "authoredOn": "{{today-270d}}",
+        "requester": {
+          "reference": "Organization/HIP-GJ-AND-001"
+        },
+        "dosageInstruction": [
+          {
+            "text": "5 mg OD"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:p01-enc-11",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "p01-enc-11",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Encounter"
+          ]
+        },
+        "status": "finished",
+        "class": {
+          "code": "AMB"
+        },
+        "subject": {
+          "reference": "Patient/P01"
+        },
+        "serviceProvider": {
+          "reference": "Organization/HIP-GJ-AND-042"
+        },
+        "period": {
+          "start": "{{today-180d}}"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:p01-cond-12",
+      "resource": {
+        "resourceType": "Condition",
+        "id": "p01-cond-12",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Condition"
+          ]
+        },
+        "subject": {
+          "reference": "Patient/P01"
+        },
+        "encounter": {
+          "reference": "Encounter/p01-enc-11"
+        },
+        "code": {
+          "text": "Type 2 diabetes mellitus",
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "44054006",
+              "display": "Type 2 diabetes mellitus"
+            }
+          ]
+        },
+        "clinicalStatus": {
+          "text": "active"
+        },
+        "recordedDate": "{{today-180d}}"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:p01-cond-13",
+      "resource": {
+        "resourceType": "Condition",
+        "id": "p01-cond-13",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Condition"
+          ]
+        },
+        "subject": {
+          "reference": "Patient/P01"
+        },
+        "encounter": {
+          "reference": "Encounter/p01-enc-11"
+        },
+        "code": {
+          "text": "Hypertension",
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "38341003",
+              "display": "Hypertension"
+            }
+          ]
+        },
+        "clinicalStatus": {
+          "text": "active"
+        },
+        "recordedDate": "{{today-180d}}"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:p01-obs-14",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "p01-obs-14",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Observation"
+          ]
+        },
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "4548-4",
+              "display": "HbA1c"
+            }
+          ],
+          "text": "HbA1c"
+        },
+        "subject": {
+          "reference": "Patient/P01"
+        },
+        "encounter": {
+          "reference": "Encounter/p01-enc-11"
+        },
+        "effectiveDateTime": "{{today-180d}}",
+        "performer": [
+          {
+            "reference": "Organization/HIP-GJ-AND-042"
+          }
+        ],
+        "valueQuantity": {
+          "value": 8.4,
+          "unit": "%"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:p01-obs-15",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "p01-obs-15",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Observation"
+          ]
+        },
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "8480-6",
+              "display": "Systolic BP"
+            }
+          ],
+          "text": "Systolic BP"
+        },
+        "subject": {
+          "reference": "Patient/P01"
+        },
+        "encounter": {
+          "reference": "Encounter/p01-enc-11"
+        },
+        "effectiveDateTime": "{{today-180d}}",
+        "performer": [
+          {
+            "reference": "Organization/HIP-GJ-AND-042"
+          }
+        ],
+        "valueQuantity": {
+          "value": 150,
+          "unit": "mmHg"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:p01-obs-16",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "p01-obs-16",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Observation"
+          ]
+        },
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "8462-4",
+              "display": "Diastolic BP"
+            }
+          ],
+          "text": "Diastolic BP"
+        },
+        "subject": {
+          "reference": "Patient/P01"
+        },
+        "encounter": {
+          "reference": "Encounter/p01-enc-11"
+        },
+        "effectiveDateTime": "{{today-180d}}",
+        "performer": [
+          {
+            "reference": "Organization/HIP-GJ-AND-042"
+          }
+        ],
+        "valueQuantity": {
+          "value": 94,
+          "unit": "mmHg"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:p01-med-17",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "p01-med-17",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/MedicationRequest"
+          ]
+        },
+        "status": "active",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "text": "Metformin"
+        },
+        "subject": {
+          "reference": "Patient/P01"
+        },
+        "encounter": {
+          "reference": "Encounter/p01-enc-11"
+        },
+        "authoredOn": "{{today-180d}}",
+        "requester": {
+          "reference": "Organization/HIP-GJ-AND-042"
+        },
+        "dosageInstruction": [
+          {
+            "text": "500 mg BD"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:p01-med-18",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "p01-med-18",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/MedicationRequest"
+          ]
+        },
+        "status": "active",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "text": "Amlodipine"
+        },
+        "subject": {
+          "reference": "Patient/P01"
+        },
+        "encounter": {
+          "reference": "Encounter/p01-enc-11"
+        },
+        "authoredOn": "{{today-180d}}",
+        "requester": {
+          "reference": "Organization/HIP-GJ-AND-042"
+        },
+        "dosageInstruction": [
+          {
+            "text": "5 mg OD"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:p01-enc-20",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "p01-enc-20",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Encounter"
+          ]
+        },
+        "status": "finished",
+        "class": {
+          "code": "AMB"
+        },
+        "subject": {
+          "reference": "Patient/P01"
+        },
+        "serviceProvider": {
+          "reference": "Organization/HIP-GJ-AND-042"
+        },
+        "period": {
+          "start": "{{today-90d}}"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:p01-cond-21",
+      "resource": {
+        "resourceType": "Condition",
+        "id": "p01-cond-21",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Condition"
+          ]
+        },
+        "subject": {
+          "reference": "Patient/P01"
+        },
+        "encounter": {
+          "reference": "Encounter/p01-enc-20"
+        },
+        "code": {
+          "text": "Type 2 diabetes mellitus",
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "44054006",
+              "display": "Type 2 diabetes mellitus"
+            }
+          ]
+        },
+        "clinicalStatus": {
+          "text": "active"
+        },
+        "recordedDate": "{{today-90d}}"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:p01-cond-22",
+      "resource": {
+        "resourceType": "Condition",
+        "id": "p01-cond-22",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Condition"
+          ]
+        },
+        "subject": {
+          "reference": "Patient/P01"
+        },
+        "encounter": {
+          "reference": "Encounter/p01-enc-20"
+        },
+        "code": {
+          "text": "Hypertension",
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "38341003",
+              "display": "Hypertension"
+            }
+          ]
+        },
+        "clinicalStatus": {
+          "text": "active"
+        },
+        "recordedDate": "{{today-90d}}"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:p01-obs-23",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "p01-obs-23",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Observation"
+          ]
+        },
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "4548-4",
+              "display": "HbA1c"
+            }
+          ],
+          "text": "HbA1c"
+        },
+        "subject": {
+          "reference": "Patient/P01"
+        },
+        "encounter": {
+          "reference": "Encounter/p01-enc-20"
+        },
+        "effectiveDateTime": "{{today-90d}}",
+        "performer": [
+          {
+            "reference": "Organization/HIP-GJ-AND-042"
+          }
+        ],
+        "valueQuantity": {
+          "value": 9.2,
+          "unit": "%"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:p01-obs-24",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "p01-obs-24",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Observation"
+          ]
+        },
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "8480-6",
+              "display": "Systolic BP"
+            }
+          ],
+          "text": "Systolic BP"
+        },
+        "subject": {
+          "reference": "Patient/P01"
+        },
+        "encounter": {
+          "reference": "Encounter/p01-enc-20"
+        },
+        "effectiveDateTime": "{{today-90d}}",
+        "performer": [
+          {
+            "reference": "Organization/HIP-GJ-AND-042"
+          }
+        ],
+        "valueQuantity": {
+          "value": 182,
+          "unit": "mmHg"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:p01-obs-25",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "p01-obs-25",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Observation"
+          ]
+        },
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "8462-4",
+              "display": "Diastolic BP"
+            }
+          ],
+          "text": "Diastolic BP"
+        },
+        "subject": {
+          "reference": "Patient/P01"
+        },
+        "encounter": {
+          "reference": "Encounter/p01-enc-20"
+        },
+        "effectiveDateTime": "{{today-90d}}",
+        "performer": [
+          {
+            "reference": "Organization/HIP-GJ-AND-042"
+          }
+        ],
+        "valueQuantity": {
+          "value": 112,
+          "unit": "mmHg"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:p01-obs-26",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "p01-obs-26",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Observation"
+          ]
+        },
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "29463-7",
+              "display": "Body weight"
+            }
+          ],
+          "text": "Body weight"
+        },
+        "subject": {
+          "reference": "Patient/P01"
+        },
+        "encounter": {
+          "reference": "Encounter/p01-enc-20"
+        },
+        "effectiveDateTime": "{{today-90d}}",
+        "performer": [
+          {
+            "reference": "Organization/HIP-GJ-AND-042"
+          }
+        ],
+        "valueQuantity": {
+          "value": 80,
+          "unit": "kg"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:p01-med-27",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "p01-med-27",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/MedicationRequest"
+          ]
+        },
+        "status": "active",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "text": "Metformin"
+        },
+        "subject": {
+          "reference": "Patient/P01"
+        },
+        "encounter": {
+          "reference": "Encounter/p01-enc-20"
+        },
+        "authoredOn": "{{today-90d}}",
+        "requester": {
+          "reference": "Organization/HIP-GJ-AND-042"
+        },
+        "dosageInstruction": [
+          {
+            "text": "500 mg BD"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:p01-med-28",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "p01-med-28",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/MedicationRequest"
+          ]
+        },
+        "status": "active",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "text": "Amlodipine"
+        },
+        "subject": {
+          "reference": "Patient/P01"
+        },
+        "encounter": {
+          "reference": "Encounter/p01-enc-20"
+        },
+        "authoredOn": "{{today-90d}}",
+        "requester": {
+          "reference": "Organization/HIP-GJ-AND-042"
+        },
+        "dosageInstruction": [
+          {
+            "text": "5 mg OD"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:p01-appt-29",
+      "resource": {
+        "resourceType": "Appointment",
+        "id": "p01-appt-29",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Appointment"
+          ]
+        },
+        "status": "booked",
+        "description": "Diabetes and BP review (30-day follow-up)",
+        "start": "{{today-60d}}",
+        "participant": [
+          {
+            "actor": {
+              "reference": "Patient/P01"
+            },
+            "status": "accepted"
+          },
+          {
+            "actor": {
+              "reference": "Organization/HIP-GJ-AND-042"
+            },
+            "status": "accepted"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:p01-appt-30",
+      "resource": {
+        "resourceType": "Appointment",
+        "id": "p01-appt-30",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Appointment"
+          ]
+        },
+        "status": "booked",
+        "description": "Annual diabetic eye check-up",
+        "start": "{{today-60d}}",
+        "participant": [
+          {
+            "actor": {
+              "reference": "Patient/P01"
+            },
+            "status": "accepted"
+          },
+          {
+            "actor": {
+              "reference": "Organization/HIP-GJ-AND-042"
+            },
+            "status": "accepted"
+          }
+        ]
+      }
+    }
+  ]
+}

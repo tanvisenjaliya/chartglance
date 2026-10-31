@@ -1,0 +1,246 @@
+{
+  "resourceType": "Bundle",
+  "id": "bundle-B20",
+  "type": "collection",
+  "meta": {
+    "tag": [
+      {
+        "code": "SYNTHETIC",
+        "display": "Synthetic demo data. Not a real patient."
+      }
+    ]
+  },
+  "entry": [
+    {
+      "fullUrl": "urn:uuid:b20-rec-5",
+      "resource": {
+        "resourceType": "Composition",
+        "id": "b20-rec-5",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/OPConsultRecord"
+          ]
+        },
+        "status": "final",
+        "type": {
+          "text": "OP consultation"
+        },
+        "title": "OP consultation",
+        "date": "{{today-500d}}",
+        "subject": {
+          "reference": "Patient/B20"
+        },
+        "encounter": {
+          "reference": "Encounter/b20-enc-1"
+        },
+        "author": [
+          {
+            "reference": "Organization/HIP-GJ-AND-001"
+          }
+        ],
+        "custodian": {
+          "reference": "Organization/HIP-GJ-AND-001"
+        },
+        "section": [
+          {
+            "title": "Clinical note",
+            "text": {
+              "status": "generated",
+              "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Old man, poor stream, nocturia x 3. USG: prostate 38 g. Tamsulosin started. Review 3 mo.</div>"
+            },
+            "entry": [
+              {
+                "reference": "Condition/b20-cond-2"
+              },
+              {
+                "reference": "MedicationRequest/b20-med-3"
+              },
+              {
+                "reference": "Appointment/b20-appt-4"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:B20",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "B20",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Patient"
+          ]
+        },
+        "name": [
+          {
+            "text": "Dahyabhai Patel"
+          }
+        ],
+        "gender": "male",
+        "birthDate": "{{today-82y}}",
+        "address": [
+          {
+            "text": "Sojitra, Anand district, Gujarat",
+            "city": "Sojitra",
+            "district": "Anand",
+            "state": "Gujarat",
+            "country": "IN"
+          }
+        ],
+        "identifier": [
+          {
+            "type": {
+              "text": "ABHA number"
+            },
+            "system": "https://healthid.abdm.gov.in",
+            "value": "91-5555-6529-0020"
+          },
+          {
+            "type": {
+              "text": "ABHA address"
+            },
+            "system": "https://healthid.abdm.gov.in",
+            "value": "dahyabhai.patel@sbx"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:HIP-GJ-AND-001",
+      "resource": {
+        "resourceType": "Organization",
+        "id": "HIP-GJ-AND-001",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Organization"
+          ]
+        },
+        "name": "CHC Petlad (demo)",
+        "identifier": [
+          {
+            "system": "https://facility.abdm.gov.in",
+            "value": "HIP-GJ-AND-001"
+          }
+        ],
+        "type": [
+          {
+            "text": "Public CHC"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b20-enc-1",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "b20-enc-1",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Encounter"
+          ]
+        },
+        "status": "finished",
+        "class": {
+          "code": "AMB"
+        },
+        "subject": {
+          "reference": "Patient/B20"
+        },
+        "serviceProvider": {
+          "reference": "Organization/HIP-GJ-AND-001"
+        },
+        "period": {
+          "start": "{{today-500d}}"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b20-cond-2",
+      "resource": {
+        "resourceType": "Condition",
+        "id": "b20-cond-2",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Condition"
+          ]
+        },
+        "subject": {
+          "reference": "Patient/B20"
+        },
+        "encounter": {
+          "reference": "Encounter/b20-enc-1"
+        },
+        "code": {
+          "text": "Benign prostatic hyperplasia"
+        },
+        "clinicalStatus": {
+          "text": "active"
+        },
+        "recordedDate": "{{today-500d}}"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b20-med-3",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "b20-med-3",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/MedicationRequest"
+          ]
+        },
+        "status": "active",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "text": "Tamsulosin"
+        },
+        "subject": {
+          "reference": "Patient/B20"
+        },
+        "encounter": {
+          "reference": "Encounter/b20-enc-1"
+        },
+        "authoredOn": "{{today-500d}}",
+        "requester": {
+          "reference": "Organization/HIP-GJ-AND-001"
+        },
+        "dosageInstruction": [
+          {
+            "text": "0.4 mg OD at night"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b20-appt-4",
+      "resource": {
+        "resourceType": "Appointment",
+        "id": "b20-appt-4",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Appointment"
+          ]
+        },
+        "status": "booked",
+        "description": "BPH review",
+        "start": "{{today-410d}}",
+        "participant": [
+          {
+            "actor": {
+              "reference": "Patient/B20"
+            },
+            "status": "accepted"
+          },
+          {
+            "actor": {
+              "reference": "Organization/HIP-GJ-AND-001"
+            },
+            "status": "accepted"
+          }
+        ]
+      }
+    }
+  ]
+}

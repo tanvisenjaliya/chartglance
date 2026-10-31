@@ -1,0 +1,267 @@
+{
+  "resourceType": "Bundle",
+  "id": "bundle-B13",
+  "type": "collection",
+  "meta": {
+    "tag": [
+      {
+        "code": "SYNTHETIC",
+        "display": "Synthetic demo data. Not a real patient."
+      }
+    ]
+  },
+  "entry": [
+    {
+      "fullUrl": "urn:uuid:b13-rec-5",
+      "resource": {
+        "resourceType": "Composition",
+        "id": "b13-rec-5",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/OPConsultRecord"
+          ]
+        },
+        "status": "final",
+        "type": {
+          "text": "OP consultation"
+        },
+        "title": "OP consultation",
+        "date": "{{today-200d}}",
+        "subject": {
+          "reference": "Patient/B13"
+        },
+        "encounter": {
+          "reference": "Encounter/b13-enc-1"
+        },
+        "author": [
+          {
+            "reference": "Organization/HIP-GJ-AND-042"
+          }
+        ],
+        "custodian": {
+          "reference": "Organization/HIP-GJ-AND-042"
+        },
+        "section": [
+          {
+            "title": "Clinical note",
+            "text": {
+              "status": "generated",
+              "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">NCD screening. BP 148/94. No prior h/o HTN. Recheck BP after 1 month before starting treatment.</div>"
+            },
+            "entry": [
+              {
+                "reference": "Observation/b13-obs-2"
+              },
+              {
+                "reference": "Observation/b13-obs-3"
+              },
+              {
+                "reference": "Appointment/b13-appt-4"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:B13",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "B13",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Patient"
+          ]
+        },
+        "name": [
+          {
+            "text": "Rukhsana Memon"
+          }
+        ],
+        "gender": "female",
+        "birthDate": "{{today-41y}}",
+        "address": [
+          {
+            "text": "Petlad, Anand district, Gujarat",
+            "city": "Petlad",
+            "district": "Anand",
+            "state": "Gujarat",
+            "country": "IN"
+          }
+        ],
+        "identifier": [
+          {
+            "type": {
+              "text": "ABHA number"
+            },
+            "system": "https://healthid.abdm.gov.in",
+            "value": "91-5555-8852-0013"
+          },
+          {
+            "type": {
+              "text": "ABHA address"
+            },
+            "system": "https://healthid.abdm.gov.in",
+            "value": "rukhsana.memon@sbx"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:HIP-GJ-AND-042",
+      "resource": {
+        "resourceType": "Organization",
+        "id": "HIP-GJ-AND-042",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Organization"
+          ]
+        },
+        "name": "PHC Navli (demo)",
+        "identifier": [
+          {
+            "system": "https://facility.abdm.gov.in",
+            "value": "HIP-GJ-AND-042"
+          }
+        ],
+        "type": [
+          {
+            "text": "Public PHC"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b13-enc-1",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "b13-enc-1",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Encounter"
+          ]
+        },
+        "status": "finished",
+        "class": {
+          "code": "AMB"
+        },
+        "subject": {
+          "reference": "Patient/B13"
+        },
+        "serviceProvider": {
+          "reference": "Organization/HIP-GJ-AND-042"
+        },
+        "period": {
+          "start": "{{today-200d}}"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b13-obs-2",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "b13-obs-2",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Observation"
+          ]
+        },
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "8480-6",
+              "display": "Systolic BP"
+            }
+          ],
+          "text": "Systolic BP"
+        },
+        "subject": {
+          "reference": "Patient/B13"
+        },
+        "encounter": {
+          "reference": "Encounter/b13-enc-1"
+        },
+        "effectiveDateTime": "{{today-200d}}",
+        "performer": [
+          {
+            "reference": "Organization/HIP-GJ-AND-042"
+          }
+        ],
+        "valueQuantity": {
+          "value": 148,
+          "unit": "mmHg"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b13-obs-3",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "b13-obs-3",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Observation"
+          ]
+        },
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "8462-4",
+              "display": "Diastolic BP"
+            }
+          ],
+          "text": "Diastolic BP"
+        },
+        "subject": {
+          "reference": "Patient/B13"
+        },
+        "encounter": {
+          "reference": "Encounter/b13-enc-1"
+        },
+        "effectiveDateTime": "{{today-200d}}",
+        "performer": [
+          {
+            "reference": "Organization/HIP-GJ-AND-042"
+          }
+        ],
+        "valueQuantity": {
+          "value": 94,
+          "unit": "mmHg"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b13-appt-4",
+      "resource": {
+        "resourceType": "Appointment",
+        "id": "b13-appt-4",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Appointment"
+          ]
+        },
+        "status": "booked",
+        "description": "BP recheck",
+        "start": "{{today-170d}}",
+        "participant": [
+          {
+            "actor": {
+              "reference": "Patient/B13"
+            },
+            "status": "accepted"
+          },
+          {
+            "actor": {
+              "reference": "Organization/HIP-GJ-AND-042"
+            },
+            "status": "accepted"
+          }
+        ]
+      }
+    }
+  ]
+}

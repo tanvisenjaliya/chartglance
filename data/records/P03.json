@@ -1,0 +1,634 @@
+{
+  "resourceType": "Bundle",
+  "id": "bundle-P03",
+  "type": "collection",
+  "meta": {
+    "tag": [
+      {
+        "code": "SYNTHETIC",
+        "display": "Synthetic demo data. Not a real patient."
+      }
+    ]
+  },
+  "entry": [
+    {
+      "fullUrl": "urn:uuid:p03-rec-4",
+      "resource": {
+        "resourceType": "Composition",
+        "id": "p03-rec-4",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/DiagnosticReportRecord"
+          ]
+        },
+        "status": "final",
+        "type": {
+          "text": "Diagnostic report"
+        },
+        "title": "Diagnostic report",
+        "date": "{{today-120d}}",
+        "subject": {
+          "reference": "Patient/P03"
+        },
+        "encounter": {
+          "reference": "Encounter/p03-enc-1"
+        },
+        "author": [
+          {
+            "reference": "Organization/HIP-RJ-UDR-015"
+          }
+        ],
+        "custodian": {
+          "reference": "Organization/HIP-RJ-UDR-015"
+        },
+        "section": [
+          {
+            "title": "Clinical note",
+            "text": {
+              "status": "generated",
+              "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Sputum CBNAAT: MTB detected, rifampicin resistance NOT detected. Notified (Ni-kshay). Pt migrating to Gujarat for work; transfer-out given.</div>"
+            },
+            "entry": [
+              {
+                "reference": "Condition/p03-cond-2"
+              },
+              {
+                "reference": "Observation/p03-obs-3"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:p03-rec-11",
+      "resource": {
+        "resourceType": "Composition",
+        "id": "p03-rec-11",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/PrescriptionRecord"
+          ]
+        },
+        "status": "final",
+        "type": {
+          "text": "Prescription"
+        },
+        "title": "Prescription",
+        "date": "{{today-118d}}",
+        "subject": {
+          "reference": "Patient/P03"
+        },
+        "encounter": {
+          "reference": "Encounter/p03-enc-5"
+        },
+        "author": [
+          {
+            "reference": "Organization/HIP-RJ-UDR-015"
+          }
+        ],
+        "custodian": {
+          "reference": "Organization/HIP-RJ-UDR-015"
+        },
+        "section": [
+          {
+            "title": "Clinical note",
+            "text": {
+              "status": "generated",
+              "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">DS-TB regimen, IP. 4FDC x3 OD (wt band 50-64). Transferred to PHC Navli, Gujarat for monthly pick-up.</div>"
+            },
+            "entry": [
+              {
+                "reference": "MedicationRequest/p03-med-6"
+              },
+              {
+                "reference": "MedicationDispense/p03-disp-7"
+              },
+              {
+                "reference": "MedicationDispense/p03-disp-8"
+              },
+              {
+                "reference": "MedicationDispense/p03-disp-9"
+              },
+              {
+                "reference": "Appointment/p03-appt-10"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:p03-rec-15",
+      "resource": {
+        "resourceType": "Composition",
+        "id": "p03-rec-15",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/OPConsultRecord"
+          ]
+        },
+        "status": "final",
+        "type": {
+          "text": "OP consultation"
+        },
+        "title": "OP consultation",
+        "date": "{{today-58d}}",
+        "subject": {
+          "reference": "Patient/P03"
+        },
+        "encounter": {
+          "reference": "Encounter/p03-enc-12"
+        },
+        "author": [
+          {
+            "reference": "Organization/HIP-GJ-AND-042"
+          }
+        ],
+        "custodian": {
+          "reference": "Organization/HIP-GJ-AND-042"
+        },
+        "section": [
+          {
+            "title": "Clinical note",
+            "text": {
+              "status": "generated",
+              "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Transfer-in from Rajasthan. TB f/u. Cough reduced. Wt 54 (from 52). Drugs issued for 30 days.</div>"
+            },
+            "entry": [
+              {
+                "reference": "Condition/p03-cond-13"
+              },
+              {
+                "reference": "Observation/p03-obs-14"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:P03",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "P03",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Patient"
+          ]
+        },
+        "name": [
+          {
+            "text": "Shankar Meena"
+          }
+        ],
+        "gender": "male",
+        "birthDate": "{{today-38y}}",
+        "address": [
+          {
+            "text": "Petlad, Anand district, Gujarat",
+            "city": "Petlad",
+            "district": "Anand",
+            "state": "Gujarat",
+            "country": "IN"
+          }
+        ],
+        "identifier": [
+          {
+            "type": {
+              "text": "ABHA number"
+            },
+            "system": "https://healthid.abdm.gov.in",
+            "value": "91-5555-6543-3003"
+          },
+          {
+            "type": {
+              "text": "ABHA address"
+            },
+            "system": "https://healthid.abdm.gov.in",
+            "value": "shankar.meena@sbx"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:HIP-GJ-AND-042",
+      "resource": {
+        "resourceType": "Organization",
+        "id": "HIP-GJ-AND-042",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Organization"
+          ]
+        },
+        "name": "PHC Navli (demo)",
+        "identifier": [
+          {
+            "system": "https://facility.abdm.gov.in",
+            "value": "HIP-GJ-AND-042"
+          }
+        ],
+        "type": [
+          {
+            "text": "Public PHC"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:HIP-RJ-UDR-015",
+      "resource": {
+        "resourceType": "Organization",
+        "id": "HIP-RJ-UDR-015",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Organization"
+          ]
+        },
+        "name": "CHC Kherwara, Rajasthan (demo)",
+        "identifier": [
+          {
+            "system": "https://facility.abdm.gov.in",
+            "value": "HIP-RJ-UDR-015"
+          }
+        ],
+        "type": [
+          {
+            "text": "Public CHC (other state)"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:p03-enc-1",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "p03-enc-1",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Encounter"
+          ]
+        },
+        "status": "finished",
+        "class": {
+          "code": "AMB"
+        },
+        "subject": {
+          "reference": "Patient/P03"
+        },
+        "serviceProvider": {
+          "reference": "Organization/HIP-RJ-UDR-015"
+        },
+        "period": {
+          "start": "{{today-120d}}"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:p03-cond-2",
+      "resource": {
+        "resourceType": "Condition",
+        "id": "p03-cond-2",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Condition"
+          ]
+        },
+        "subject": {
+          "reference": "Patient/P03"
+        },
+        "encounter": {
+          "reference": "Encounter/p03-enc-1"
+        },
+        "code": {
+          "text": "Pulmonary tuberculosis",
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "154283005",
+              "display": "Pulmonary tuberculosis"
+            }
+          ]
+        },
+        "clinicalStatus": {
+          "text": "active"
+        },
+        "recordedDate": "{{today-120d}}"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:p03-obs-3",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "p03-obs-3",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Observation"
+          ]
+        },
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "29463-7",
+              "display": "Body weight"
+            }
+          ],
+          "text": "Body weight"
+        },
+        "subject": {
+          "reference": "Patient/P03"
+        },
+        "encounter": {
+          "reference": "Encounter/p03-enc-1"
+        },
+        "effectiveDateTime": "{{today-120d}}",
+        "performer": [
+          {
+            "reference": "Organization/HIP-RJ-UDR-015"
+          }
+        ],
+        "valueQuantity": {
+          "value": 52,
+          "unit": "kg"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:p03-enc-5",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "p03-enc-5",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Encounter"
+          ]
+        },
+        "status": "finished",
+        "class": {
+          "code": "AMB"
+        },
+        "subject": {
+          "reference": "Patient/P03"
+        },
+        "serviceProvider": {
+          "reference": "Organization/HIP-RJ-UDR-015"
+        },
+        "period": {
+          "start": "{{today-118d}}"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:p03-med-6",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "p03-med-6",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/MedicationRequest"
+          ]
+        },
+        "status": "active",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "text": "HRZE fixed-dose combination (intensive phase)"
+        },
+        "subject": {
+          "reference": "Patient/P03"
+        },
+        "encounter": {
+          "reference": "Encounter/p03-enc-5"
+        },
+        "authoredOn": "{{today-118d}}",
+        "requester": {
+          "reference": "Organization/HIP-RJ-UDR-015"
+        },
+        "dosageInstruction": [
+          {
+            "text": "3 tab OD"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:p03-disp-7",
+      "resource": {
+        "resourceType": "MedicationDispense",
+        "id": "p03-disp-7",
+        "status": "completed",
+        "medicationCodeableConcept": {
+          "text": "HRZE fixed-dose combination (intensive phase)"
+        },
+        "subject": {
+          "reference": "Patient/P03"
+        },
+        "authorizingPrescription": [
+          {
+            "reference": "MedicationRequest/p03-med-6"
+          }
+        ],
+        "whenHandedOver": "{{today-118d}}",
+        "performer": [
+          {
+            "actor": {
+              "reference": "Organization/HIP-GJ-AND-042"
+            }
+          }
+        ],
+        "quantity": {
+          "value": 30,
+          "unit": "days supply"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:p03-disp-8",
+      "resource": {
+        "resourceType": "MedicationDispense",
+        "id": "p03-disp-8",
+        "status": "completed",
+        "medicationCodeableConcept": {
+          "text": "HRZE fixed-dose combination (intensive phase)"
+        },
+        "subject": {
+          "reference": "Patient/P03"
+        },
+        "authorizingPrescription": [
+          {
+            "reference": "MedicationRequest/p03-med-6"
+          }
+        ],
+        "whenHandedOver": "{{today-88d}}",
+        "performer": [
+          {
+            "actor": {
+              "reference": "Organization/HIP-GJ-AND-042"
+            }
+          }
+        ],
+        "quantity": {
+          "value": 30,
+          "unit": "days supply"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:p03-disp-9",
+      "resource": {
+        "resourceType": "MedicationDispense",
+        "id": "p03-disp-9",
+        "status": "completed",
+        "medicationCodeableConcept": {
+          "text": "HRZE fixed-dose combination (intensive phase)"
+        },
+        "subject": {
+          "reference": "Patient/P03"
+        },
+        "authorizingPrescription": [
+          {
+            "reference": "MedicationRequest/p03-med-6"
+          }
+        ],
+        "whenHandedOver": "{{today-58d}}",
+        "performer": [
+          {
+            "actor": {
+              "reference": "Organization/HIP-GJ-AND-042"
+            }
+          }
+        ],
+        "quantity": {
+          "value": 30,
+          "unit": "days supply"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:p03-appt-10",
+      "resource": {
+        "resourceType": "Appointment",
+        "id": "p03-appt-10",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Appointment"
+          ]
+        },
+        "status": "booked",
+        "description": "TB medicine pick-up",
+        "start": "{{today-28d}}",
+        "participant": [
+          {
+            "actor": {
+              "reference": "Patient/P03"
+            },
+            "status": "accepted"
+          },
+          {
+            "actor": {
+              "reference": "Organization/HIP-RJ-UDR-015"
+            },
+            "status": "accepted"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:p03-enc-12",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "p03-enc-12",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Encounter"
+          ]
+        },
+        "status": "finished",
+        "class": {
+          "code": "AMB"
+        },
+        "subject": {
+          "reference": "Patient/P03"
+        },
+        "serviceProvider": {
+          "reference": "Organization/HIP-GJ-AND-042"
+        },
+        "period": {
+          "start": "{{today-58d}}"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:p03-cond-13",
+      "resource": {
+        "resourceType": "Condition",
+        "id": "p03-cond-13",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Condition"
+          ]
+        },
+        "subject": {
+          "reference": "Patient/P03"
+        },
+        "encounter": {
+          "reference": "Encounter/p03-enc-12"
+        },
+        "code": {
+          "text": "Pulmonary tuberculosis",
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "154283005",
+              "display": "Pulmonary tuberculosis"
+            }
+          ]
+        },
+        "clinicalStatus": {
+          "text": "active"
+        },
+        "recordedDate": "{{today-58d}}"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:p03-obs-14",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "p03-obs-14",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Observation"
+          ]
+        },
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "29463-7",
+              "display": "Body weight"
+            }
+          ],
+          "text": "Body weight"
+        },
+        "subject": {
+          "reference": "Patient/P03"
+        },
+        "encounter": {
+          "reference": "Encounter/p03-enc-12"
+        },
+        "effectiveDateTime": "{{today-58d}}",
+        "performer": [
+          {
+            "reference": "Organization/HIP-GJ-AND-042"
+          }
+        ],
+        "valueQuantity": {
+          "value": 54,
+          "unit": "kg"
+        }
+      }
+    }
+  ]
+}

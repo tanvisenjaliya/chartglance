@@ -1,0 +1,256 @@
+{
+  "resourceType": "Bundle",
+  "id": "bundle-B08",
+  "type": "collection",
+  "meta": {
+    "tag": [
+      {
+        "code": "SYNTHETIC",
+        "display": "Synthetic demo data. Not a real patient."
+      }
+    ]
+  },
+  "entry": [
+    {
+      "fullUrl": "urn:uuid:b08-rec-5",
+      "resource": {
+        "resourceType": "Composition",
+        "id": "b08-rec-5",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/DiagnosticReportRecord"
+          ]
+        },
+        "status": "final",
+        "type": {
+          "text": "Diagnostic report"
+        },
+        "title": "Diagnostic report",
+        "date": "{{today-45d}}",
+        "subject": {
+          "reference": "Patient/B08"
+        },
+        "encounter": {
+          "reference": "Encounter/b08-enc-1"
+        },
+        "author": [
+          {
+            "reference": "Organization/HIP-GJ-AND-042"
+          }
+        ],
+        "custodian": {
+          "reference": "Organization/HIP-GJ-AND-042"
+        },
+        "section": [
+          {
+            "title": "Clinical note",
+            "text": {
+              "status": "generated",
+              "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">School anaemia screening. Hb 9.1. Weekly IFA. Sickle cell screening adv - not done.</div>"
+            },
+            "entry": [
+              {
+                "reference": "Condition/b08-cond-2"
+              },
+              {
+                "reference": "Observation/b08-obs-3"
+              },
+              {
+                "reference": "MedicationRequest/b08-med-4"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:B08",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "B08",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Patient"
+          ]
+        },
+        "name": [
+          {
+            "text": "Krupali Chaudhary"
+          }
+        ],
+        "gender": "female",
+        "birthDate": "{{today-16y}}",
+        "address": [
+          {
+            "text": "Bakrol, Anand district, Gujarat",
+            "city": "Bakrol",
+            "district": "Anand",
+            "state": "Gujarat",
+            "country": "IN"
+          }
+        ],
+        "identifier": [
+          {
+            "type": {
+              "text": "ABHA number"
+            },
+            "system": "https://healthid.abdm.gov.in",
+            "value": "91-5555-5529-0008"
+          },
+          {
+            "type": {
+              "text": "ABHA address"
+            },
+            "system": "https://healthid.abdm.gov.in",
+            "value": "krupali.chaudhary@sbx"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:HIP-GJ-AND-042",
+      "resource": {
+        "resourceType": "Organization",
+        "id": "HIP-GJ-AND-042",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Organization"
+          ]
+        },
+        "name": "PHC Navli (demo)",
+        "identifier": [
+          {
+            "system": "https://facility.abdm.gov.in",
+            "value": "HIP-GJ-AND-042"
+          }
+        ],
+        "type": [
+          {
+            "text": "Public PHC"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b08-enc-1",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "b08-enc-1",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Encounter"
+          ]
+        },
+        "status": "finished",
+        "class": {
+          "code": "AMB"
+        },
+        "subject": {
+          "reference": "Patient/B08"
+        },
+        "serviceProvider": {
+          "reference": "Organization/HIP-GJ-AND-042"
+        },
+        "period": {
+          "start": "{{today-45d}}"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b08-cond-2",
+      "resource": {
+        "resourceType": "Condition",
+        "id": "b08-cond-2",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Condition"
+          ]
+        },
+        "subject": {
+          "reference": "Patient/B08"
+        },
+        "encounter": {
+          "reference": "Encounter/b08-enc-1"
+        },
+        "code": {
+          "text": "Anaemia"
+        },
+        "clinicalStatus": {
+          "text": "active"
+        },
+        "recordedDate": "{{today-45d}}"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b08-obs-3",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "b08-obs-3",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Observation"
+          ]
+        },
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "718-7",
+              "display": "Haemoglobin"
+            }
+          ],
+          "text": "Haemoglobin"
+        },
+        "subject": {
+          "reference": "Patient/B08"
+        },
+        "encounter": {
+          "reference": "Encounter/b08-enc-1"
+        },
+        "effectiveDateTime": "{{today-45d}}",
+        "performer": [
+          {
+            "reference": "Organization/HIP-GJ-AND-042"
+          }
+        ],
+        "valueQuantity": {
+          "value": 9.1,
+          "unit": "g/dL"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b08-med-4",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "b08-med-4",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/MedicationRequest"
+          ]
+        },
+        "status": "active",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "text": "Iron + folic acid (IFA, weekly)"
+        },
+        "subject": {
+          "reference": "Patient/B08"
+        },
+        "encounter": {
+          "reference": "Encounter/b08-enc-1"
+        },
+        "authoredOn": "{{today-45d}}",
+        "requester": {
+          "reference": "Organization/HIP-GJ-AND-042"
+        },
+        "dosageInstruction": [
+          {
+            "text": "1 tab Once weekly"
+          }
+        ]
+      }
+    }
+  ]
+}

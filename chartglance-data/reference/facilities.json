@@ -1,0 +1,27 @@
+[
+  {
+    "id": "HIP-GJ-AND-042",
+    "name": "PHC Navli (demo)",
+    "type": "Public PHC"
+  },
+  {
+    "id": "HIP-GJ-AND-001",
+    "name": "CHC Petlad (demo)",
+    "type": "Public CHC"
+  },
+  {
+    "id": "HIP-GJ-AND-101",
+    "name": "General Hospital Anand (demo)",
+    "type": "Public district hospital"
+  },
+  {
+    "id": "HIP-GJ-AND-207",
+    "name": "Shiv Care Hospital, Anand (fictional)",
+    "type": "Private hospital"
+  },
+  {
+    "id": "HIP-RJ-UDR-015",
+    "name": "CHC Kherwara, Rajasthan (demo)",
+    "type": "Public CHC (other state)"
+  }
+]

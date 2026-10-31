@@ -48,7 +48,15 @@ CDSCO medical-device regulation; out of scope.)
 6. **Priority ordering of the queue** – patients sorted by rule-based flags, with the reason
    always visible (e.g. "2 red flags: severe anaemia in pregnancy"). No AI scoring.
 7. **Alert dismissal with a reason** – logged, so the doctor stays in control.
-8. **Consultation note** – short free text, saved per visit.
+8. **Consultation note** – clinical notes recorded per visit when status is "In consultation".
+   Includes notes text area (required, with confirmation prompt if closed empty) and follow-up
+   schedule selector (none, 1 week, 2 weeks, 1 month, 3 months). Automatically autosaves draft
+   every few seconds and restores upon reload. "Save & mark done" saves date, time, doctor name,
+   and facility, sets visit to Done, and returns to queue. Saved notes are immutable (read-only),
+   supporting dated corrections via "Add addendum". Historical visits are listed under
+   "Previous visits at this PHC" (newest first) and are visible without ABDM consent since they
+   belong directly to the local facility. Completed visits feature a "Start new visit" action
+   to demonstrate return visits in the queue.
 9. **Evaluation** – script comparing summaries against doctor-written must-know facts.
 
 ### Out of scope (roadmap only)

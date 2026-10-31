@@ -1,0 +1,193 @@
+{
+  "resourceType": "Bundle",
+  "id": "bundle-B17",
+  "type": "collection",
+  "meta": {
+    "tag": [
+      {
+        "code": "SYNTHETIC",
+        "display": "Synthetic demo data. Not a real patient."
+      }
+    ]
+  },
+  "entry": [
+    {
+      "fullUrl": "urn:uuid:b17-rec-3",
+      "resource": {
+        "resourceType": "Composition",
+        "id": "b17-rec-3",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/DiagnosticReportRecord"
+          ]
+        },
+        "status": "final",
+        "type": {
+          "text": "Diagnostic report"
+        },
+        "title": "Diagnostic report",
+        "date": "{{today-14d}}",
+        "subject": {
+          "reference": "Patient/B17"
+        },
+        "encounter": {
+          "reference": "Encounter/b17-enc-1"
+        },
+        "author": [
+          {
+            "reference": "Organization/HIP-GJ-AND-042"
+          }
+        ],
+        "custodian": {
+          "reference": "Organization/HIP-GJ-AND-042"
+        },
+        "section": [
+          {
+            "title": "Clinical note",
+            "text": {
+              "status": "generated",
+              "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">FBS 168 mg/dL (NCD screening camp). Adv review with MO.</div>"
+            },
+            "entry": [
+              {
+                "reference": "Observation/b17-obs-2"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:B17",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "B17",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Patient"
+          ]
+        },
+        "name": [
+          {
+            "text": "Bhavna Panchal"
+          }
+        ],
+        "gender": "female",
+        "birthDate": "{{today-50y}}",
+        "address": [
+          {
+            "text": "Bakrol, Anand district, Gujarat",
+            "city": "Bakrol",
+            "district": "Anand",
+            "state": "Gujarat",
+            "country": "IN"
+          }
+        ],
+        "identifier": [
+          {
+            "type": {
+              "text": "ABHA number"
+            },
+            "system": "https://healthid.abdm.gov.in",
+            "value": "91-5555-3296-0017"
+          },
+          {
+            "type": {
+              "text": "ABHA address"
+            },
+            "system": "https://healthid.abdm.gov.in",
+            "value": "bhavna.panchal@sbx"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:HIP-GJ-AND-042",
+      "resource": {
+        "resourceType": "Organization",
+        "id": "HIP-GJ-AND-042",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Organization"
+          ]
+        },
+        "name": "PHC Navli (demo)",
+        "identifier": [
+          {
+            "system": "https://facility.abdm.gov.in",
+            "value": "HIP-GJ-AND-042"
+          }
+        ],
+        "type": [
+          {
+            "text": "Public PHC"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b17-enc-1",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "b17-enc-1",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Encounter"
+          ]
+        },
+        "status": "finished",
+        "class": {
+          "code": "AMB"
+        },
+        "subject": {
+          "reference": "Patient/B17"
+        },
+        "serviceProvider": {
+          "reference": "Organization/HIP-GJ-AND-042"
+        },
+        "period": {
+          "start": "{{today-14d}}"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b17-obs-2",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "b17-obs-2",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Observation"
+          ]
+        },
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "1558-6",
+              "display": "Fasting blood glucose"
+            }
+          ],
+          "text": "Fasting blood glucose"
+        },
+        "subject": {
+          "reference": "Patient/B17"
+        },
+        "encounter": {
+          "reference": "Encounter/b17-enc-1"
+        },
+        "effectiveDateTime": "{{today-14d}}",
+        "performer": [
+          {
+            "reference": "Organization/HIP-GJ-AND-042"
+          }
+        ],
+        "valueQuantity": {
+          "value": 168,
+          "unit": "mg/dL"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,291 @@
+{
+  "resourceType": "Bundle",
+  "id": "bundle-B15",
+  "type": "collection",
+  "meta": {
+    "tag": [
+      {
+        "code": "SYNTHETIC",
+        "display": "Synthetic demo data. Not a real patient."
+      }
+    ]
+  },
+  "entry": [
+    {
+      "fullUrl": "urn:uuid:b15-rec-6",
+      "resource": {
+        "resourceType": "Composition",
+        "id": "b15-rec-6",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/DischargeSummaryRecord"
+          ]
+        },
+        "status": "final",
+        "type": {
+          "text": "Discharge summary"
+        },
+        "title": "Discharge summary",
+        "date": "{{today-42d}}",
+        "subject": {
+          "reference": "Patient/B15"
+        },
+        "encounter": {
+          "reference": "Encounter/b15-enc-1"
+        },
+        "author": [
+          {
+            "reference": "Organization/HIP-GJ-AND-001"
+          }
+        ],
+        "custodian": {
+          "reference": "Organization/HIP-GJ-AND-001"
+        },
+        "section": [
+          {
+            "title": "Clinical note",
+            "text": {
+              "status": "generated",
+              "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">FTND, live female baby 2.8 kg. Mother stable. Hb 9.5. IFA + Ca x 6 mo. PNC visits by ASHA.</div>"
+            },
+            "entry": [
+              {
+                "reference": "Condition/b15-cond-2"
+              },
+              {
+                "reference": "Observation/b15-obs-3"
+              },
+              {
+                "reference": "MedicationRequest/b15-med-4"
+              },
+              {
+                "reference": "MedicationRequest/b15-med-5"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:B15",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "B15",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Patient"
+          ]
+        },
+        "name": [
+          {
+            "text": "Krishna Bharwad"
+          }
+        ],
+        "gender": "female",
+        "birthDate": "{{today-29y}}",
+        "address": [
+          {
+            "text": "Navli, Anand district, Gujarat",
+            "city": "Navli",
+            "district": "Anand",
+            "state": "Gujarat",
+            "country": "IN"
+          }
+        ],
+        "identifier": [
+          {
+            "type": {
+              "text": "ABHA number"
+            },
+            "system": "https://healthid.abdm.gov.in",
+            "value": "91-5555-1074-0015"
+          },
+          {
+            "type": {
+              "text": "ABHA address"
+            },
+            "system": "https://healthid.abdm.gov.in",
+            "value": "krishna.bharwad@sbx"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:HIP-GJ-AND-001",
+      "resource": {
+        "resourceType": "Organization",
+        "id": "HIP-GJ-AND-001",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Organization"
+          ]
+        },
+        "name": "CHC Petlad (demo)",
+        "identifier": [
+          {
+            "system": "https://facility.abdm.gov.in",
+            "value": "HIP-GJ-AND-001"
+          }
+        ],
+        "type": [
+          {
+            "text": "Public CHC"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b15-enc-1",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "b15-enc-1",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Encounter"
+          ]
+        },
+        "status": "finished",
+        "class": {
+          "code": "IMP"
+        },
+        "subject": {
+          "reference": "Patient/B15"
+        },
+        "serviceProvider": {
+          "reference": "Organization/HIP-GJ-AND-001"
+        },
+        "period": {
+          "start": "{{today-42d}}"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b15-cond-2",
+      "resource": {
+        "resourceType": "Condition",
+        "id": "b15-cond-2",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Condition"
+          ]
+        },
+        "subject": {
+          "reference": "Patient/B15"
+        },
+        "encounter": {
+          "reference": "Encounter/b15-enc-1"
+        },
+        "code": {
+          "text": "Normal vaginal delivery"
+        },
+        "clinicalStatus": {
+          "text": "active"
+        },
+        "recordedDate": "{{today-42d}}"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b15-obs-3",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "b15-obs-3",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Observation"
+          ]
+        },
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "718-7",
+              "display": "Haemoglobin"
+            }
+          ],
+          "text": "Haemoglobin"
+        },
+        "subject": {
+          "reference": "Patient/B15"
+        },
+        "encounter": {
+          "reference": "Encounter/b15-enc-1"
+        },
+        "effectiveDateTime": "{{today-42d}}",
+        "performer": [
+          {
+            "reference": "Organization/HIP-GJ-AND-001"
+          }
+        ],
+        "valueQuantity": {
+          "value": 9.5,
+          "unit": "g/dL"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b15-med-4",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "b15-med-4",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/MedicationRequest"
+          ]
+        },
+        "status": "active",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "text": "Iron + folic acid (IFA)"
+        },
+        "subject": {
+          "reference": "Patient/B15"
+        },
+        "encounter": {
+          "reference": "Encounter/b15-enc-1"
+        },
+        "authoredOn": "{{today-42d}}",
+        "requester": {
+          "reference": "Organization/HIP-GJ-AND-001"
+        },
+        "dosageInstruction": [
+          {
+            "text": "1 tab OD"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b15-med-5",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "b15-med-5",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/MedicationRequest"
+          ]
+        },
+        "status": "active",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "text": "Calcium"
+        },
+        "subject": {
+          "reference": "Patient/B15"
+        },
+        "encounter": {
+          "reference": "Encounter/b15-enc-1"
+        },
+        "authoredOn": "{{today-42d}}",
+        "requester": {
+          "reference": "Organization/HIP-GJ-AND-001"
+        },
+        "dosageInstruction": [
+          {
+            "text": "500 mg BD"
+          }
+        ]
+      }
+    }
+  ]
+}

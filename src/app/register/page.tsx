@@ -6,34 +6,32 @@ import { useRouter } from "next/navigation";
 
 // Common chief complaints for the OPD dropdown
 const CHIEF_COMPLAINTS = [
+  "Follow-up for diabetes / blood sugar check",
+  "High blood pressure check",
   "Fever and body ache",
-  "Cough and cold",
-  "Blood pressure check",
-  "Diabetes follow-up",
-  "Abdominal pain",
-  "ANC / maternal care visit",
-  "Joint pain",
-  "Headache / giddiness",
-  "Skin rash or allergy",
+  "Cough and cold / breathlessness",
+  "Knee / joint pain",
+  "Abdominal pain / indigestion",
+  "ANC / maternal health visit",
   "Medicine refill",
+  "Weakness and giddiness",
   "General check-up",
-  "Chest pain or breathlessness",
-  "Eye / ear complaint",
-  "Wound dressing",
-  "Child vaccination",
+  "Skin rash or allergy",
   "Other",
 ];
 
 interface LookedUpPatient {
   id: string;
   name: string;
-  age: number;
+  age: string | number;
   gender: string;
   abhaNumber: string;
   abhaAddress: string;
   hasRecords: boolean;
   recordCount: number;
   recordFacilities: string[];
+  village?: string;
+  district?: string;
   recordSummary: string;
 }
 
@@ -70,7 +68,7 @@ export default function RegisterPatientPage() {
       } else {
         setLookupError(
           data.error ||
-            "ABHA not found in the mock registry. The patient may not have a linked ABHA account."
+            "ABHA not found in the mock registry. Please verify the 14-digit ABHA number or address."
         );
       }
     } catch {
@@ -142,15 +140,13 @@ export default function RegisterPatientPage() {
       </header>
 
       <main className="max-w-3xl mx-auto px-6 py-10 space-y-8">
-        {/* Page Title */}
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-navy">
             Register Patient
           </h1>
           <p className="text-sm text-navy-muted mt-1">
-            Enter the patient&apos;s ABHA number or address to look them up in
-            the mock ABDM registry, then add them to today&apos;s OPD queue and
-            start the consent request.
+            Look up a patient by their ABHA number or ABHA address in the registry,
+            add them to today&apos;s OPD queue, and start the ABDM consent flow.
           </p>
         </div>
 
@@ -179,7 +175,7 @@ export default function RegisterPatientPage() {
                   type="text"
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
-                  placeholder="e.g. 91-1234-5678-9012 or priya.kadam1@sbx"
+                  placeholder="e.g. 91-5555-2031-0006 or savitaben.solanki@sbx"
                   className="flex-1 px-4 py-2.5 rounded-xl border border-border bg-panel text-navy text-sm font-mono placeholder:text-slate/60 focus:outline-none focus:ring-2 focus:ring-blue/40 focus:border-blue"
                   required
                   autoComplete="off"
@@ -193,10 +189,7 @@ export default function RegisterPatientPage() {
                 </button>
               </div>
               <p className="mt-1.5 text-[11px] text-slate">
-                Format: ABHA number{" "}
-                <code className="font-mono">XX-XXXX-XXXX-XXXX</code> or ABHA
-                address{" "}
-                <code className="font-mono">firstname.lastname[N]@sbx</code>
+                Format: ABHA number <code className="font-mono">XX-XXXX-XXXX-XXXX</code> or address <code className="font-mono">name@sbx</code>
               </p>
             </div>
           </form>
@@ -221,14 +214,15 @@ export default function RegisterPatientPage() {
                   </p>
                   <p className="text-xs text-navy-muted mt-0.5">
                     {lookedUp.age} yrs &bull; {lookedUp.gender}
+                    {lookedUp.village && ` • ${lookedUp.village}`}
                   </p>
                 </div>
                 {alreadyInQueue ? (
-                  <span className="shrink-0 font-mono text-[11px] uppercase tracking-wider px-2.5 py-1 rounded-full border border-amber-300 bg-amber-50 text-amber-800">
-                    Already in queue
+                  <span className="shrink-0 font-mono text-[11px] uppercase tracking-wider px-2.5 py-1 rounded-full border border-amber-300 bg-amber-50 text-amber-800 font-semibold">
+                    Already in today&apos;s queue
                   </span>
                 ) : (
-                  <span className="shrink-0 font-mono text-[11px] uppercase tracking-wider px-2.5 py-1 rounded-full border border-border bg-surface text-slate">
+                  <span className="shrink-0 font-mono text-[11px] uppercase tracking-wider px-2.5 py-1 rounded-full border border-border bg-surface text-slate font-semibold">
                     Not in queue
                   </span>
                 )}
@@ -260,8 +254,7 @@ export default function RegisterPatientPage() {
                 <p className="text-xs text-navy">{lookedUp.recordSummary}</p>
                 {lookedUp.recordFacilities.length > 0 && (
                   <p className="text-[11px] text-slate mt-1">
-                    Facilities:{" "}
-                    {lookedUp.recordFacilities.join(", ")}
+                    Facilities on record: {lookedUp.recordFacilities.join(", ")}
                   </p>
                 )}
               </div>
@@ -269,7 +262,7 @@ export default function RegisterPatientPage() {
           )}
         </div>
 
-        {/* Step 2 — Add to Queue (only shown after successful lookup) */}
+        {/* Step 2 — Add to Queue */}
         {lookedUp && !alreadyInQueue && (
           <div className="bg-surface rounded-2xl border border-border p-6 shadow-sm space-y-4">
             <div>
@@ -280,8 +273,7 @@ export default function RegisterPatientPage() {
                 Record chief complaint
               </h2>
               <p className="text-xs text-navy-muted mt-1">
-                Select or enter the patient&apos;s presenting complaint. A
-                consent request will be sent automatically once they are added.
+                Select or enter the patient&apos;s presenting complaint. A consent request can be started once added.
               </p>
             </div>
 
@@ -322,7 +314,7 @@ export default function RegisterPatientPage() {
                     type="text"
                     value={customComplaint}
                     onChange={(e) => setCustomComplaint(e.target.value)}
-                    placeholder="Describe the chief complaint…"
+                    placeholder="Describe the presenting complaint…"
                     required
                     className="w-full px-4 py-2.5 rounded-xl border border-border bg-panel text-navy text-sm focus:outline-none focus:ring-2 focus:ring-blue/40 focus:border-blue"
                   />
@@ -337,10 +329,7 @@ export default function RegisterPatientPage() {
 
               <div className="flex items-center justify-between gap-4 pt-2">
                 <p className="text-[11px] text-slate">
-                  Patient will be added with token{" "}
-                  <strong className="text-navy">next available</strong> and
-                  status{" "}
-                  <strong className="text-navy">Waiting</strong>.
+                  Patient will be added with next available token and status <strong className="text-navy">Waiting</strong>.
                 </p>
                 <button
                   type="submit"
@@ -362,18 +351,16 @@ export default function RegisterPatientPage() {
         {lookedUp && alreadyInQueue && (
           <div className="bg-surface rounded-2xl border border-border p-6 shadow-sm">
             <p className="text-sm font-semibold text-navy">
-              Already in today&apos;s queue
+              Patient is already registered
             </p>
             <p className="text-xs text-navy-muted mt-1">
-              {lookedUp.name} is already registered in today&apos;s OPD queue.
-              Open their entry from the queue list to manage their consent and
-              records.
+              {lookedUp.name} is already registered in today&apos;s OPD queue. You can open their record directly from the queue.
             </p>
             <Link
-              href="/"
+              href={`/patient/${lookedUp.id}`}
               className="inline-block mt-3 text-xs font-semibold text-blue hover:underline"
             >
-              &larr; Return to OPD Queue
+              Open Patient Consultation &rarr;
             </Link>
           </div>
         )}
@@ -381,4 +368,3 @@ export default function RegisterPatientPage() {
     </div>
   );
 }
-

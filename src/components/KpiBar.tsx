@@ -2,11 +2,7 @@
 
 import { PatientQueueItem } from "@/lib/records";
 
-export type FilterType =
-  | "all"
-  | "Records available"
-  | "ABHA, no records"
-  | "No ABHA";
+export type FilterType = "all" | "Records available" | "ABHA, no records";
 
 interface KpiBarProps {
   patients: PatientQueueItem[];
@@ -26,14 +22,11 @@ export default function KpiBar({
   const abhaNoRecordsCount = patients.filter(
     (p) => p.dataStatus === "ABHA, no records"
   ).length;
-  const noAbhaCount = patients.filter(
-    (p) => p.dataStatus === "No ABHA"
-  ).length;
 
   return (
     <div className="space-y-4">
       {/* KPI & Records Status Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         {/* Total in Queue Card */}
         <button
           type="button"
@@ -51,9 +44,7 @@ export default function KpiBar({
             <span className="w-2 h-2 rounded-full bg-blue" />
           </div>
           <div className="mt-2 flex items-baseline gap-2">
-            <span className="text-2xl font-bold text-navy">
-              {total}
-            </span>
+            <span className="text-2xl font-bold text-navy">{total}</span>
             <span className="text-xs text-navy-muted">Patients</span>
           </div>
           <span className="mt-1 text-xs text-blue block">
@@ -76,7 +67,7 @@ export default function KpiBar({
           }`}
         >
           <div className="flex items-center justify-between">
-            <span className="font-mono text-xs uppercase tracking-wider text-navy">
+            <span className="font-mono text-xs uppercase tracking-wider text-slate">
               RECORDS AVAILABLE
             </span>
             <span className="w-2 h-2 rounded-full bg-blue" />
@@ -94,7 +85,7 @@ export default function KpiBar({
           </span>
         </button>
 
-        {/* Filter 2: ABHA, no records */}
+        {/* Filter 2: ABHA, No Records */}
         <button
           type="button"
           onClick={() =>
@@ -126,39 +117,6 @@ export default function KpiBar({
               : "Click to filter"}
           </span>
         </button>
-
-        {/* Filter 3: No ABHA */}
-        <button
-          type="button"
-          onClick={() =>
-            onFilterChange(
-              activeFilter === "No ABHA" ? "all" : "No ABHA"
-            )
-          }
-          className={`p-4 rounded-2xl border text-left transition-all ${
-            activeFilter === "No ABHA"
-              ? "bg-surface border-blue shadow-sm ring-1 ring-blue"
-              : "bg-surface border-border hover:border-slate/50 hover:bg-panel/40"
-          }`}
-        >
-          <div className="flex items-center justify-between">
-            <span className="font-mono text-xs uppercase tracking-wider text-slate">
-              NO ABHA
-            </span>
-            <span className="w-2 h-2 rounded-full bg-slate/40" />
-          </div>
-          <div className="mt-2 flex items-baseline gap-2">
-            <span className="text-2xl font-bold text-navy">
-              {noAbhaCount}
-            </span>
-            <span className="text-xs text-navy-muted">Patients</span>
-          </div>
-          <span className="mt-1 text-xs text-blue block">
-            {activeFilter === "No ABHA"
-              ? "Filter active · Click to reset"
-              : "Click to filter"}
-          </span>
-        </button>
       </div>
 
       {/* Active filter notification bar */}
@@ -168,9 +126,7 @@ export default function KpiBar({
             <span className="font-mono text-xs uppercase tracking-wider text-slate">
               STATUS FILTER:
             </span>
-            <span className="font-semibold text-navy">
-              {activeFilter}
-            </span>
+            <span className="font-semibold text-navy">{activeFilter}</span>
           </div>
           <button
             type="button"

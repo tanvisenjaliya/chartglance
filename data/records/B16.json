@@ -1,0 +1,184 @@
+{
+  "resourceType": "Bundle",
+  "id": "bundle-B16",
+  "type": "collection",
+  "meta": {
+    "tag": [
+      {
+        "code": "SYNTHETIC",
+        "display": "Synthetic demo data. Not a real patient."
+      }
+    ]
+  },
+  "entry": [
+    {
+      "fullUrl": "urn:uuid:b16-rec-3",
+      "resource": {
+        "resourceType": "Composition",
+        "id": "b16-rec-3",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/HealthDocumentRecord"
+          ]
+        },
+        "status": "final",
+        "type": {
+          "text": "Scanned health document"
+        },
+        "title": "Scanned health document",
+        "date": "{{today-700d}}",
+        "subject": {
+          "reference": "Patient/B16"
+        },
+        "encounter": {
+          "reference": "Encounter/b16-enc-1"
+        },
+        "author": [
+          {
+            "reference": "Organization/HIP-GJ-AND-207"
+          }
+        ],
+        "custodian": {
+          "reference": "Organization/HIP-GJ-AND-207"
+        },
+        "section": [
+          {
+            "title": "Clinical note",
+            "text": {
+              "status": "generated",
+              "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Scanned document. No structured data. Content not machine-readable.</div>"
+            },
+            "entry": [
+              {
+                "reference": "DocumentReference/b16-doc-2"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:B16",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "B16",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Patient"
+          ]
+        },
+        "name": [
+          {
+            "text": "Navinchandra Mehta"
+          }
+        ],
+        "gender": "male",
+        "birthDate": "{{today-64y}}",
+        "address": [
+          {
+            "text": "Anand, Anand district, Gujarat",
+            "city": "Anand",
+            "district": "Anand",
+            "state": "Gujarat",
+            "country": "IN"
+          }
+        ],
+        "identifier": [
+          {
+            "type": {
+              "text": "ABHA number"
+            },
+            "system": "https://healthid.abdm.gov.in",
+            "value": "91-5555-2185-0016"
+          },
+          {
+            "type": {
+              "text": "ABHA address"
+            },
+            "system": "https://healthid.abdm.gov.in",
+            "value": "navinchandra.mehta@sbx"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:HIP-GJ-AND-207",
+      "resource": {
+        "resourceType": "Organization",
+        "id": "HIP-GJ-AND-207",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Organization"
+          ]
+        },
+        "name": "Shiv Care Hospital, Anand (fictional)",
+        "identifier": [
+          {
+            "system": "https://facility.abdm.gov.in",
+            "value": "HIP-GJ-AND-207"
+          }
+        ],
+        "type": [
+          {
+            "text": "Private hospital"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b16-enc-1",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "b16-enc-1",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Encounter"
+          ]
+        },
+        "status": "finished",
+        "class": {
+          "code": "AMB"
+        },
+        "subject": {
+          "reference": "Patient/B16"
+        },
+        "serviceProvider": {
+          "reference": "Organization/HIP-GJ-AND-207"
+        },
+        "period": {
+          "start": "{{today-700d}}"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b16-doc-2",
+      "resource": {
+        "resourceType": "DocumentReference",
+        "id": "b16-doc-2",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/DocumentReference"
+          ]
+        },
+        "status": "current",
+        "type": {
+          "text": "Cardiology discharge summary (scanned PDF)"
+        },
+        "subject": {
+          "reference": "Patient/B16"
+        },
+        "date": "{{today-700d}}",
+        "content": [
+          {
+            "attachment": {
+              "contentType": "application/pdf",
+              "title": "Cardiology discharge summary (scanned PDF)",
+              "data": null
+            }
+          }
+        ],
+        "description": "Scanned PDF; not machine-readable in this prototype"
+      }
+    }
+  ]
+}

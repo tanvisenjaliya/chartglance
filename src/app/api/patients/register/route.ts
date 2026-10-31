@@ -3,26 +3,14 @@ import {
   getOpdQueue,
   saveOpdQueue,
   getNextTokenNumber,
+  getAllRegistryPatients,
   PatientQueueItem,
 } from "@/lib/records";
 
 /**
  * POST /api/patients/register
  *
- * Body:
- * {
- *   id: string;           // from background-patients (bg-XX) or "unknown"
- *   name: string;
- *   age: number;
- *   gender: "Male" | "Female" | "Other";
- *   abhaNumber: string;
- *   abhaAddress: string;
- *   hasRecords: boolean;
- *   recordCount: number;
- *   chiefComplaint: string;
- * }
- *
- * Appends the patient to patients.json and returns the new entry.
+ * Adds a patient into today's queue (data/todays-queue.json)
  */
 export async function POST(req: NextRequest) {
   try {
@@ -41,8 +29,8 @@ export async function POST(req: NextRequest) {
     } = body as {
       id: string;
       name: string;
-      age: number;
-      gender: "Male" | "Female" | "Other";
+      age: string | number;
+      gender: "Male" | "Female" | "Other" | "M" | "F" | "O";
       abhaNumber: string;
       abhaAddress: string;
       hasRecords: boolean;
@@ -59,10 +47,10 @@ export async function POST(req: NextRequest) {
 
     const queue = getOpdQueue();
 
-    // Don't duplicate: if this id (bg patient) is already in the queue, reject
-    if (id && queue.find((p) => p.id === id)) {
+    // Check if already in queue
+    if (id && queue.some((p) => p.id === id)) {
       return NextResponse.json(
-        { error: "Patient is already in today's queue" },
+        { error: "Patient is already in today's OPD queue" },
         { status: 409 }
       );
     }
@@ -71,11 +59,15 @@ export async function POST(req: NextRequest) {
     const arrivalTime = now.toLocaleTimeString("en-IN", {
       hour: "2-digit",
       minute: "2-digit",
-      hour12: true,
+      hour12: false,
     });
 
+    // Lookup original registry patient to retain any villages or facility lists
+    const registry = getAllRegistryPatients();
+    const regPatient = registry.find((p) => p.id === id);
+
     const newPatient: PatientQueueItem = {
-      id: id || `reg-${Date.now()}`,
+      id: id || `P-${Date.now()}`,
       tokenNumber: getNextTokenNumber(),
       name,
       age,
@@ -83,15 +75,16 @@ export async function POST(req: NextRequest) {
       abhaNumber,
       abhaAddress,
       arrivalTime,
-      visitType: "New Visit",
+      visitType: regPatient?.visitType || "Follow-up",
       chiefComplaint,
-      dataStatus: hasRecords
-        ? "Records available"
-        : abhaNumber && abhaNumber !== "—"
-        ? "ABHA, no records"
-        : "No ABHA",
+      complaint: chiefComplaint,
+      dataStatus: hasRecords ? "Records available" : "ABHA, no records",
       recordCount: recordCount ?? 0,
       hasRecords: hasRecords ?? false,
+      village: regPatient?.village,
+      district: regPatient?.district,
+      state: regPatient?.state,
+      facilities: regPatient?.facilities,
       queueStatus: "Waiting",
     };
 
@@ -105,4 +98,3 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }
-

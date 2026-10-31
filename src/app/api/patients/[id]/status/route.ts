@@ -4,7 +4,7 @@ import { getOpdQueue, saveOpdQueue } from "@/lib/records";
 /**
  * PATCH /api/patients/[id]/status
  * Body: { status: "Waiting" | "In consultation" | "Done" }
- * Updates a single patient's queueStatus in patients.json.
+ * Updates a patient's queueStatus in data/todays-queue.json.
  */
 export async function PATCH(
   req: NextRequest,
@@ -25,7 +25,7 @@ export async function PATCH(
     const queue = getOpdQueue();
     const idx = queue.findIndex((p) => p.id === id);
     if (idx === -1) {
-      return NextResponse.json({ error: "Patient not found" }, { status: 404 });
+      return NextResponse.json({ error: "Patient not found in today's queue" }, { status: 404 });
     }
 
     queue[idx] = {
@@ -41,4 +41,3 @@ export async function PATCH(
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }
-

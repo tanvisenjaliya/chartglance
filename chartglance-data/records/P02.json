@@ -1,0 +1,962 @@
+{
+  "resourceType": "Bundle",
+  "id": "bundle-P02",
+  "type": "collection",
+  "meta": {
+    "tag": [
+      {
+        "code": "SYNTHETIC",
+        "display": "Synthetic demo data. Not a real patient."
+      }
+    ]
+  },
+  "entry": [
+    {
+      "fullUrl": "urn:uuid:p02-rec-8",
+      "resource": {
+        "resourceType": "Composition",
+        "id": "p02-rec-8",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/OPConsultRecord"
+          ]
+        },
+        "status": "final",
+        "type": {
+          "text": "OP consultation"
+        },
+        "title": "OP consultation",
+        "date": "{{today-100d}}",
+        "subject": {
+          "reference": "Patient/P02"
+        },
+        "encounter": {
+          "reference": "Encounter/p02-enc-1"
+        },
+        "author": [
+          {
+            "reference": "Organization/HIP-GJ-AND-042"
+          }
+        ],
+        "custodian": {
+          "reference": "Organization/HIP-GJ-AND-042"
+        },
+        "section": [
+          {
+            "title": "Clinical note",
+            "text": {
+              "status": "generated",
+              "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">ANC regn. G2P1L1, ~10 wks. Hb 9.8. Adv IFA, diet. MCP card given.</div>"
+            },
+            "entry": [
+              {
+                "reference": "Condition/p02-cond-2"
+              },
+              {
+                "reference": "Observation/p02-obs-3"
+              },
+              {
+                "reference": "Observation/p02-obs-4"
+              },
+              {
+                "reference": "Observation/p02-obs-5"
+              },
+              {
+                "reference": "Observation/p02-obs-6"
+              },
+              {
+                "reference": "MedicationRequest/p02-med-7"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:p02-rec-11",
+      "resource": {
+        "resourceType": "Composition",
+        "id": "p02-rec-11",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/ImmunizationRecord"
+          ]
+        },
+        "status": "final",
+        "type": {
+          "text": "Immunization record"
+        },
+        "title": "Immunization record",
+        "date": "{{today-90d}}",
+        "subject": {
+          "reference": "Patient/P02"
+        },
+        "encounter": {
+          "reference": "Encounter/p02-enc-9"
+        },
+        "author": [
+          {
+            "reference": "Organization/HIP-GJ-AND-042"
+          }
+        ],
+        "custodian": {
+          "reference": "Organization/HIP-GJ-AND-042"
+        },
+        "section": [
+          {
+            "title": "Clinical note",
+            "text": {
+              "status": "generated",
+              "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Td-1 given.</div>"
+            },
+            "entry": [
+              {
+                "reference": "Immunization/p02-imm-10"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:p02-rec-20",
+      "resource": {
+        "resourceType": "Composition",
+        "id": "p02-rec-20",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/OPConsultRecord"
+          ]
+        },
+        "status": "final",
+        "type": {
+          "text": "OP consultation"
+        },
+        "title": "OP consultation",
+        "date": "{{today-40d}}",
+        "subject": {
+          "reference": "Patient/P02"
+        },
+        "encounter": {
+          "reference": "Encounter/p02-enc-12"
+        },
+        "author": [
+          {
+            "reference": "Organization/HIP-GJ-AND-001"
+          }
+        ],
+        "custodian": {
+          "reference": "Organization/HIP-GJ-AND-001"
+        },
+        "section": [
+          {
+            "title": "Clinical note",
+            "text": {
+              "status": "generated",
+              "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">ANC 2nd visit ~18 wks. Hb 8.2 - mod anaemia. IFA BD started. Rpt Hb 4 wks.</div>"
+            },
+            "entry": [
+              {
+                "reference": "Condition/p02-cond-13"
+              },
+              {
+                "reference": "Condition/p02-cond-14"
+              },
+              {
+                "reference": "Observation/p02-obs-15"
+              },
+              {
+                "reference": "Observation/p02-obs-16"
+              },
+              {
+                "reference": "Observation/p02-obs-17"
+              },
+              {
+                "reference": "Observation/p02-obs-18"
+              },
+              {
+                "reference": "MedicationRequest/p02-med-19"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:p02-rec-23",
+      "resource": {
+        "resourceType": "Composition",
+        "id": "p02-rec-23",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/DiagnosticReportRecord"
+          ]
+        },
+        "status": "final",
+        "type": {
+          "text": "Diagnostic report"
+        },
+        "title": "Diagnostic report",
+        "date": "{{today-10d}}",
+        "subject": {
+          "reference": "Patient/P02"
+        },
+        "encounter": {
+          "reference": "Encounter/p02-enc-21"
+        },
+        "author": [
+          {
+            "reference": "Organization/HIP-GJ-AND-001"
+          }
+        ],
+        "custodian": {
+          "reference": "Organization/HIP-GJ-AND-001"
+        },
+        "section": [
+          {
+            "title": "Clinical note",
+            "text": {
+              "status": "generated",
+              "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">CBC: Hb 6.8 g/dL. Peripheral smear: microcytic hypochromic.</div>"
+            },
+            "entry": [
+              {
+                "reference": "Observation/p02-obs-22"
+              },
+              {
+                "reference": "Appointment/p02-appt-24"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:P02",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "P02",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Patient"
+          ]
+        },
+        "name": [
+          {
+            "text": "Hetal Parmar"
+          }
+        ],
+        "gender": "female",
+        "birthDate": "{{today-24y}}",
+        "address": [
+          {
+            "text": "Bakrol, Anand district, Gujarat",
+            "city": "Bakrol",
+            "district": "Anand",
+            "state": "Gujarat",
+            "country": "IN"
+          }
+        ],
+        "identifier": [
+          {
+            "type": {
+              "text": "ABHA number"
+            },
+            "system": "https://healthid.abdm.gov.in",
+            "value": "91-5555-7890-2002"
+          },
+          {
+            "type": {
+              "text": "ABHA address"
+            },
+            "system": "https://healthid.abdm.gov.in",
+            "value": "hetal.parmar@sbx"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:HIP-GJ-AND-001",
+      "resource": {
+        "resourceType": "Organization",
+        "id": "HIP-GJ-AND-001",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Organization"
+          ]
+        },
+        "name": "CHC Petlad (demo)",
+        "identifier": [
+          {
+            "system": "https://facility.abdm.gov.in",
+            "value": "HIP-GJ-AND-001"
+          }
+        ],
+        "type": [
+          {
+            "text": "Public CHC"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:HIP-GJ-AND-042",
+      "resource": {
+        "resourceType": "Organization",
+        "id": "HIP-GJ-AND-042",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Organization"
+          ]
+        },
+        "name": "PHC Navli (demo)",
+        "identifier": [
+          {
+            "system": "https://facility.abdm.gov.in",
+            "value": "HIP-GJ-AND-042"
+          }
+        ],
+        "type": [
+          {
+            "text": "Public PHC"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:p02-enc-1",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "p02-enc-1",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Encounter"
+          ]
+        },
+        "status": "finished",
+        "class": {
+          "code": "AMB"
+        },
+        "subject": {
+          "reference": "Patient/P02"
+        },
+        "serviceProvider": {
+          "reference": "Organization/HIP-GJ-AND-042"
+        },
+        "period": {
+          "start": "{{today-100d}}"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:p02-cond-2",
+      "resource": {
+        "resourceType": "Condition",
+        "id": "p02-cond-2",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Condition"
+          ]
+        },
+        "subject": {
+          "reference": "Patient/P02"
+        },
+        "encounter": {
+          "reference": "Encounter/p02-enc-1"
+        },
+        "code": {
+          "text": "Pregnancy, first trimester (G2P1)"
+        },
+        "clinicalStatus": {
+          "text": "active"
+        },
+        "recordedDate": "{{today-100d}}"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:p02-obs-3",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "p02-obs-3",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Observation"
+          ]
+        },
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "718-7",
+              "display": "Haemoglobin"
+            }
+          ],
+          "text": "Haemoglobin"
+        },
+        "subject": {
+          "reference": "Patient/P02"
+        },
+        "encounter": {
+          "reference": "Encounter/p02-enc-1"
+        },
+        "effectiveDateTime": "{{today-100d}}",
+        "performer": [
+          {
+            "reference": "Organization/HIP-GJ-AND-042"
+          }
+        ],
+        "valueQuantity": {
+          "value": 9.8,
+          "unit": "g/dL"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:p02-obs-4",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "p02-obs-4",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Observation"
+          ]
+        },
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "29463-7",
+              "display": "Body weight"
+            }
+          ],
+          "text": "Body weight"
+        },
+        "subject": {
+          "reference": "Patient/P02"
+        },
+        "encounter": {
+          "reference": "Encounter/p02-enc-1"
+        },
+        "effectiveDateTime": "{{today-100d}}",
+        "performer": [
+          {
+            "reference": "Organization/HIP-GJ-AND-042"
+          }
+        ],
+        "valueQuantity": {
+          "value": 48,
+          "unit": "kg"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:p02-obs-5",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "p02-obs-5",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Observation"
+          ]
+        },
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "8480-6",
+              "display": "Systolic BP"
+            }
+          ],
+          "text": "Systolic BP"
+        },
+        "subject": {
+          "reference": "Patient/P02"
+        },
+        "encounter": {
+          "reference": "Encounter/p02-enc-1"
+        },
+        "effectiveDateTime": "{{today-100d}}",
+        "performer": [
+          {
+            "reference": "Organization/HIP-GJ-AND-042"
+          }
+        ],
+        "valueQuantity": {
+          "value": 110,
+          "unit": "mmHg"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:p02-obs-6",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "p02-obs-6",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Observation"
+          ]
+        },
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "8462-4",
+              "display": "Diastolic BP"
+            }
+          ],
+          "text": "Diastolic BP"
+        },
+        "subject": {
+          "reference": "Patient/P02"
+        },
+        "encounter": {
+          "reference": "Encounter/p02-enc-1"
+        },
+        "effectiveDateTime": "{{today-100d}}",
+        "performer": [
+          {
+            "reference": "Organization/HIP-GJ-AND-042"
+          }
+        ],
+        "valueQuantity": {
+          "value": 70,
+          "unit": "mmHg"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:p02-med-7",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "p02-med-7",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/MedicationRequest"
+          ]
+        },
+        "status": "active",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "text": "Folic acid"
+        },
+        "subject": {
+          "reference": "Patient/P02"
+        },
+        "encounter": {
+          "reference": "Encounter/p02-enc-1"
+        },
+        "authoredOn": "{{today-100d}}",
+        "requester": {
+          "reference": "Organization/HIP-GJ-AND-042"
+        },
+        "dosageInstruction": [
+          {
+            "text": "400 mcg OD"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:p02-enc-9",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "p02-enc-9",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Encounter"
+          ]
+        },
+        "status": "finished",
+        "class": {
+          "code": "AMB"
+        },
+        "subject": {
+          "reference": "Patient/P02"
+        },
+        "serviceProvider": {
+          "reference": "Organization/HIP-GJ-AND-042"
+        },
+        "period": {
+          "start": "{{today-90d}}"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:p02-imm-10",
+      "resource": {
+        "resourceType": "Immunization",
+        "id": "p02-imm-10",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Immunization"
+          ]
+        },
+        "status": "completed",
+        "vaccineCode": {
+          "text": "Td (tetanus-diphtheria) dose 1"
+        },
+        "patient": {
+          "reference": "Patient/P02"
+        },
+        "occurrenceDateTime": "{{today-90d}}",
+        "performer": [
+          {
+            "actor": {
+              "reference": "Organization/HIP-GJ-AND-042"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:p02-enc-12",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "p02-enc-12",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Encounter"
+          ]
+        },
+        "status": "finished",
+        "class": {
+          "code": "AMB"
+        },
+        "subject": {
+          "reference": "Patient/P02"
+        },
+        "serviceProvider": {
+          "reference": "Organization/HIP-GJ-AND-001"
+        },
+        "period": {
+          "start": "{{today-40d}}"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:p02-cond-13",
+      "resource": {
+        "resourceType": "Condition",
+        "id": "p02-cond-13",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Condition"
+          ]
+        },
+        "subject": {
+          "reference": "Patient/P02"
+        },
+        "encounter": {
+          "reference": "Encounter/p02-enc-12"
+        },
+        "code": {
+          "text": "Pregnancy, second trimester"
+        },
+        "clinicalStatus": {
+          "text": "active"
+        },
+        "recordedDate": "{{today-40d}}"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:p02-cond-14",
+      "resource": {
+        "resourceType": "Condition",
+        "id": "p02-cond-14",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Condition"
+          ]
+        },
+        "subject": {
+          "reference": "Patient/P02"
+        },
+        "encounter": {
+          "reference": "Encounter/p02-enc-12"
+        },
+        "code": {
+          "text": "Anaemia in pregnancy"
+        },
+        "clinicalStatus": {
+          "text": "active"
+        },
+        "recordedDate": "{{today-40d}}"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:p02-obs-15",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "p02-obs-15",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Observation"
+          ]
+        },
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "718-7",
+              "display": "Haemoglobin"
+            }
+          ],
+          "text": "Haemoglobin"
+        },
+        "subject": {
+          "reference": "Patient/P02"
+        },
+        "encounter": {
+          "reference": "Encounter/p02-enc-12"
+        },
+        "effectiveDateTime": "{{today-40d}}",
+        "performer": [
+          {
+            "reference": "Organization/HIP-GJ-AND-001"
+          }
+        ],
+        "valueQuantity": {
+          "value": 8.2,
+          "unit": "g/dL"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:p02-obs-16",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "p02-obs-16",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Observation"
+          ]
+        },
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "29463-7",
+              "display": "Body weight"
+            }
+          ],
+          "text": "Body weight"
+        },
+        "subject": {
+          "reference": "Patient/P02"
+        },
+        "encounter": {
+          "reference": "Encounter/p02-enc-12"
+        },
+        "effectiveDateTime": "{{today-40d}}",
+        "performer": [
+          {
+            "reference": "Organization/HIP-GJ-AND-001"
+          }
+        ],
+        "valueQuantity": {
+          "value": 50,
+          "unit": "kg"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:p02-obs-17",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "p02-obs-17",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Observation"
+          ]
+        },
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "8480-6",
+              "display": "Systolic BP"
+            }
+          ],
+          "text": "Systolic BP"
+        },
+        "subject": {
+          "reference": "Patient/P02"
+        },
+        "encounter": {
+          "reference": "Encounter/p02-enc-12"
+        },
+        "effectiveDateTime": "{{today-40d}}",
+        "performer": [
+          {
+            "reference": "Organization/HIP-GJ-AND-001"
+          }
+        ],
+        "valueQuantity": {
+          "value": 112,
+          "unit": "mmHg"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:p02-obs-18",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "p02-obs-18",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Observation"
+          ]
+        },
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "8462-4",
+              "display": "Diastolic BP"
+            }
+          ],
+          "text": "Diastolic BP"
+        },
+        "subject": {
+          "reference": "Patient/P02"
+        },
+        "encounter": {
+          "reference": "Encounter/p02-enc-12"
+        },
+        "effectiveDateTime": "{{today-40d}}",
+        "performer": [
+          {
+            "reference": "Organization/HIP-GJ-AND-001"
+          }
+        ],
+        "valueQuantity": {
+          "value": 72,
+          "unit": "mmHg"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:p02-med-19",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "p02-med-19",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/MedicationRequest"
+          ]
+        },
+        "status": "active",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "text": "Iron + folic acid (IFA)"
+        },
+        "subject": {
+          "reference": "Patient/P02"
+        },
+        "encounter": {
+          "reference": "Encounter/p02-enc-12"
+        },
+        "authoredOn": "{{today-40d}}",
+        "requester": {
+          "reference": "Organization/HIP-GJ-AND-001"
+        },
+        "dosageInstruction": [
+          {
+            "text": "1 tab BD"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:p02-enc-21",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "p02-enc-21",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Encounter"
+          ]
+        },
+        "status": "finished",
+        "class": {
+          "code": "AMB"
+        },
+        "subject": {
+          "reference": "Patient/P02"
+        },
+        "serviceProvider": {
+          "reference": "Organization/HIP-GJ-AND-001"
+        },
+        "period": {
+          "start": "{{today-10d}}"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:p02-obs-22",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "p02-obs-22",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Observation"
+          ]
+        },
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "718-7",
+              "display": "Haemoglobin"
+            }
+          ],
+          "text": "Haemoglobin"
+        },
+        "subject": {
+          "reference": "Patient/P02"
+        },
+        "encounter": {
+          "reference": "Encounter/p02-enc-21"
+        },
+        "effectiveDateTime": "{{today-10d}}",
+        "performer": [
+          {
+            "reference": "Organization/HIP-GJ-AND-001"
+          }
+        ],
+        "valueQuantity": {
+          "value": 6.8,
+          "unit": "g/dL"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:p02-appt-24",
+      "resource": {
+        "resourceType": "Appointment",
+        "id": "p02-appt-24",
+        "status": "booked",
+        "description": "Next ANC visit",
+        "start": "{{today+5d}}",
+        "participant": [
+          {
+            "actor": {
+              "reference": "Patient/P02"
+            },
+            "status": "accepted"
+          }
+        ]
+      }
+    }
+  ]
+}

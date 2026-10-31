@@ -1,0 +1,492 @@
+{
+  "resourceType": "Bundle",
+  "id": "bundle-B07",
+  "type": "collection",
+  "meta": {
+    "tag": [
+      {
+        "code": "SYNTHETIC",
+        "display": "Synthetic demo data. Not a real patient."
+      }
+    ]
+  },
+  "entry": [
+    {
+      "fullUrl": "urn:uuid:b07-rec-4",
+      "resource": {
+        "resourceType": "Composition",
+        "id": "b07-rec-4",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/OPConsultRecord"
+          ]
+        },
+        "status": "final",
+        "type": {
+          "text": "OP consultation"
+        },
+        "title": "OP consultation",
+        "date": "{{today-200d}}",
+        "subject": {
+          "reference": "Patient/B07"
+        },
+        "encounter": {
+          "reference": "Encounter/b07-enc-1"
+        },
+        "author": [
+          {
+            "reference": "Organization/HIP-GJ-AND-042"
+          }
+        ],
+        "custodian": {
+          "reference": "Organization/HIP-GJ-AND-042"
+        },
+        "section": [
+          {
+            "title": "Clinical note",
+            "text": {
+              "status": "generated",
+              "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Recurrent wheeze, worse in winter. ? childhood asthma. Salbutamol MDI + spacer SOS. Demo given to mother.</div>"
+            },
+            "entry": [
+              {
+                "reference": "Condition/b07-cond-2"
+              },
+              {
+                "reference": "MedicationRequest/b07-med-3"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b07-rec-11",
+      "resource": {
+        "resourceType": "Composition",
+        "id": "b07-rec-11",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/DischargeSummaryRecord"
+          ]
+        },
+        "status": "final",
+        "type": {
+          "text": "Discharge summary"
+        },
+        "title": "Discharge summary",
+        "date": "{{today-30d}}",
+        "subject": {
+          "reference": "Patient/B07"
+        },
+        "encounter": {
+          "reference": "Encounter/b07-enc-5"
+        },
+        "author": [
+          {
+            "reference": "Organization/HIP-GJ-AND-101"
+          }
+        ],
+        "custodian": {
+          "reference": "Organization/HIP-GJ-AND-101"
+        },
+        "section": [
+          {
+            "title": "Clinical note",
+            "text": {
+              "status": "generated",
+              "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Admitted 2 days, acute exacerbation of asthma. SpO2 91% on arrival. Nebulised. Disch on budesonide BD + salbutamol SOS. F/u PHC 2 wks.</div>"
+            },
+            "entry": [
+              {
+                "reference": "Condition/b07-cond-6"
+              },
+              {
+                "reference": "Observation/b07-obs-7"
+              },
+              {
+                "reference": "MedicationRequest/b07-med-8"
+              },
+              {
+                "reference": "MedicationRequest/b07-med-9"
+              },
+              {
+                "reference": "Appointment/b07-appt-10"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:B07",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "B07",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Patient"
+          ]
+        },
+        "name": [
+          {
+            "text": "Jiya Desai"
+          }
+        ],
+        "gender": "female",
+        "birthDate": "{{today-7y}}",
+        "address": [
+          {
+            "text": "Vidyanagar, Anand district, Gujarat",
+            "city": "Vidyanagar",
+            "district": "Anand",
+            "state": "Gujarat",
+            "country": "IN"
+          }
+        ],
+        "identifier": [
+          {
+            "type": {
+              "text": "ABHA number"
+            },
+            "system": "https://healthid.abdm.gov.in",
+            "value": "91-5555-3307-0007"
+          },
+          {
+            "type": {
+              "text": "ABHA address"
+            },
+            "system": "https://healthid.abdm.gov.in",
+            "value": "jiya.desai@sbx"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:HIP-GJ-AND-101",
+      "resource": {
+        "resourceType": "Organization",
+        "id": "HIP-GJ-AND-101",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Organization"
+          ]
+        },
+        "name": "General Hospital Anand (demo)",
+        "identifier": [
+          {
+            "system": "https://facility.abdm.gov.in",
+            "value": "HIP-GJ-AND-101"
+          }
+        ],
+        "type": [
+          {
+            "text": "Public district hospital"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:HIP-GJ-AND-042",
+      "resource": {
+        "resourceType": "Organization",
+        "id": "HIP-GJ-AND-042",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Organization"
+          ]
+        },
+        "name": "PHC Navli (demo)",
+        "identifier": [
+          {
+            "system": "https://facility.abdm.gov.in",
+            "value": "HIP-GJ-AND-042"
+          }
+        ],
+        "type": [
+          {
+            "text": "Public PHC"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b07-enc-1",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "b07-enc-1",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Encounter"
+          ]
+        },
+        "status": "finished",
+        "class": {
+          "code": "AMB"
+        },
+        "subject": {
+          "reference": "Patient/B07"
+        },
+        "serviceProvider": {
+          "reference": "Organization/HIP-GJ-AND-042"
+        },
+        "period": {
+          "start": "{{today-200d}}"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b07-cond-2",
+      "resource": {
+        "resourceType": "Condition",
+        "id": "b07-cond-2",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Condition"
+          ]
+        },
+        "subject": {
+          "reference": "Patient/B07"
+        },
+        "encounter": {
+          "reference": "Encounter/b07-enc-1"
+        },
+        "code": {
+          "text": "Asthma",
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "195967001",
+              "display": "Asthma"
+            }
+          ]
+        },
+        "clinicalStatus": {
+          "text": "active"
+        },
+        "recordedDate": "{{today-200d}}"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b07-med-3",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "b07-med-3",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/MedicationRequest"
+          ]
+        },
+        "status": "active",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "text": "Salbutamol inhaler with spacer"
+        },
+        "subject": {
+          "reference": "Patient/B07"
+        },
+        "encounter": {
+          "reference": "Encounter/b07-enc-1"
+        },
+        "authoredOn": "{{today-200d}}",
+        "requester": {
+          "reference": "Organization/HIP-GJ-AND-042"
+        },
+        "dosageInstruction": [
+          {
+            "text": "2 puffs SOS"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b07-enc-5",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "b07-enc-5",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Encounter"
+          ]
+        },
+        "status": "finished",
+        "class": {
+          "code": "IMP"
+        },
+        "subject": {
+          "reference": "Patient/B07"
+        },
+        "serviceProvider": {
+          "reference": "Organization/HIP-GJ-AND-101"
+        },
+        "period": {
+          "start": "{{today-30d}}"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b07-cond-6",
+      "resource": {
+        "resourceType": "Condition",
+        "id": "b07-cond-6",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Condition"
+          ]
+        },
+        "subject": {
+          "reference": "Patient/B07"
+        },
+        "encounter": {
+          "reference": "Encounter/b07-enc-5"
+        },
+        "code": {
+          "text": "Asthma",
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "195967001",
+              "display": "Asthma"
+            }
+          ]
+        },
+        "clinicalStatus": {
+          "text": "active"
+        },
+        "recordedDate": "{{today-30d}}"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b07-obs-7",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "b07-obs-7",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Observation"
+          ]
+        },
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "59408-5",
+              "display": "SpO2"
+            }
+          ],
+          "text": "SpO2"
+        },
+        "subject": {
+          "reference": "Patient/B07"
+        },
+        "encounter": {
+          "reference": "Encounter/b07-enc-5"
+        },
+        "effectiveDateTime": "{{today-30d}}",
+        "performer": [
+          {
+            "reference": "Organization/HIP-GJ-AND-101"
+          }
+        ],
+        "valueQuantity": {
+          "value": 91,
+          "unit": "%"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b07-med-8",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "b07-med-8",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/MedicationRequest"
+          ]
+        },
+        "status": "active",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "text": "Budesonide inhaler with spacer"
+        },
+        "subject": {
+          "reference": "Patient/B07"
+        },
+        "encounter": {
+          "reference": "Encounter/b07-enc-5"
+        },
+        "authoredOn": "{{today-30d}}",
+        "requester": {
+          "reference": "Organization/HIP-GJ-AND-101"
+        },
+        "dosageInstruction": [
+          {
+            "text": "200 mcg BD"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b07-med-9",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "b07-med-9",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/MedicationRequest"
+          ]
+        },
+        "status": "active",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "text": "Salbutamol inhaler with spacer"
+        },
+        "subject": {
+          "reference": "Patient/B07"
+        },
+        "encounter": {
+          "reference": "Encounter/b07-enc-5"
+        },
+        "authoredOn": "{{today-30d}}",
+        "requester": {
+          "reference": "Organization/HIP-GJ-AND-101"
+        },
+        "dosageInstruction": [
+          {
+            "text": "2 puffs SOS"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b07-appt-10",
+      "resource": {
+        "resourceType": "Appointment",
+        "id": "b07-appt-10",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Appointment"
+          ]
+        },
+        "status": "booked",
+        "description": "Asthma review after discharge",
+        "start": "{{today-16d}}",
+        "participant": [
+          {
+            "actor": {
+              "reference": "Patient/B07"
+            },
+            "status": "accepted"
+          },
+          {
+            "actor": {
+              "reference": "Organization/HIP-GJ-AND-101"
+            },
+            "status": "accepted"
+          }
+        ]
+      }
+    }
+  ]
+}
