@@ -10,6 +10,8 @@ import QueueStatusBadge from "@/components/QueueStatusBadge";
 import DemoModeBanner from "@/components/DemoModeBanner";
 import ConsultationNoteBox from "@/components/ConsultationNoteBox";
 import PreviousVisitsList from "@/components/PreviousVisitsList";
+import SummaryCard from "@/components/SummaryCard";
+import type { AIAnalysisResult } from "@/lib/ai/gemini-analysis";
 
 export default function PatientConsultationPage() {
   const params = useParams();
@@ -27,6 +29,11 @@ export default function PatientConsultationPage() {
   const [actionLoading, setActionLoading] = useState(false);
   const [statusUpdating, setStatusUpdating] = useState(false);
   const [startingNewVisit, setStartingNewVisit] = useState(false);
+
+  // AI Summary Card state
+  const [analysis, setAnalysis] = useState<AIAnalysisResult | null>(null);
+  const [loadingAnalysis, setLoadingAnalysis] = useState(false);
+  const [activeHighlightedIds, setActiveHighlightedIds] = useState<string[]>([]);
 
   // Local Notes state
   const [previousNotes, setPreviousNotes] = useState<ConsultationNote[]>([]);
@@ -107,6 +114,49 @@ export default function PatientConsultationPage() {
     }, 2500);
     return () => clearInterval(interval);
   }, [consent?.status, pendingFacilities.length, fetchConsentStatus]);
+
+  // 4. Fetch AI Clinical Analysis
+  const fetchAnalysis = useCallback(
+    async (refresh = false) => {
+      if (!patientId || consent?.status !== "GRANTED") return;
+      setLoadingAnalysis(true);
+      try {
+        const url = `/api/ai/analysis/${patientId}${refresh ? "?refresh=true" : ""}`;
+        const res = await fetch(url);
+        if (res.ok) {
+          const data = await res.json();
+          setAnalysis(data);
+        }
+      } catch (err) {
+        console.error("AI Analysis load failed:", err);
+      } finally {
+        setLoadingAnalysis(false);
+      }
+    },
+    [patientId, consent?.status]
+  );
+
+  useEffect(() => {
+    if (consent?.status === "GRANTED") {
+      fetchAnalysis();
+    } else {
+      setAnalysis(null);
+    }
+  }, [consent?.status, fetchAnalysis]);
+
+  const handleHighlightSource = (sourceIds: string[]) => {
+    setActiveHighlightedIds(sourceIds);
+    for (const id of sourceIds) {
+      const el = document.getElementById(`record-${id}`);
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth", block: "center" });
+        break;
+      }
+    }
+    setTimeout(() => {
+      setActiveHighlightedIds((prev) => (prev === sourceIds ? [] : prev));
+    }, 4000);
+  };
 
   const handleRequestRecords = async () => {
     if (!patient) return;
@@ -314,9 +364,12 @@ export default function PatientConsultationPage() {
       {/* Demo Mode Banner */}
       <DemoModeBanner />
 
-      {/* Main Container */}
-      <main className="max-w-6xl mx-auto px-6 py-8 space-y-6">
-        {/* Patient Demographics Card */}
+      {/* Main Container: 2 Columns */}
+      <main className="max-w-7xl mx-auto px-6 py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          {/* Left Column (7 cols): Demographics, Notes, Consent & Records */}
+          <div className="lg:col-span-7 space-y-6">
+            {/* Patient Demographics Card */}
         <div className="bg-surface rounded-2xl border border-border p-6 shadow-sm">
           <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
             <div className="flex items-start gap-4">
@@ -775,92 +828,128 @@ export default function PatientConsultationPage() {
             ) : (
               /* Grouped by Composition (Health Record) */
               <div className="divide-y divide-border">
-                {compositions.map((comp) => (
-                  <div key={comp.id} className="p-6 space-y-4 hover:bg-panel/10 transition-colors">
-                    {/* Composition Header */}
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-border/60">
-                      <div className="flex items-center gap-3">
-                        <span className="font-mono text-[11px] font-semibold uppercase tracking-wider px-2.5 py-1 rounded-lg bg-panel border border-border text-blue shrink-0">
-                          {comp.type}
-                        </span>
-                        <div>
-                          <h4 className="text-base font-bold text-navy tracking-tight">
-                            {comp.title}
-                          </h4>
-                        </div>
-                      </div>
-
-                      <div className="flex items-center gap-5 text-xs text-navy-muted sm:text-right shrink-0">
-                        <div>
-                          <span className="font-mono text-[10px] uppercase tracking-wider text-slate block">
-                            FACILITY
+                {compositions.map((comp) => {
+                  const isCompHighlighted = activeHighlightedIds.includes(comp.id);
+                  return (
+                    <div
+                      key={comp.id}
+                      id={`record-${comp.id}`}
+                      className={`p-6 space-y-4 rounded-xl transition-all ${
+                        isCompHighlighted
+                          ? "bg-blue/10 ring-2 ring-blue border-blue shadow-md"
+                          : "hover:bg-panel/10"
+                      }`}
+                    >
+                      {/* Composition Header */}
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-border/60">
+                        <div className="flex items-center gap-3">
+                          <span className="font-mono text-[11px] font-semibold uppercase tracking-wider px-2.5 py-1 rounded-lg bg-panel border border-border text-blue shrink-0">
+                            {comp.type}
                           </span>
-                          <span className="font-medium text-navy">{comp.facility}</span>
+                          <div>
+                            <h4 className="text-base font-bold text-navy tracking-tight">
+                              {comp.title}
+                            </h4>
+                          </div>
                         </div>
-                        <div>
-                          <span className="font-mono text-[10px] uppercase tracking-wider text-slate block">
-                            DATE
+
+                        <div className="flex items-center gap-5 text-xs text-navy-muted sm:text-right shrink-0">
+                          <div>
+                            <span className="font-mono text-[10px] uppercase tracking-wider text-slate block">
+                              FACILITY
+                            </span>
+                            <span className="font-medium text-navy">{comp.facility}</span>
+                          </div>
+                          <div>
+                            <span className="font-mono text-[10px] uppercase tracking-wider text-slate block">
+                              DATE
+                            </span>
+                            <span className="font-medium text-navy">{comp.date}</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Clinical Note if present */}
+                      {comp.clinicalNote && (
+                        <div className="p-3.5 rounded-xl bg-panel/50 border border-border/80 text-xs">
+                          <span className="font-mono text-[10px] uppercase tracking-wider text-slate block mb-1">
+                            CLINICAL NOTE
                           </span>
-                          <span className="font-medium text-navy">{comp.date}</span>
+                          <p className="text-navy font-medium leading-relaxed">
+                            {comp.clinicalNote}
+                          </p>
                         </div>
-                      </div>
-                    </div>
+                      )}
 
-                    {/* Clinical Note if present */}
-                    {comp.clinicalNote && (
-                      <div className="p-3.5 rounded-xl bg-panel/50 border border-border/80 text-xs">
-                        <span className="font-mono text-[10px] uppercase tracking-wider text-slate block mb-1">
-                          CLINICAL NOTE
-                        </span>
-                        <p className="text-navy font-medium leading-relaxed">
-                          {comp.clinicalNote}
-                        </p>
-                      </div>
-                    )}
-
-                    {/* Referenced Clinical Items */}
-                    {comp.items.length > 0 && (
-                      <div className="space-y-2 pt-1">
-                        <span className="font-mono text-[10px] uppercase tracking-wider text-slate block">
-                          RECORD CONTENTS ({comp.items.length})
-                        </span>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                          {comp.items.map((item) => (
-                            <div
-                              key={item.id}
-                              className="p-3 rounded-xl border border-border bg-surface flex flex-col justify-between text-xs"
-                            >
-                              <div>
-                                <div className="flex items-center justify-between gap-2">
-                                  <span className="font-mono text-[10px] uppercase tracking-wider px-1.5 py-0.5 rounded bg-panel text-slate">
-                                    {item.resourceType}
-                                  </span>
-                                  {item.date && (
-                                    <span className="text-[11px] text-slate font-mono">
-                                      {item.date}
-                                    </span>
+                      {/* Referenced Clinical Items */}
+                      {comp.items.length > 0 && (
+                        <div className="space-y-2 pt-1">
+                          <span className="font-mono text-[10px] uppercase tracking-wider text-slate block">
+                            RECORD CONTENTS ({comp.items.length})
+                          </span>
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                            {comp.items.map((item) => {
+                              const isItemHighlighted = activeHighlightedIds.includes(item.id);
+                              return (
+                                <div
+                                  key={item.id}
+                                  id={`record-${item.id}`}
+                                  className={`p-3 rounded-xl border transition-all flex flex-col justify-between text-xs ${
+                                    isItemHighlighted
+                                      ? "bg-amber-100 border-amber-500 ring-2 ring-amber-400 shadow-sm"
+                                      : "border-border bg-surface"
+                                  }`}
+                                >
+                                  <div>
+                                    <div className="flex items-center justify-between gap-2">
+                                      <span className="font-mono text-[10px] uppercase tracking-wider px-1.5 py-0.5 rounded bg-panel text-slate">
+                                        {item.resourceType}
+                                      </span>
+                                      {item.date && (
+                                        <span className="text-[11px] text-slate font-mono">
+                                          {item.date}
+                                        </span>
+                                      )}
+                                    </div>
+                                    <p className="font-semibold text-navy mt-1.5">
+                                      {item.display}
+                                    </p>
+                                  </div>
+                                  {item.details && (
+                                    <p className="text-[11px] text-navy-muted mt-1 pt-1 border-t border-border/40">
+                                      {item.details}
+                                    </p>
                                   )}
                                 </div>
-                                <p className="font-semibold text-navy mt-1.5">
-                                  {item.display}
-                                </p>
-                              </div>
-                              {item.details && (
-                                <p className="text-[11px] text-navy-muted mt-1 pt-1 border-t border-border/40">
-                                  {item.details}
-                                </p>
-                              )}
-                            </div>
-                          ))}
+                              );
+                            })}
+                          </div>
                         </div>
-                      </div>
-                    )}
-                  </div>
-                ))}
+                      )}
+                    </div>
+                  );
+                })}
               </div>
             )}
           </section>
         )}
+          </div>
+
+          {/* Right Column (5 cols): Sticky 10-Second Summary Card */}
+          <div className="lg:col-span-5">
+            <SummaryCard
+              analysis={analysis}
+              loading={loadingAnalysis}
+              hasAbha={patient.hasAbha !== false && Boolean(patient.abhaNumber)}
+              consentStatus={consent?.status || "NOT_REQUESTED"}
+              consentExpiry={consent?.expiryDate}
+              hasRecords={patient.hasRecords || compositions.length > 0}
+              onRefresh={() => fetchAnalysis(true)}
+              onHighlightSource={handleHighlightSource}
+              activeHighlightedIds={activeHighlightedIds}
+            />
+          </div>
+        </div>
       </main>
 
       {/* Link ABHA Modal */}

@@ -2,9 +2,11 @@ import fs from "fs";
 import path from "path";
 
 export * from "./queue-utils";
-import {
+import type {
   PatientQueueItem,
   FacilityMetadata,
+} from "./queue-utils";
+import {
   sortQueueLive,
 } from "./queue-utils";
 
