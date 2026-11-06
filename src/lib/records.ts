@@ -10,6 +10,116 @@ import {
   sortQueueLive,
 } from "./queue-utils";
 
+// ---------------------------------------------------------------------------
+// Seeded PRNG (32-bit LCG) — no external dependency
+// Same pattern used in abdm-mock/index.ts
+// ---------------------------------------------------------------------------
+function seededRng(seed: number): () => number {
+  let s = seed >>> 0;
+  return () => {
+    s = Math.imul(1664525, s) + 1013904223 >>> 0;
+    return s / 0x100000000;
+  };
+}
+
+/** Deterministic Fisher-Yates shuffle using the given rng */
+function seededShuffle<T>(arr: T[], rng: () => number): T[] {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(rng() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+/** Format minutes-from-midnight as "HH:MM" */
+function minutesToTime(mins: number): string {
+  const h = Math.floor(mins / 60);
+  const m = mins % 60;
+  return `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`;
+}
+
+/**
+ * Builds a fresh 10-patient daily queue for the given date string (YYYY-MM-DD).
+ * Always includes P01–P05; picks 5 more from the other 20 using the date as seed.
+ * Assigns realistic arrival times between 09:00–11:30 and tokens OPD-01..OPD-10.
+ * Writes the result to data/runtime/queue-{dateStr}.json and returns the list.
+ */
+export function buildFreshDailyQueue(dateStr: string): PatientQueueItem[] {
+  const seed = parseInt(dateStr.replace(/-/g, ""), 10); // e.g. 20261106
+  const rng = seededRng(seed);
+
+  const all = getAllRegistryPatients();
+  const demoIds = new Set(["P01", "P02", "P03", "P04", "P05"]);
+  const demos = all.filter((p) => demoIds.has(p.id));
+  const others = all.filter((p) => !demoIds.has(p.id));
+
+  // Pick 5 from the 20 non-demo patients deterministically
+  const shuffledOthers = seededShuffle(others, rng);
+  const picked = shuffledOthers.slice(0, 5);
+
+  const pool = [...demos, ...picked]; // 10 patients
+
+  // Generate 10 arrival times between 09:00 (540 min) and 11:30 (690 min)
+  // Spread them out with a base spacing of ~15 min + jitter up to ±5 min
+  const SESSION_START = 540; // 09:00
+  const SESSION_END = 690;   // 11:30
+  const totalWindow = SESSION_END - SESSION_START; // 150 min for 10 patients
+  const baseGap = Math.floor(totalWindow / pool.length); // ~15 min
+
+  const arrivalMins: number[] = [];
+  for (let i = 0; i < pool.length; i++) {
+    const base = SESSION_START + i * baseGap;
+    // Jitter ± up to half the gap, capped to window
+    const jitter = Math.floor((rng() - 0.5) * baseGap);
+    const mins = Math.min(SESSION_END, Math.max(SESSION_START, base + jitter));
+    arrivalMins.push(mins);
+  }
+  // Sort arrival times
+  arrivalMins.sort((a, b) => a - b);
+
+  // Assign arrival times randomly across the pool (shuffle pool order, then zip)
+  const shuffledPool = seededShuffle(pool, rng);
+
+  // Zip pool with sorted arrival times, then sort by arrival time for token assignment
+  const paired = shuffledPool.map((p, i) => ({ p, arrivalMin: arrivalMins[i] }));
+  paired.sort((a, b) => a.arrivalMin - b.arrivalMin);
+
+  const queue: PatientQueueItem[] = paired.map((item, idx) => {
+    const arrivalTime = minutesToTime(item.arrivalMin);
+    // Build arrival timestamp for today
+    const [yy, mm, dd] = dateStr.split("-").map(Number);
+    const arrivalDate = new Date(yy, mm - 1, dd, Math.floor(item.arrivalMin / 60), item.arrivalMin % 60, 0, 0);
+    return {
+      ...item.p,
+      tokenNumber: `OPD-${String(idx + 1).padStart(2, "0")}`,
+      arrivalTime,
+      arrivalTimestamp: arrivalDate.getTime(),
+      queueStatus: "Waiting" as const,
+      isEmergency: false,
+      emergencyReason: undefined,
+      completedTimestamp: undefined,
+    };
+  });
+
+  // Persist
+  const runtimeDir = path.join(process.cwd(), "data", "runtime");
+  if (!fs.existsSync(runtimeDir)) fs.mkdirSync(runtimeDir, { recursive: true });
+  const filePath = path.join(runtimeDir, `queue-${dateStr}.json`);
+  fs.writeFileSync(filePath, JSON.stringify(queue, null, 2), "utf-8");
+
+  return queue;
+}
+
+/**
+ * Resets today's queue to its initial state (all 10 patients Waiting, no emergencies).
+ * Consultation notes in data/runtime/notes.json are NOT touched.
+ */
+export function resetTodayQueue(): PatientQueueItem[] {
+  const todayStr = new Date().toISOString().slice(0, 10);
+  return buildFreshDailyQueue(todayStr);
+}
+
 /**
  * Resolves all {{today...}} date tokens using the formula from README.md.
  * e.g., {{today}}, {{today-90d}}, {{today+5d}}, {{today-52y}}
@@ -134,12 +244,23 @@ export function getAllRegistryPatients(): PatientQueueItem[] {
 }
 
 /**
- * Loads today's OPD queue from data/todays-queue.json, applying live sort
+ * Returns the path to today's runtime queue file: data/runtime/queue-YYYY-MM-DD.json
+ */
+function todayQueuePath(): string {
+  const todayStr = new Date().toISOString().slice(0, 10);
+  return path.join(process.cwd(), "data", "runtime", `queue-${todayStr}.json`);
+}
+
+/**
+ * Loads today's OPD queue from data/runtime/queue-YYYY-MM-DD.json.
+ * If the file does not exist (new day or first run), generates a fresh queue.
  */
 export function getOpdQueue(): PatientQueueItem[] {
-  const filePath = path.join(process.cwd(), "data", "todays-queue.json");
+  const filePath = todayQueuePath();
   if (!fs.existsSync(filePath)) {
-    return [];
+    // Auto-generate a fresh queue for today
+    const todayStr = new Date().toISOString().slice(0, 10);
+    return buildFreshDailyQueue(todayStr);
   }
   try {
     const raw = fs.readFileSync(filePath, "utf-8");
@@ -158,14 +279,19 @@ export function getOpdQueue(): PatientQueueItem[] {
       emergencyReason: p.emergencyReason as string | undefined,
       mobileNumber: p.mobileNumber as string | undefined,
       arrivalTime: (p.arrivalTime as string) || "09:00",
-      arrivalTimestamp: (p.arrivalTimestamp as number) || (Date.now() - (idx * 60000)),
+      arrivalTimestamp: (p.arrivalTimestamp as number) || (Date.now() - idx * 60000),
       completedTimestamp: p.completedTimestamp as number | undefined,
-      visitType: (p.visitType as "Follow-up" | "New Visit" | "Emergency") || (p.isEmergency ? "Emergency" : "New Visit"),
+      visitType:
+        (p.visitType as "Follow-up" | "New Visit" | "Emergency") ||
+        (p.isEmergency ? "Emergency" : "New Visit"),
       chiefComplaint: (p.complaint as string) || (p.chiefComplaint as string) || "",
-      dataStatus: ((p.recordCount as number) > 0 ? "Records available" : "ABHA, no records") as "Records available" | "ABHA, no records",
+      dataStatus: (
+        (p.recordCount as number) > 0 ? "Records available" : "ABHA, no records"
+      ) as "Records available" | "ABHA, no records",
       recordCount: (p.recordCount as number) || 0,
       hasRecords: ((p.recordCount as number) || 0) > 0,
-      queueStatus: (p.queueStatus as "Waiting" | "In consultation" | "Done") || "Waiting",
+      queueStatus:
+        (p.queueStatus as "Waiting" | "In consultation" | "Done") || "Waiting",
     }));
 
     return sortQueueLive(normalized);
@@ -175,10 +301,12 @@ export function getOpdQueue(): PatientQueueItem[] {
 }
 
 /**
- * Writes the active today's OPD queue back to data/todays-queue.json
+ * Writes the active today's OPD queue back to data/runtime/queue-YYYY-MM-DD.json
  */
 export function saveOpdQueue(patients: PatientQueueItem[]): void {
-  const filePath = path.join(process.cwd(), "data", "todays-queue.json");
+  const filePath = todayQueuePath();
+  const runtimeDir = path.dirname(filePath);
+  if (!fs.existsSync(runtimeDir)) fs.mkdirSync(runtimeDir, { recursive: true });
   fs.writeFileSync(filePath, JSON.stringify(patients, null, 2), "utf-8");
 }
 

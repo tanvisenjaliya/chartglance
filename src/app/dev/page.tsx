@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 interface PersonaMeta {
   id: string;
@@ -75,13 +76,37 @@ const PERSONAS: PersonaMeta[] = [
 ];
 
 export default function DevPage() {
+  const router = useRouter();
   const [selectedPersonaId, setSelectedPersonaId] = useState("P01");
+  const [resetting, setResetting] = useState(false);
+  const [resetMsg, setResetMsg] = useState<string | null>(null);
 
   const selectedMeta =
     PERSONAS.find((p) => p.id === selectedPersonaId) || PERSONAS[0];
 
   const handleSelect = (p: PersonaMeta) => {
     setSelectedPersonaId(p.id);
+  };
+
+  const handleResetQueue = async () => {
+    setResetting(true);
+    setResetMsg(null);
+    try {
+      const res = await fetch("/api/patients/reset", { method: "POST" });
+      if (res.ok) {
+        const data = await res.json();
+        setResetMsg(`Queue reset. ${data.count} patients are now Waiting. Consultation notes preserved.`);
+        // Refresh the page data without a hard reload
+        router.refresh();
+      } else {
+        const err = await res.json();
+        setResetMsg(`Error: ${err.error || "Failed to reset queue"}`);
+      }
+    } catch {
+      setResetMsg("Network error — could not reach the server.");
+    } finally {
+      setResetting(false);
+    }
   };
 
   return (
@@ -193,6 +218,55 @@ export default function DevPage() {
           >
             Open Patient View &rarr;
           </Link>
+        </div>
+
+        {/* Queue Management */}
+        <div className="bg-surface rounded-2xl border border-border p-6 shadow-sm space-y-4">
+          <div>
+            <span className="font-mono text-xs uppercase tracking-wider text-blue font-semibold block">
+              Queue Management
+            </span>
+            <h2 className="text-lg font-bold text-navy mt-0.5">Reset today&apos;s queue</h2>
+            <p className="text-xs text-navy-muted mt-1">
+              Rebuilds today&apos;s 10-patient queue with all statuses reset to Waiting.
+              Uses the same date-seeded selection (P01–P05 + 5 others), so the same 10 patients appear.
+              Emergency patients added during the session will be removed.
+              Consultation notes are always kept.
+            </p>
+          </div>
+
+          <div className="flex items-center gap-4 flex-wrap">
+            <button
+              type="button"
+              disabled={resetting}
+              onClick={handleResetQueue}
+              className="px-5 py-2.5 rounded-xl bg-brand-red hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-mono text-xs uppercase tracking-wider font-semibold transition-colors shadow-sm active:scale-[0.99] flex items-center gap-2"
+            >
+              {resetting && (
+                <span className="w-3 h-3 rounded-full border-2 border-white border-t-transparent animate-spin" />
+              )}
+              {resetting ? "Resetting…" : "Reset today's queue"}
+            </button>
+
+            <Link
+              href="/"
+              className="px-4 py-2.5 rounded-xl border border-border hover:bg-panel text-navy font-mono text-xs uppercase tracking-wider font-semibold transition-colors"
+            >
+              Back to OPD queue &rarr;
+            </Link>
+          </div>
+
+          {resetMsg && (
+            <div
+              className={`mt-2 px-4 py-3 rounded-xl text-xs font-medium border ${
+                resetMsg.startsWith("Error") || resetMsg.startsWith("Network")
+                  ? "bg-[#FDE8EA] border-[#F8CED3] text-[#7A0F1C]"
+                  : "bg-[#F0FDF4] border-[#BBF7D0] text-[#166534]"
+              }`}
+            >
+              {resetMsg}
+            </div>
+          )}
         </div>
       </main>
     </div>
