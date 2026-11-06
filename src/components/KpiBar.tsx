@@ -50,252 +50,168 @@ export function isSenior(age: string | number): boolean {
   return !isNaN(parsed) && parsed >= 60;
 }
 
+function isEmergencyPatient(p: PatientQueueItem): boolean {
+  return (
+    Boolean(p.isEmergency) ||
+    p.visitType === "Emergency" ||
+    Boolean(p.tokenNumber && p.tokenNumber.startsWith("E"))
+  );
+}
+
 export default function KpiBar({
   patients,
   activeFilter,
   onFilterChange,
 }: KpiBarProps) {
+  // ── Card 1: Total Today ── counts ALL patients
   const total = patients.length;
-
   const waitingCount = patients.filter((p) => p.queueStatus === "Waiting").length;
-  const inConsultCount = patients.filter(
-    (p) => p.queueStatus === "In consultation"
-  ).length;
+  const inConsultCount = patients.filter((p) => p.queueStatus === "In consultation").length;
   const doneCount = patients.filter((p) => p.queueStatus === "Done").length;
 
-  // Gender counts
-  const mCount = patients.filter(
-    (p) => p.gender === "Male" || p.gender === "M"
-  ).length;
-  const fCount = patients.filter(
-    (p) => p.gender === "Female" || p.gender === "F"
-  ).length;
-  const oCount = patients.filter(
-    (p) => p.gender === "Other" || p.gender === "O"
-  ).length;
+  // ── Cards 2-4: active queue only (Waiting + In consultation)
+  const activeQueue = patients.filter(
+    (p) => p.queueStatus === "Waiting" || p.queueStatus === "In consultation"
+  );
 
-  // Infants (< 1 yr) & Seniors (>= 60 yrs)
-  const infantCount = patients.filter((p) => isInfant(p.age)).length;
-  const seniorCount = patients.filter((p) => isSenior(p.age)).length;
+  // M : F
+  const mCount = activeQueue.filter((p) => p.gender === "Male" || p.gender === "M").length;
+  const fCount = activeQueue.filter((p) => p.gender === "Female" || p.gender === "F").length;
+  const oCount = activeQueue.filter((p) => p.gender === "Other" || p.gender === "O").length;
 
-  // Emergency cases
-  const emergencyCount = patients.filter(
-    (p) =>
-      Boolean(p.isEmergency) ||
-      p.visitType === "Emergency" ||
-      (p.tokenNumber && p.tokenNumber.startsWith("E"))
-  ).length;
+  // Infants & Seniors
+  const infantCount = activeQueue.filter((p) => isInfant(p.age)).length;
+  const seniorCount = activeQueue.filter((p) => isSenior(p.age)).length;
 
-  const isTotalFilter = activeFilter === "all";
-  const isGenderFilter =
-    activeFilter === "male" ||
-    activeFilter === "female" ||
-    activeFilter === "other-gender";
-  const isAgeFilter =
+  // Emergencies
+  const activeEmergencyCount = activeQueue.filter(isEmergencyPatient).length;
+  const doneEmergencyCount = patients
+    .filter((p) => p.queueStatus === "Done")
+    .filter(isEmergencyPatient).length;
+
+  // ── Active filter states
+  const isTotalActive = activeFilter === "all";
+  const isGenderActive =
+    activeFilter === "male" || activeFilter === "female" || activeFilter === "other-gender";
+  const isAgeActive =
     activeFilter === "infants-seniors" ||
     activeFilter === "infants" ||
     activeFilter === "seniors";
+  const isEmergencyActive = activeFilter === "emergency";
+
+  // ── Shared card base classes
+  const baseCard =
+    "flex flex-col gap-2 p-4 rounded-2xl border text-left transition-all cursor-pointer select-none";
+  const normalCard = "bg-surface border-border hover:border-slate/50 hover:bg-panel/40";
+  const activeCard = "bg-surface border-blue shadow-sm ring-2 ring-blue/20";
+
+  // ── Infants · Seniors detail line (correct singular/plural)
+  const infantLabel = infantCount === 1 ? "infant" : "infants";
+  const seniorLabel = seniorCount === 1 ? "senior" : "seniors";
+
+  // ── Emergency detail line
+  const emergencyDetail =
+    activeEmergencyCount === 0 && doneEmergencyCount === 0
+      ? "None today"
+      : `${doneEmergencyCount} seen today`;
 
   return (
-    <div className="space-y-3">
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-        {/* Card 1: Total Today */}
-        <button
-          type="button"
-          onClick={() => onFilterChange("all")}
-          className={`p-4 rounded-2xl border text-left transition-all ${
-            isTotalFilter
-              ? "bg-surface border-blue shadow-sm ring-2 ring-blue/20"
-              : "bg-surface border-border hover:border-slate/50 hover:bg-panel/40"
+    <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+
+      {/* ── Card 1: Total Today ── */}
+      <button
+        type="button"
+        onClick={() => onFilterChange("all")}
+        className={`${baseCard} ${isTotalActive ? activeCard : normalCard}`}
+      >
+        <span className="font-mono text-xs uppercase tracking-wider text-slate truncate">
+          Total today
+        </span>
+        <span className="text-3xl font-semibold text-navy leading-none">
+          {total}
+        </span>
+        <span className="text-sm text-slate">
+          {waitingCount} waiting &middot; {inConsultCount} in consult &middot; {doneCount} done
+        </span>
+      </button>
+
+      {/* ── Card 2: M : F ── */}
+      <button
+        type="button"
+        onClick={() => {
+          if (activeFilter === "male") onFilterChange("female");
+          else if (activeFilter === "female") onFilterChange("all");
+          else onFilterChange("male");
+        }}
+        className={`${baseCard} ${isGenderActive ? activeCard : normalCard}`}
+      >
+        <span className="font-mono text-xs uppercase tracking-wider text-slate truncate">
+          M : F
+        </span>
+        <span className="text-3xl font-semibold text-navy leading-none">
+          {mCount} : {fCount}
+        </span>
+        <span className="text-sm text-slate">
+          {mCount} male &middot; {fCount} female
+          {oCount > 0 ? ` · ${oCount} other` : ""}
+        </span>
+      </button>
+
+      {/* ── Card 3: Infants · Seniors ── */}
+      <button
+        type="button"
+        onClick={() =>
+          onFilterChange(isAgeActive ? "all" : "infants-seniors")
+        }
+        className={`${baseCard} ${isAgeActive ? activeCard : normalCard}`}
+      >
+        <span className="font-mono text-xs uppercase tracking-wider text-slate truncate">
+          Infants &middot; Seniors
+        </span>
+        <span className="text-3xl font-semibold text-navy leading-none">
+          {infantCount} | {seniorCount}
+        </span>
+        <span className="text-sm text-slate">
+          {infantCount} {infantLabel} | {seniorCount} {seniorLabel}
+        </span>
+      </button>
+
+      {/* ── Card 4: Emergencies ── */}
+      <button
+        type="button"
+        onClick={() => onFilterChange(isEmergencyActive ? "all" : "emergency")}
+        className={`${baseCard} ${
+          activeEmergencyCount > 0
+            ? isEmergencyActive
+              ? "bg-[#FDE8EA] border-[#F8CED3] ring-2 ring-brand-red/30 shadow-sm"
+              : "bg-[#FDE8EA] border-[#F8CED3] hover:border-brand-red"
+            : isEmergencyActive
+            ? activeCard
+            : normalCard
+        }`}
+      >
+        <span
+          className={`font-mono text-xs uppercase tracking-wider truncate ${
+            activeEmergencyCount > 0 ? "text-brand-red" : "text-slate"
           }`}
         >
-          <div className="flex items-center justify-between">
-            <span className="font-mono text-xs uppercase tracking-wider text-slate">
-              TOTAL TODAY
-            </span>
-            <span className="w-2 h-2 rounded-full bg-blue" />
-          </div>
-          <div className="mt-2 flex items-baseline gap-2">
-            <span className="text-3xl font-bold text-navy">{total}</span>
-            <span className="text-xs text-navy-muted">patients</span>
-          </div>
-          <div className="mt-1.5 text-xs text-navy-muted font-mono">
-            {waitingCount} waiting &bull; {inConsultCount} in consult &bull; {doneCount} done
-          </div>
-          <span className="mt-1 text-[11px] text-blue block">
-            {isTotalFilter ? "Showing all" : "Click to show all"}
-          </span>
-        </button>
-
-        {/* Card 2: M : F Ratio */}
-        <button
-          type="button"
-          onClick={() => {
-            if (activeFilter === "male") onFilterChange("female");
-            else if (activeFilter === "female") onFilterChange("all");
-            else onFilterChange("male");
-          }}
-          className={`p-4 rounded-2xl border text-left transition-all ${
-            isGenderFilter
-              ? "bg-surface border-blue shadow-sm ring-2 ring-blue/20"
-              : "bg-surface border-border hover:border-slate/50 hover:bg-panel/40"
+          Emergencies
+        </span>
+        <span
+          className={`text-3xl font-semibold leading-none ${
+            activeEmergencyCount > 0 ? "text-brand-red" : "text-navy"
           }`}
         >
-          <div className="flex items-center justify-between">
-            <span className="font-mono text-xs uppercase tracking-wider text-slate">
-              M : F RATIO
-            </span>
-            <span className="w-2 h-2 rounded-full bg-indigo-500" />
-          </div>
-          <div className="mt-2 flex items-baseline gap-1.5 flex-wrap">
-            <span className="text-2xl font-bold text-navy">
-              {mCount}M : {fCount}F
-            </span>
-            {oCount > 0 && (
-              <span className="text-xs font-semibold text-slate bg-panel px-1.5 py-0.5 rounded border border-border">
-                + {oCount} Other
-              </span>
-            )}
-          </div>
-          <div className="mt-1.5 text-xs text-navy-muted">
-            {mCount} male &bull; {fCount} female
-          </div>
-          <span className="mt-1 text-[11px] text-blue block">
-            {activeFilter === "male"
-              ? "Filtered: Males (click for Females)"
-              : activeFilter === "female"
-              ? "Filtered: Females (click to clear)"
-              : "Click to filter by sex"}
-          </span>
-        </button>
-
-        {/* Card 3: Infants & Seniors */}
-        <button
-          type="button"
-          onClick={() =>
-            onFilterChange(
-              activeFilter === "infants-seniors" ? "all" : "infants-seniors"
-            )
-          }
-          className={`p-4 rounded-2xl border text-left transition-all ${
-            isAgeFilter
-              ? "bg-surface border-blue shadow-sm ring-2 ring-blue/20"
-              : "bg-surface border-border hover:border-slate/50 hover:bg-panel/40"
+          {activeEmergencyCount}
+        </span>
+        <span
+          className={`text-sm ${
+            activeEmergencyCount > 0 ? "text-[#7A0F1C]" : "text-slate"
           }`}
         >
-          <div className="flex items-center justify-between">
-            <span className="font-mono text-xs uppercase tracking-wider text-slate">
-              INFANTS &amp; SENIORS
-            </span>
-            <span className="w-2 h-2 rounded-full bg-emerald-500" />
-          </div>
-          <div className="mt-2 flex items-baseline gap-2">
-            <span className="text-xl font-bold text-navy">
-              {infantCount} infants &bull; {seniorCount} seniors
-            </span>
-          </div>
-          <div className="mt-1.5 text-xs text-navy-muted">
-            &lt; 1 yr &amp; &ge; 60 yrs priority groups
-          </div>
-          <span className="mt-1 text-[11px] text-blue block">
-            {isAgeFilter ? "Filter active (click to reset)" : "Click to filter priority age"}
-          </span>
-        </button>
-
-        {/* Card 4: Emergency Cases */}
-        <button
-          type="button"
-          onClick={() =>
-            onFilterChange(activeFilter === "emergency" ? "all" : "emergency")
-          }
-          className={`p-4 rounded-2xl border text-left transition-all ${
-            emergencyCount > 0
-              ? activeFilter === "emergency"
-                ? "bg-red-50 border-red-500 shadow-sm ring-2 ring-red-400"
-                : "bg-red-50/70 border-red-300 hover:bg-red-50 hover:border-red-500"
-              : activeFilter === "emergency"
-              ? "bg-surface border-blue shadow-sm ring-2 ring-blue/20"
-              : "bg-surface border-border hover:border-slate/50 hover:bg-panel/40"
-          }`}
-        >
-          <div className="flex items-center justify-between">
-            <span
-              className={`font-mono text-xs uppercase tracking-wider font-semibold ${
-                emergencyCount > 0 ? "text-red-700" : "text-slate"
-              }`}
-            >
-              EMERGENCY CASES
-            </span>
-            <span
-              className={`w-2.5 h-2.5 rounded-full ${
-                emergencyCount > 0 ? "bg-red-600 animate-pulse" : "bg-slate/40"
-              }`}
-            />
-          </div>
-          <div className="mt-2 flex items-baseline gap-2">
-            <span
-              className={`text-3xl font-bold ${
-                emergencyCount > 0 ? "text-red-600" : "text-navy"
-              }`}
-            >
-              {emergencyCount}
-            </span>
-            <span
-              className={`text-xs font-semibold ${
-                emergencyCount > 0 ? "text-red-700" : "text-navy-muted"
-              }`}
-            >
-              {emergencyCount === 1 ? "emergency" : "emergencies"}
-            </span>
-          </div>
-          <div
-            className={`mt-1.5 text-xs ${
-              emergencyCount > 0 ? "text-red-800" : "text-navy-muted"
-            }`}
-          >
-            {emergencyCount > 0 ? "Immediate clinical priority" : "None admitted today"}
-          </div>
-          <span
-            className={`mt-1 text-[11px] block ${
-              emergencyCount > 0 ? "text-red-700 font-semibold" : "text-blue"
-            }`}
-          >
-            {activeFilter === "emergency"
-              ? "Filter active (click to reset)"
-              : "Click to filter emergency cases"}
-          </span>
-        </button>
-      </div>
-
-      {/* Filter Active pill if filtered */}
-      {activeFilter !== "all" && (
-        <div className="flex items-center justify-between bg-blue/10 border border-blue/20 rounded-xl px-4 py-2 text-xs">
-          <div className="flex items-center gap-2 text-blue font-semibold">
-            <span className="w-2 h-2 rounded-full bg-blue" />
-            <span>
-              Queue filtered by:{" "}
-              <strong className="uppercase font-mono">
-                {activeFilter === "emergency"
-                  ? "Emergency Cases"
-                  : activeFilter === "infants-seniors"
-                  ? "Infants & Seniors"
-                  : activeFilter === "male"
-                  ? "Male Patients"
-                  : activeFilter === "female"
-                  ? "Female Patients"
-                  : activeFilter}
-              </strong>
-            </span>
-          </div>
-          <button
-            type="button"
-            onClick={() => onFilterChange("all")}
-            className="text-xs text-blue hover:text-navy font-semibold hover:underline"
-          >
-            Clear filter (show all {total} patients)
-          </button>
-        </div>
-      )}
+          {emergencyDetail}
+        </span>
+      </button>
     </div>
   );
 }
