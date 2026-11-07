@@ -41,8 +41,8 @@ describe("Gemini Client & Retry Logic (/lib/ai/gemini-analysis)", () => {
       assert.strictEqual(res.ok, false, "Result should not be ok");
       assert.strictEqual(
         res.error,
-        "AI unavailable: Gemini overloaded, try Re-analyse in a minute",
-        "Error message should indicate Gemini overloaded"
+        "AI unavailable: Gemini overloaded [Model tried: gemini-3.8-flash], try Re-analyse in a minute",
+        "Error message should indicate Gemini overloaded and model tried"
       );
     } finally {
       global.fetch = originalFetch;

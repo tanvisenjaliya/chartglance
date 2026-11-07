@@ -318,24 +318,24 @@ export async function callGemini(options: GeminiCallOptions): Promise<GeminiCall
     };
   }
 
-  // Determine user-friendly reason to show on card
-  let errorReason = "AI unavailable: Gemini analysis failed, try Re-analyse in a minute";
+  // Determine user-friendly reason to show on card, including specific reason and model tried
+  let errorReason = `AI unavailable: Gemini analysis failed [Model tried: ${modelUsed}], try Re-analyse in a minute`;
   if (result.status === 429) {
-    errorReason = "AI unavailable: Gemini overloaded, try Re-analyse in a minute";
+    errorReason = `AI unavailable: Gemini overloaded [Model tried: ${modelUsed}], try Re-analyse in a minute`;
   } else if (result.status === 503) {
     errorReason = fallbackUsed
-      ? "AI unavailable: Gemini overloaded (primary & fallback models unavailable), try Re-analyse in a minute"
-      : "AI unavailable: Gemini overloaded, try Re-analyse in a minute";
+      ? `AI unavailable: Gemini overloaded (primary & fallback models unavailable) [Model tried: ${modelUsed}], try Re-analyse in a minute`
+      : `AI unavailable: Gemini overloaded [Model tried: ${modelUsed}], try Re-analyse in a minute`;
   } else if (result.isTimeout || result.status === 408) {
-    errorReason = "AI unavailable: Gemini timed out, try Re-analyse in a minute";
+    errorReason = `AI unavailable: Gemini timed out (45s) [Model tried: ${modelUsed}], try Re-analyse in a minute`;
   } else if (result.status === 401 || result.status === 403) {
-    errorReason = "AI unavailable: API key rejected or unauthorized";
+    errorReason = `AI unavailable: API key rejected or unauthorized [Model tried: ${modelUsed}]`;
   } else if (result.status === 404) {
-    errorReason = `AI unavailable: Model not found (${modelUsed})`;
+    errorReason = `AI unavailable: Model not found [Model tried: ${modelUsed}]`;
   } else if (result.status === 0) {
-    errorReason = "AI unavailable: Could not reach Gemini, check connectivity";
+    errorReason = `AI unavailable: Could not reach Gemini (network error) [Model tried: ${modelUsed}], check connectivity`;
   } else if (result.status) {
-    errorReason = `AI unavailable: Gemini error (${result.status}), try Re-analyse in a minute`;
+    errorReason = `AI unavailable: Gemini error (${result.status}) [Model tried: ${modelUsed}], try Re-analyse in a minute`;
   }
 
   return {
@@ -368,14 +368,32 @@ export async function getOrGenerateAnalysis(
   const consentId = consent.id || `consent-${patientId}`;
   const cachePath = path.join(CACHE_DIR, `${patientId}-${consentId}.json`);
 
-  // 1. Check Cache
+  // 1. Check Cache: never serve failed analyses from cache, and forceRefresh clears stale cache
+  if (forceRefresh && fs.existsSync(cachePath)) {
+    try {
+      fs.unlinkSync(cachePath);
+    } catch {
+      // Ignore
+    }
+  }
+
   if (!forceRefresh && fs.existsSync(cachePath)) {
     try {
       const raw = fs.readFileSync(cachePath, "utf-8");
       const cached = JSON.parse(raw) as AIAnalysisResult;
-      cached.cached = true;
-      cached.consentExpiry = consent.expiryDate;
-      return cached;
+      // Only return successful analyses from cache
+      if (!cached.aiFailed) {
+        cached.cached = true;
+        cached.consentExpiry = consent.expiryDate;
+        return cached;
+      } else {
+        // Discard stale failure cache file
+        try {
+          fs.unlinkSync(cachePath);
+        } catch {
+          // Ignore
+        }
+      }
     } catch {
       // Re-run on cache read error
     }
@@ -584,12 +602,12 @@ Ideal Output:
       rawAiResponse = JSON.parse(geminiResult.text);
     } catch (jsonErr) {
       aiFailed = true;
-      failureNotice = "AI unavailable: Invalid JSON format returned by Gemini";
+      failureNotice = `AI unavailable: Invalid JSON format returned [Model tried: ${geminiResult.modelUsed}], try Re-analyse in a minute`;
       console.error("[GEMINI ERROR] Failed to parse JSON response:", jsonErr);
     }
   } else {
     aiFailed = true;
-    failureNotice = "AI unavailable: Empty response from Gemini";
+    failureNotice = `AI unavailable: Empty response from Gemini [Model tried: ${geminiResult.modelUsed}], try Re-analyse in a minute`;
   }
 
   // 5. Validation & Safety Net
@@ -817,11 +835,22 @@ Ideal Output:
     consentExpiry: consent.expiryDate,
   };
 
-  // 8. Cache result
-  try {
-    fs.writeFileSync(cachePath, JSON.stringify(finalResult, null, 2), "utf-8");
-  } catch (err) {
-    console.error("Failed to write AI cache:", err);
+  // 8. Cache result: only cache successful AI analyses; never cache failures
+  if (!aiFailed) {
+    try {
+      fs.writeFileSync(cachePath, JSON.stringify(finalResult, null, 2), "utf-8");
+    } catch (err) {
+      console.error("Failed to write AI cache:", err);
+    }
+  } else {
+    // If a cache file exists from previous run, remove it
+    if (fs.existsSync(cachePath)) {
+      try {
+        fs.unlinkSync(cachePath);
+      } catch {
+        // Ignore
+      }
+    }
   }
 
   return finalResult;
