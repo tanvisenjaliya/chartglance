@@ -109,6 +109,247 @@ function collectAllValidIds(
   return ids;
 }
 
+export interface GeminiCallOptions {
+  userPrompt: string;
+  systemInstruction?: string;
+  responseMimeType?: string;
+  temperature?: number;
+  timeoutMs?: number;
+  modelOverride?: string;
+}
+
+export interface GeminiRawError {
+  name: string;
+  message: string;
+  cause?: {
+    code?: string | number;
+    message?: string;
+  };
+}
+
+export interface GeminiCallResult {
+  ok: boolean;
+  status: number;
+  text?: string;
+  error?: string;
+  rawError?: GeminiRawError;
+  requestUrlMasked?: string;
+  modelUsed: string;
+  fallbackUsed: boolean;
+  attempts: number;
+}
+
+/**
+ * Executes a call to the Gemini REST API using query parameter auth (?key=...).
+ * Retries on 429 and 503 up to 3 times (waiting 2s, 4s, 8s).
+ * Tries GEMINI_FALLBACK_MODEL once if main model still fails with 503 and fallback is configured.
+ * Never logs the full URL with API key.
+ */
+export async function callGemini(options: GeminiCallOptions): Promise<GeminiCallResult> {
+  const apiKey = process.env.GEMINI_API_KEY?.trim();
+  if (!apiKey) {
+    return {
+      ok: false,
+      status: 401,
+      error: "AI unavailable: GEMINI_API_KEY is not configured in .env.local",
+      modelUsed: "",
+      fallbackUsed: false,
+      attempts: 0,
+    };
+  }
+
+  const sanitizeLog = (text: string) => {
+    if (!text) return "";
+    return text.split(apiKey).join("[REDACTED_API_KEY]");
+  };
+
+  const mainModel = options.modelOverride || process.env.GEMINI_MODEL?.trim() || "gemini-3.8-flash";
+  const fallbackModel = process.env.GEMINI_FALLBACK_MODEL?.trim();
+
+  const requestBody: Record<string, unknown> = {
+    contents: [
+      {
+        role: "user",
+        parts: [{ text: options.userPrompt }],
+      },
+    ],
+    generationConfig: {
+      temperature: options.temperature ?? 0.1,
+      ...(options.responseMimeType ? { responseMimeType: options.responseMimeType } : {}),
+    },
+  };
+
+  if (options.systemInstruction) {
+    requestBody.systemInstruction = {
+      parts: [{ text: options.systemInstruction }],
+    };
+  }
+
+  const runSingleAttempt = async (modelToUse: string): Promise<{
+    ok: boolean;
+    status: number;
+    text?: string;
+    errorText?: string;
+    rawError?: GeminiRawError;
+    requestUrlMasked: string;
+    isTimeout?: boolean;
+  }> => {
+    // Note: Send key as query parameter (?key=...)
+    const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(modelToUse)}:generateContent?key=${encodeURIComponent(apiKey)}`;
+    const maskedUrl = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(modelToUse)}:generateContent?key=***`;
+    console.log(`[GEMINI REQUEST] URL: ${maskedUrl}`);
+
+    const timeoutMs = options.timeoutMs ?? 45000;
+
+    try {
+      const res = await fetch(endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        signal: AbortSignal.timeout(timeoutMs),
+        body: JSON.stringify(requestBody),
+      });
+
+      if (!res.ok) {
+        const errBody = await res.text().catch(() => "");
+        // Log endpoint WITHOUT key
+        console.error(`[GEMINI ERROR] Model: ${modelToUse} | HTTP Status: ${res.status} ${res.statusText || ""}`);
+        if (errBody) {
+          console.error(`[GEMINI ERROR] Response Body: ${sanitizeLog(errBody)}`);
+        }
+        return { ok: false, status: res.status, errorText: errBody, requestUrlMasked: maskedUrl };
+      }
+
+      const data = await res.json();
+      const textContent = data.candidates?.[0]?.content?.parts?.[0]?.text;
+      if (typeof textContent === "string") {
+        return { ok: true, status: 200, text: textContent, requestUrlMasked: maskedUrl };
+      }
+      return { ok: false, status: 200, errorText: "Response contained no text parts", requestUrlMasked: maskedUrl };
+    } catch (err: unknown) {
+      const isTimeout =
+        (err instanceof Error && err.name === "TimeoutError") ||
+        String(err).includes("TimeoutError");
+      const errName = err instanceof Error ? err.name : "Error";
+      const errMsg = err instanceof Error ? err.message : String(err);
+
+      let causeInfo: { code?: string | number; message?: string } | undefined = undefined;
+      if (err instanceof Error && (err as { cause?: unknown }).cause) {
+        const c = (err as { cause?: unknown }).cause;
+        if (typeof c === "object" && c !== null) {
+          causeInfo = {
+            code: (c as { code?: string | number }).code,
+            message: sanitizeLog((c as { message?: string }).message || String(c)),
+          };
+        } else {
+          causeInfo = {
+            message: sanitizeLog(String(c)),
+          };
+        }
+      }
+
+      const rawErr: GeminiRawError = {
+        name: errName,
+        message: sanitizeLog(errMsg),
+        cause: causeInfo,
+      };
+
+      console.error(
+        `[GEMINI ERROR] Model: ${modelToUse} | Exception: ${sanitizeLog(errMsg)} | Cause: ${JSON.stringify(causeInfo || {})}`
+      );
+      return {
+        ok: false,
+        status: isTimeout ? 408 : 0,
+        errorText: errMsg,
+        rawError: rawErr,
+        requestUrlMasked: maskedUrl,
+        isTimeout,
+      };
+    }
+  };
+
+  const retryDelays = [2000, 4000, 8000];
+  let attempts = 0;
+
+  // Initial attempt on main model
+  attempts++;
+  let result = await runSingleAttempt(mainModel);
+
+  // Retries automatically on 503 and 429 errors: up to 3 attempts, waiting 2, 4 and 8 seconds
+  while (!result.ok && (result.status === 429 || result.status === 503) && attempts <= retryDelays.length) {
+    const delay = retryDelays[attempts - 1];
+    console.warn(
+      `[GEMINI RETRY] HTTP ${result.status} from ${mainModel}. Waiting ${delay / 1000}s before retry (attempt ${attempts + 1})...`
+    );
+    await new Promise((resolve) => setTimeout(resolve, delay));
+    attempts++;
+    result = await runSingleAttempt(mainModel);
+  }
+
+  let fallbackUsed = false;
+  let modelUsed = mainModel;
+
+  // Optional fallback model: if GEMINI_FALLBACK_MODEL is set in .env.local and the main model still fails with 503, try fallback model once
+  if (!result.ok && result.status === 503 && fallbackModel && fallbackModel !== mainModel) {
+    console.warn(
+      `[GEMINI FALLBACK] Primary model ${mainModel} failed with 503 after retries. Trying fallback model ${fallbackModel}...`
+    );
+    attempts++;
+    const fallbackResult = await runSingleAttempt(fallbackModel);
+    if (fallbackResult.ok) {
+      result = fallbackResult;
+      fallbackUsed = true;
+      modelUsed = fallbackModel;
+    } else {
+      result = fallbackResult;
+      fallbackUsed = true;
+      modelUsed = fallbackModel;
+    }
+  }
+
+  if (result.ok && typeof result.text === "string") {
+    return {
+      ok: true,
+      status: 200,
+      text: result.text,
+      requestUrlMasked: result.requestUrlMasked,
+      modelUsed,
+      fallbackUsed,
+      attempts,
+    };
+  }
+
+  // Determine user-friendly reason to show on card
+  let errorReason = "AI unavailable: Gemini analysis failed, try Re-analyse in a minute";
+  if (result.status === 429) {
+    errorReason = "AI unavailable: Gemini overloaded, try Re-analyse in a minute";
+  } else if (result.status === 503) {
+    errorReason = fallbackUsed
+      ? "AI unavailable: Gemini overloaded (primary & fallback models unavailable), try Re-analyse in a minute"
+      : "AI unavailable: Gemini overloaded, try Re-analyse in a minute";
+  } else if (result.isTimeout || result.status === 408) {
+    errorReason = "AI unavailable: Gemini timed out, try Re-analyse in a minute";
+  } else if (result.status === 401 || result.status === 403) {
+    errorReason = "AI unavailable: API key rejected or unauthorized";
+  } else if (result.status === 404) {
+    errorReason = `AI unavailable: Model not found (${modelUsed})`;
+  } else if (result.status === 0) {
+    errorReason = "AI unavailable: Could not reach Gemini, check connectivity";
+  } else if (result.status) {
+    errorReason = `AI unavailable: Gemini error (${result.status}), try Re-analyse in a minute`;
+  }
+
+  return {
+    ok: false,
+    status: result.status,
+    error: errorReason,
+    rawError: result.rawError,
+    requestUrlMasked: result.requestUrlMasked,
+    modelUsed,
+    fallbackUsed,
+    attempts,
+  };
+}
+
 /**
  * Generates or retrieves cached AI analysis for a consented patient.
  */
@@ -195,9 +436,6 @@ export async function getOrGenerateAnalysis(
   const safetyAlerts = bundle ? evaluatePatientSafety(bundle) : [];
 
   // 4. Call Gemini AI with strict guardrails, prompt schema, and worked examples
-  const apiKey = process.env.GEMINI_API_KEY;
-  const modelName = process.env.GEMINI_MODEL || "gemini-3.8-flash";
-
   let rawAiResponse: {
     summary?: string;
     summarySourceIds?: string[];
@@ -212,9 +450,7 @@ export async function getOrGenerateAnalysis(
   let aiFailed = false;
   let failureNotice: string | undefined;
 
-  if (apiKey) {
-    try {
-      const systemInstruction = `You are an experienced Primary Health Centre (PHC) medical officer's clinical assistant in rural India.
+  const systemInstruction = `You are an experienced Primary Health Centre (PHC) medical officer's clinical assistant in rural India.
 You analyse the patient's full consented medical history alongside Indian national clinical guidelines (NP-NCD, NTEP, Anaemia Mukt Bharat, UIP, CKD).
 
 Definitions:
@@ -332,73 +568,28 @@ Ideal Output:
         clinicalReference: clinicalRefText,
       });
 
-      const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${apiKey}`;
+  const geminiResult = await callGemini({
+    userPrompt,
+    systemInstruction,
+    responseMimeType: "application/json",
+    temperature: 0.1,
+    timeoutMs: 45000,
+  });
 
-      const res = await fetch(endpoint, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        signal: AbortSignal.timeout(25000), // 25s timeout per prompt
-        body: JSON.stringify({
-          systemInstruction: {
-            parts: [{ text: systemInstruction }],
-          },
-          contents: [
-            {
-              role: "user",
-              parts: [{ text: userPrompt }],
-            },
-          ],
-          generationConfig: {
-            temperature: 0.1,
-            responseMimeType: "application/json",
-          },
-        }),
-      });
-
-      const sanitize = (text: string) => {
-        if (!text) return "";
-        let clean = text;
-        if (apiKey) {
-          clean = clean.split(apiKey).join("[REDACTED_API_KEY]");
-        }
-        return clean;
-      };
-
-      if (!res.ok) {
-        const errText = await res.text();
-        console.error(`[GEMINI ERROR] HTTP Status: ${res.status} ${res.statusText || ""}`);
-        console.error(`[GEMINI ERROR] Response Body: ${sanitize(errText)}`);
-        aiFailed = true;
-        failureNotice = `Gemini API returned status ${res.status}. Falling back to deterministic safety rules.`;
-      } else {
-        const data = await res.json();
-        const textContent = data.candidates?.[0]?.content?.parts?.[0]?.text;
-        if (textContent) {
-          rawAiResponse = JSON.parse(textContent);
-        } else {
-          aiFailed = true;
-          failureNotice = "Empty response from Gemini API. Falling back to deterministic safety rules.";
-          console.error("[GEMINI ERROR] Received response with no text parts:", JSON.stringify(data));
-        }
-      }
-    } catch (err: unknown) {
-      let errMsg = "";
-      if (err instanceof Error) {
-        const causeStr = (err as { cause?: unknown }).cause ? ` | Cause: ${String((err as { cause?: unknown }).cause)}` : "";
-        errMsg = `${err.name}: ${err.message}${causeStr}`;
-      } else {
-        errMsg = String(err);
-      }
-      const cleanErrMsg = apiKey ? errMsg.split(apiKey).join("[REDACTED_API_KEY]") : errMsg;
-      console.error(`[GEMINI ERROR] Exception caught: ${cleanErrMsg}`);
+  if (!geminiResult.ok) {
+    aiFailed = true;
+    failureNotice = geminiResult.error;
+  } else if (geminiResult.text) {
+    try {
+      rawAiResponse = JSON.parse(geminiResult.text);
+    } catch (jsonErr) {
       aiFailed = true;
-      failureNotice = err instanceof Error && err.name === "TimeoutError"
-        ? "Gemini analysis timed out after 25s. Showing deterministic safety rules."
-        : "Gemini analysis failed. Showing deterministic safety rules.";
+      failureNotice = "AI unavailable: Invalid JSON format returned by Gemini";
+      console.error("[GEMINI ERROR] Failed to parse JSON response:", jsonErr);
     }
   } else {
     aiFailed = true;
-    failureNotice = "GEMINI_API_KEY is not configured in .env.local. Showing deterministic safety rules.";
+    failureNotice = "AI unavailable: Empty response from Gemini";
   }
 
   // 5. Validation & Safety Net

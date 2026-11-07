@@ -105,7 +105,7 @@
     ]
   },
   "B08": {
-    "id": "consent-B08-1793442743084",
+    "id": "consent-B08-1794027961810",
     "patientId": "B08",
     "abhaNumber": "91-5555-5529-0008",
     "abhaAddress": "krupali.chaudhary@sbx",
@@ -119,17 +119,17 @@
       "DischargeSummary"
     ],
     "dateRange": {
-      "from": "2023-11-01",
-      "to": "2026-10-31"
+      "from": "2023-11-08",
+      "to": "2026-11-07"
     },
-    "expiryDate": "2026-11-01T10:32:35.074Z",
-    "status": "EXPIRED",
-    "createdAt": "2026-10-31T10:32:23.083Z",
-    "updatedAt": "2026-11-06T10:39:49.669Z",
+    "expiryDate": "2026-11-08T05:06:11.122Z",
+    "status": "GRANTED",
+    "createdAt": "2026-11-07T05:06:01.809Z",
+    "updatedAt": "2026-11-07T05:06:11.122Z",
     "facilityFetch": [
       {
         "facility": "PHC Navli (demo)",
-        "scheduledAt": 1793442762055.896,
+        "scheduledAt": 1794027978084.723,
         "status": "received"
       }
     ]
@@ -195,7 +195,7 @@
     ]
   },
   "B14": {
-    "id": "consent-B14-1793959483707",
+    "id": "consent-B14-1793980783134",
     "patientId": "B14",
     "abhaNumber": "91-5555-9963-0014",
     "abhaAddress": "mahendra.prajapati@sbx",
@@ -212,10 +212,22 @@
       "from": "2023-11-07",
       "to": "2026-11-06"
     },
-    "expiryDate": "2026-11-07T10:04:43.706Z",
-    "status": "DENIED",
-    "createdAt": "2026-11-06T10:04:43.706Z",
-    "updatedAt": "2026-11-06T10:04:46.704Z"
+    "expiryDate": "2026-11-07T15:59:50.346Z",
+    "status": "GRANTED",
+    "createdAt": "2026-11-06T15:59:43.133Z",
+    "updatedAt": "2026-11-06T15:59:50.346Z",
+    "facilityFetch": [
+      {
+        "facility": "General Hospital Anand (demo)",
+        "scheduledAt": 1793980794486.8655,
+        "status": "received"
+      },
+      {
+        "facility": "CHC Petlad (demo)",
+        "scheduledAt": 1793980794676.8586,
+        "status": "received"
+      }
+    ]
   },
   "P03": {
     "id": "consent-P03-1793538715586",
@@ -321,5 +333,32 @@
         "status": "received"
       }
     ]
+  },
+  "emg-1793979809737": {
+    "id": "consent-emg-1793979809737-1793979809738",
+    "patientId": "emg-1793979809737",
+    "abhaNumber": "91-5555-2031-0006",
+    "abhaAddress": "savitaben.solanki@sbx",
+    "requesterName": "Dr. Aditi Sharma",
+    "requesterFacility": "PHC Navli (demo) (HIU-GJ-AND-042)",
+    "purpose": "CAREMGT",
+    "hiTypes": [
+      "OPConsultation",
+      "DiagnosticReport",
+      "Prescription",
+      "DischargeSummary"
+    ],
+    "dateRange": {
+      "from": "2023-11-07",
+      "to": "2026-11-06"
+    },
+    "expiryDate": "2026-11-07T15:43:29.738Z",
+    "status": "REQUESTED",
+    "createdAt": "2026-11-06T15:43:29.738Z",
+    "updatedAt": "2026-11-06T15:43:29.738Z",
+    "simulation": {
+      "outcome": "GRANTED",
+      "resolveAt": 1793979840249.3574
+    }
   }
 }

@@ -9,6 +9,17 @@ interface EmergencyPatientModalProps {
   onPatientAdded: (patient: PatientQueueItem) => void;
 }
 
+interface LookedUpPatient {
+  id: string;
+  name: string;
+  age: string | number;
+  gender: "Male" | "Female" | "Other";
+  abhaNumber: string;
+  abhaAddress: string;
+  recordCount?: number;
+  hasRecords?: boolean;
+}
+
 export default function EmergencyPatientModal({
   isOpen,
   onClose,
@@ -23,16 +34,9 @@ export default function EmergencyPatientModal({
   const [identifier, setIdentifier] = useState("");
   const [lookupLoading, setLookupLoading] = useState(false);
   const [lookupError, setLookupError] = useState("");
-  const [lookedUpPatient, setLookedUpPatient] = useState<{
-    id?: string;
-    name: string;
-    age: string | number;
-    gender: "Male" | "Female" | "Other";
-    abhaNumber: string;
-    abhaAddress: string;
-    recordCount?: number;
-    hasRecords?: boolean;
-  } | null>(null);
+  const [lookedUpPatient, setLookedUpPatient] = useState<LookedUpPatient | null>(null);
+  const [alreadyInQueue, setAlreadyInQueue] = useState(false);
+  const [markingEmergency, setMarkingEmergency] = useState(false);
 
   // Path 2: No ABHA
   const [manualName, setManualName] = useState("");
@@ -46,40 +50,97 @@ export default function EmergencyPatientModal({
 
   if (!isOpen) return null;
 
+  const resetLookup = () => {
+    setLookedUpPatient(null);
+    setAlreadyInQueue(false);
+    setLookupError("");
+  };
+
+  const handleTabChange = (tab: "has-abha" | "no-abha") => {
+    setActiveTab(tab);
+    resetLookup();
+    setSubmitError("");
+  };
+
+  // ── Fix: use POST with JSON body instead of GET with query string ──
   const handleLookup = async () => {
     if (!identifier.trim()) {
-      setLookupError("Enter an ABHA number or ABHA address to lookup");
+      setLookupError("Enter an ABHA number or ABHA address to look up");
       return;
     }
     setLookupLoading(true);
     setLookupError("");
+    setLookedUpPatient(null);
+    setAlreadyInQueue(false);
+
     try {
-      const res = await fetch(`/api/abdm/lookup?identifier=${encodeURIComponent(identifier.trim())}`);
+      const res = await fetch("/api/abdm/lookup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ query: identifier.trim() }),
+      });
+
       const data = await res.json();
+
       if (!res.ok) {
-        setLookupError(data.error || "Patient not found in registry");
-        setLookedUpPatient(null);
+        // 404 → human-friendly message; anything else → actual server error
+        setLookupError(
+          res.status === 404
+            ? "No patient found with this ABHA"
+            : data.error ?? "Lookup failed — please try again"
+        );
       } else {
-        setLookedUpPatient({
-          id: data.id,
-          name: data.name,
-          age: data.age,
-          gender: data.gender === "M" ? "Male" : data.gender === "F" ? "Female" : data.gender,
-          abhaNumber: data.abhaNumber,
-          abhaAddress: data.abhaAddress,
-          recordCount: data.recordCount,
-          hasRecords: data.hasRecords,
-        });
+        // Map gender codes to full words if needed
+        const g = data.patient.gender;
+        const gender: "Male" | "Female" | "Other" =
+          g === "M" ? "Male" : g === "F" ? "Female" : g === "O" ? "Other" : g;
+
+        setLookedUpPatient({ ...data.patient, gender });
+        setAlreadyInQueue(Boolean(data.alreadyInQueue));
       }
     } catch {
-      setLookupError("Network error during ABHA lookup");
-      setLookedUpPatient(null);
+      // Network / fetch failure (offline, DNS error, etc.)
+      setLookupError(
+        "Network error — could not reach the lookup service. Try again."
+      );
     } finally {
       setLookupLoading(false);
     }
   };
 
-  const handleApplyPreset = (nameText: string, ageVal: string, genderVal: "Male" | "Female" | "Other") => {
+  // ── Mark an existing queue patient as emergency in-place ──
+  const handleMarkAsEmergency = async () => {
+    if (!lookedUpPatient || !reason.trim()) {
+      setSubmitError("Please enter a reason for the emergency first");
+      return;
+    }
+    setMarkingEmergency(true);
+    setSubmitError("");
+    try {
+      const res = await fetch(`/api/patients/${lookedUpPatient.id}/emergency`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ emergencyReason: reason.trim() }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setSubmitError(data.error ?? "Failed to mark patient as emergency");
+        return;
+      }
+      onPatientAdded(data.patient);
+      onClose();
+    } catch {
+      setSubmitError("Network error — could not update the queue. Try again.");
+    } finally {
+      setMarkingEmergency(false);
+    }
+  };
+
+  const handleApplyPreset = (
+    nameText: string,
+    ageVal: string,
+    genderVal: "Male" | "Female" | "Other"
+  ) => {
     setManualName(nameText);
     setManualAge(ageVal);
     setManualGender(genderVal);
@@ -96,12 +157,21 @@ export default function EmergencyPatientModal({
 
     if (activeTab === "has-abha") {
       if (!lookedUpPatient) {
-        setSubmitError("Please lookup and select an ABHA patient first");
+        setSubmitError("Please look up and select an ABHA patient first");
+        return;
+      }
+      // Guard: cannot re-admit a patient already in the queue via the normal flow
+      if (alreadyInQueue) {
+        setSubmitError(
+          "This patient is already in today's queue. Use 'Mark as emergency' above."
+        );
         return;
       }
     } else {
       if (!manualName.trim()) {
-        setSubmitError("Please enter a patient name or select an 'Unknown' preset");
+        setSubmitError(
+          "Please enter a patient name or select an 'Unknown' preset"
+        );
         return;
       }
     }
@@ -173,7 +243,7 @@ export default function EmergencyPatientModal({
         <div className="flex border-b border-border bg-panel/60 p-2 gap-2">
           <button
             type="button"
-            onClick={() => setActiveTab("has-abha")}
+            onClick={() => handleTabChange("has-abha")}
             className={`flex-1 py-2 px-3 text-xs font-mono uppercase tracking-wider font-semibold rounded-lg transition-all ${
               activeTab === "has-abha"
                 ? "bg-surface text-red-600 shadow-sm border border-red-200"
@@ -184,7 +254,7 @@ export default function EmergencyPatientModal({
           </button>
           <button
             type="button"
-            onClick={() => setActiveTab("no-abha")}
+            onClick={() => handleTabChange("no-abha")}
             className={`flex-1 py-2 px-3 text-xs font-mono uppercase tracking-wider font-semibold rounded-lg transition-all ${
               activeTab === "no-abha"
                 ? "bg-surface text-red-600 shadow-sm border border-red-200"
@@ -223,7 +293,10 @@ export default function EmergencyPatientModal({
                     type="text"
                     placeholder="e.g. 91-5555-2031-0006 or rahul.verma@sbx"
                     value={identifier}
-                    onChange={(e) => setIdentifier(e.target.value)}
+                    onChange={(e) => {
+                      setIdentifier(e.target.value);
+                      resetLookup();
+                    }}
                     className="flex-1 px-3 py-2 text-sm border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue font-mono"
                   />
                   <button
@@ -232,11 +305,13 @@ export default function EmergencyPatientModal({
                     disabled={lookupLoading}
                     className="px-4 py-2 bg-navy text-white text-xs font-mono uppercase tracking-wider font-semibold rounded-lg hover:bg-navy-muted disabled:opacity-50"
                   >
-                    {lookupLoading ? "Looking up..." : "Lookup"}
+                    {lookupLoading ? "Looking up…" : "Lookup"}
                   </button>
                 </div>
                 {lookupError && (
-                  <p className="mt-1 text-xs text-red-600">{lookupError}</p>
+                  <p className="mt-1.5 text-xs text-red-600 flex items-center gap-1">
+                    <span aria-hidden>⚠</span> {lookupError}
+                  </p>
                 )}
                 <p className="mt-1 text-[11px] text-slate">
                   Auto-fills demographics and triggers consent request immediately upon entry.
@@ -244,28 +319,57 @@ export default function EmergencyPatientModal({
               </div>
 
               {lookedUpPatient && (
-                <div className="p-3 bg-panel rounded-xl border border-border space-y-1.5 animate-in fade-in">
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-mono uppercase tracking-wider text-slate">
-                      Matched Registry Patient
-                    </span>
-                    <span className="text-xs font-mono font-bold text-green-700 bg-green-50 px-2 py-0.5 rounded border border-green-200">
-                      Verified ABHA
-                    </span>
+                <div className="space-y-3">
+                  {/* Patient card */}
+                  <div className="p-3 bg-panel rounded-xl border border-border space-y-1.5 animate-in fade-in">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-mono uppercase tracking-wider text-slate">
+                        Matched Registry Patient
+                      </span>
+                      <span className="text-xs font-mono font-bold text-green-700 bg-green-50 px-2 py-0.5 rounded border border-green-200">
+                        Verified ABHA
+                      </span>
+                    </div>
+                    <div className="text-sm font-bold text-navy">
+                      {lookedUpPatient.name}
+                    </div>
+                    <div className="text-xs text-navy-muted flex gap-3">
+                      <span>Age: {lookedUpPatient.age} yrs</span>
+                      <span>Sex: {lookedUpPatient.gender}</span>
+                      <span className="font-mono">{lookedUpPatient.abhaAddress}</span>
+                    </div>
+                    <div className="text-xs text-blue">
+                      {lookedUpPatient.hasRecords
+                        ? `${lookedUpPatient.recordCount} past records will be requested via consent`
+                        : "ABHA verified (zero prior records in network)"}
+                    </div>
                   </div>
-                  <div className="text-sm font-bold text-navy">
-                    {lookedUpPatient.name}
-                  </div>
-                  <div className="text-xs text-navy-muted flex gap-3">
-                    <span>Age: {lookedUpPatient.age} yrs</span>
-                    <span>Sex: {lookedUpPatient.gender}</span>
-                    <span className="font-mono">{lookedUpPatient.abhaAddress}</span>
-                  </div>
-                  <div className="text-xs text-blue">
-                    {lookedUpPatient.hasRecords
-                      ? `${lookedUpPatient.recordCount} past records will be requested via consent`
-                      : "ABHA verified (zero prior records in network)"}
-                  </div>
+
+                  {/* Already-in-queue notice */}
+                  {alreadyInQueue && (
+                    <div className="p-3 bg-amber-50 border border-amber-300 rounded-xl space-y-2 animate-in fade-in">
+                      <p className="text-xs font-semibold text-amber-800 flex items-center gap-1.5">
+                        <span aria-hidden>⚠</span> Already in today&apos;s queue
+                      </p>
+                      <p className="text-xs text-amber-700">
+                        {lookedUpPatient.name} is already registered in today&apos;s OPD queue.
+                        You cannot admit them again, but you can escalate them to emergency status.
+                      </p>
+                      <button
+                        type="button"
+                        onClick={handleMarkAsEmergency}
+                        disabled={markingEmergency || !reason.trim()}
+                        className="w-full py-2 bg-amber-600 text-white text-xs font-mono uppercase tracking-wider font-bold rounded-lg hover:bg-amber-700 disabled:opacity-50 flex items-center justify-center gap-2"
+                      >
+                        {markingEmergency ? "Updating…" : "⚡ Mark as emergency"}
+                      </button>
+                      {!reason.trim() && (
+                        <p className="text-[11px] text-amber-600">
+                          Fill in the reason for emergency above first.
+                        </p>
+                      )}
+                    </div>
+                  )}
                 </div>
               )}
             </div>
@@ -368,13 +472,14 @@ export default function EmergencyPatientModal({
               </div>
 
               <div className="p-2.5 bg-amber-50 rounded-lg border border-amber-200 text-xs text-amber-800">
-                <span className="font-semibold">Note:</span> Admitted with token E1, E2... No consent or records fetch until ABHA is linked later via the patient file.
+                <span className="font-semibold">Note:</span> Admitted with token E1, E2… No consent or records fetch until ABHA is linked later via the patient file.
               </div>
             </div>
           )}
 
           {submitError && (
-            <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-xs text-red-700">
+            <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-xs text-red-700 flex items-start gap-1.5">
+              <span aria-hidden className="shrink-0 mt-0.5">⚠</span>
               {submitError}
             </div>
           )}
@@ -387,13 +492,16 @@ export default function EmergencyPatientModal({
             >
               Cancel
             </button>
-            <button
-              type="submit"
-              disabled={submitting}
-              className="px-5 py-2 bg-red-600 text-white rounded-lg text-xs font-mono uppercase tracking-wider font-bold hover:bg-red-700 shadow-sm disabled:opacity-50 flex items-center gap-2"
-            >
-              {submitting ? "Admitting..." : "Admit Emergency Patient \u2192"}
-            </button>
+            {/* Hide the admit button when the found patient is already in the queue */}
+            {!(activeTab === "has-abha" && alreadyInQueue) && (
+              <button
+                type="submit"
+                disabled={submitting}
+                className="px-5 py-2 bg-red-600 text-white rounded-lg text-xs font-mono uppercase tracking-wider font-bold hover:bg-red-700 shadow-sm disabled:opacity-50 flex items-center gap-2"
+              >
+                {submitting ? "Admitting…" : "Admit Emergency Patient →"}
+              </button>
+            )}
           </div>
         </form>
       </div>

@@ -268,6 +268,25 @@ export default function DevPage() {
             </div>
           )}
         </div>
+
+        {/* Gemini API Diagnostic */}
+        <div className="bg-surface rounded-2xl border border-border p-6 shadow-sm flex items-center justify-between text-xs flex-wrap gap-4">
+          <div>
+            <span className="font-mono text-xs uppercase tracking-wider text-blue font-semibold block">
+              Gemini AI Diagnostic
+            </span>
+            <p className="text-navy font-bold mt-0.5">Test Gemini REST API connectivity &amp; retries</p>
+            <p className="text-navy-muted text-[11px] mt-0.5">
+              Verify API key delivery via query parameter, 429/503 retry policies, and fallback model settings.
+            </p>
+          </div>
+          <Link
+            href="/dev/ai-check"
+            className="px-4 py-2.5 rounded-xl bg-navy hover:bg-navy-muted text-white font-mono text-xs uppercase tracking-wider font-semibold transition-colors"
+          >
+            Open Gemini Check &rarr;
+          </Link>
+        </div>
       </main>
     </div>
   );
