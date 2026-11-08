@@ -1,10 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getOpdQueue, saveOpdQueue } from "@/lib/records";
+import { updatePatientQueueStatus } from "@/lib/records";
 
 /**
  * PATCH /api/patients/[id]/status
  * Body: { status: "Waiting" | "In consultation" | "Done" }
- * Updates a patient's queueStatus in data/todays-queue.json.
+ * Updates a patient's queueStatus in today's active queue.
+ * Rejects with 409 if another patient is already in consultation.
  */
 export async function PATCH(
   req: NextRequest,
@@ -22,19 +23,25 @@ export async function PATCH(
       );
     }
 
-    const queue = getOpdQueue();
-    const idx = queue.findIndex((p) => p.id === id);
-    if (idx === -1) {
-      return NextResponse.json({ error: "Patient not found in today's queue" }, { status: 404 });
+    const result = updatePatientQueueStatus(
+      id,
+      status as "Waiting" | "In consultation" | "Done"
+    );
+
+    if (!result.ok) {
+      if (result.conflict) {
+        return NextResponse.json(
+          {
+            error: result.error,
+            activePatient: result.activePatient,
+          },
+          { status: 409 }
+        );
+      }
+      return NextResponse.json({ error: result.error }, { status: 404 });
     }
 
-    queue[idx] = {
-      ...queue[idx],
-      queueStatus: status as "Waiting" | "In consultation" | "Done",
-    };
-    saveOpdQueue(queue);
-
-    return NextResponse.json({ patient: queue[idx] });
+    return NextResponse.json({ patient: result.patient });
   } catch (err: unknown) {
     const message =
       err instanceof Error ? err.message : "Failed to update patient status";

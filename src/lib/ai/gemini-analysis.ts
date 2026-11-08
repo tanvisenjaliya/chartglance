@@ -42,6 +42,7 @@ export interface AIAnalysisResult {
   facilitiesUsed: string[];
   dateRange: { from?: string; to?: string };
   consentExpiry?: string;
+  modelUsed?: string;
 }
 
 const RUNTIME_DIR = path.join(process.cwd(), "data", "runtime");
@@ -226,11 +227,15 @@ export async function callGemini(options: GeminiCallOptions): Promise<GeminiCall
       }
       return { ok: false, status: 200, errorText: "Response contained no text parts", requestUrlMasked: maskedUrl };
     } catch (err: unknown) {
-      const isTimeout =
-        (err instanceof Error && err.name === "TimeoutError") ||
-        String(err).includes("TimeoutError");
       const errName = err instanceof Error ? err.name : "Error";
       const errMsg = err instanceof Error ? err.message : String(err);
+      const causeCode = (err as { cause?: { code?: string | number } })?.cause?.code;
+      const isTimeout =
+        errName === "TimeoutError" ||
+        errName === "AbortError" ||
+        errMsg.toLowerCase().includes("timeout") ||
+        errMsg.toLowerCase().includes("aborted") ||
+        String(causeCode || "").toUpperCase().includes("TIMEOUT");
 
       let causeInfo: { code?: string | number; message?: string } | undefined = undefined;
       if (err instanceof Error && (err as { cause?: unknown }).cause) {
@@ -549,10 +554,25 @@ Ideal Output:
   ]
 }`;
 
+      // Strip redundant XHTML markup from notes
+      const cleanNoteText = (str?: string): string | undefined => {
+        if (!str) return undefined;
+        return str
+          .replace(/<[^>]+>/g, " ")
+          .replace(/&amp;/g, "&")
+          .replace(/&lt;/g, "<")
+          .replace(/&gt;/g, ">")
+          .replace(/&quot;/g, '"')
+          .replace(/&#39;/g, "'")
+          .replace(/\s+/g, " ")
+          .trim();
+      };
+
       // Build simplified records representation for prompt
       const recordsSummary = entries.map((e) => {
         const r = e.resource;
         if (!r) return null;
+        const rawNote = (r.clinicalNote as string) || (r.text as { div?: string })?.div;
         return {
           id: r.id,
           type: r.resourceType,
@@ -562,7 +582,7 @@ Ideal Output:
             (r.title as string) ||
             r.display ||
             (r.valueQuantity ? `${(r.valueQuantity as { value?: number }).value} ${(r.valueQuantity as { unit?: string }).unit || ""}` : undefined),
-          note: (r.clinicalNote as string) || (r.text as { div?: string })?.div,
+          note: cleanNoteText(rawNote),
         };
       }).filter(Boolean);
 
@@ -579,7 +599,7 @@ Ideal Output:
           id: n.id,
           date: n.date,
           doctor: n.doctorName,
-          note: n.noteText,
+          note: cleanNoteText(n.noteText),
           followUp: n.followUp,
         })),
         consentedHealthRecords: recordsSummary,
@@ -599,7 +619,12 @@ Ideal Output:
     failureNotice = geminiResult.error;
   } else if (geminiResult.text) {
     try {
-      rawAiResponse = JSON.parse(geminiResult.text);
+      const cleaned = geminiResult.text
+        .replace(/^```json\s*/i, "")
+        .replace(/^```\s*/i, "")
+        .replace(/\s*```$/, "")
+        .trim();
+      rawAiResponse = JSON.parse(cleaned);
     } catch (jsonErr) {
       aiFailed = true;
       failureNotice = `AI unavailable: Invalid JSON format returned [Model tried: ${geminiResult.modelUsed}], try Re-analyse in a minute`;
@@ -833,6 +858,7 @@ Ideal Output:
       to: datesList[datesList.length - 1],
     },
     consentExpiry: consent.expiryDate,
+    modelUsed: geminiResult.modelUsed,
   };
 
   // 8. Cache result: only cache successful AI analyses; never cache failures

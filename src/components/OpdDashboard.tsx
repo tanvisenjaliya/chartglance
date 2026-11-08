@@ -29,6 +29,11 @@ export default function OpdDashboard({
   );
   const [activeFilter, setActiveFilter] = useState<FilterType>("all");
   const [isEmergencyModalOpen, setIsEmergencyModalOpen] = useState(false);
+  const [consultationConflict, setConsultationConflict] = useState<{
+    id: string;
+    name: string;
+    tokenNumber: string;
+  } | null>(null);
 
   // Filter logic
   const filteredPatients = patients.filter((patient) => {
@@ -84,6 +89,22 @@ export default function OpdDashboard({
     patientId: string,
     newStatus: "Waiting" | "In consultation" | "Done"
   ) => {
+    // Only one patient can be In consultation at a time
+    if (newStatus === "In consultation") {
+      const activeOther = patients.find(
+        (p) => p.queueStatus === "In consultation" && p.id !== patientId
+      );
+      if (activeOther) {
+        setConsultationConflict({
+          id: activeOther.id,
+          name: activeOther.name,
+          tokenNumber: activeOther.tokenNumber,
+        });
+        return;
+      }
+      setConsultationConflict(null);
+    }
+
     const now = Date.now();
     setPatients((prev) => {
       const updated = prev.map((p) => {
@@ -98,7 +119,7 @@ export default function OpdDashboard({
     });
 
     try {
-      await fetch(`/api/patients/${patientId}/status`, {
+      const res = await fetch(`/api/patients/${patientId}/status`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -106,6 +127,20 @@ export default function OpdDashboard({
           completedTimestamp: newStatus === "Done" ? now : undefined,
         }),
       });
+
+      if (res.status === 409) {
+        const errData = await res.json();
+        if (errData.activePatient) {
+          setConsultationConflict(errData.activePatient);
+        }
+        // Revert local state to match server truth
+        const r = await fetch("/api/patients");
+        if (r.ok) {
+          const data = await r.json();
+          setPatients(sortQueueLive(data));
+        }
+        return;
+      }
     } catch {
       const res = await fetch("/api/patients");
       if (res.ok) {
@@ -168,6 +203,31 @@ export default function OpdDashboard({
               activeFilter={activeFilter}
               onFilterChange={setActiveFilter}
             />
+
+            {/* Consultation Conflict Alert */}
+            {consultationConflict && (
+              <div className="bg-amber-50 border border-amber-300 rounded-2xl p-4 flex items-center justify-between text-xs text-amber-900 shadow-sm animate-in fade-in">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className="font-bold text-amber-800">
+                    Finish the current consultation first:
+                  </span>
+                  <Link
+                    href={`/patient/${consultationConflict.id}`}
+                    className="font-semibold text-blue underline hover:text-blue/80"
+                  >
+                    {consultationConflict.name} ({consultationConflict.tokenNumber}) &rarr;
+                  </Link>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setConsultationConflict(null)}
+                  className="text-amber-700 hover:text-amber-900 text-base font-bold p-1 leading-none"
+                  title="Dismiss"
+                >
+                  &times;
+                </button>
+              </div>
+            )}
 
             {/* OPD Queue List */}
             <div className="bg-surface rounded-2xl border border-border shadow-sm overflow-hidden">

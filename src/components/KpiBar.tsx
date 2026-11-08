@@ -110,10 +110,7 @@ export default function KpiBar({
   const seniorLabel = seniorCount === 1 ? "senior" : "seniors";
 
   // ── Emergency detail line
-  const emergencyDetail =
-    activeEmergencyCount === 0 && doneEmergencyCount === 0
-      ? "None today"
-      : `${doneEmergencyCount} seen today`;
+  const emergencyDetail = `${doneEmergencyCount} seen today`;
 
   return (
     <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">

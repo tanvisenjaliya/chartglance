@@ -44,6 +44,11 @@ export default function PatientConsultationPage() {
   const [linkLoading, setLinkLoading] = useState(false);
   const [linkError, setLinkError] = useState("");
   const [linkSuccess, setLinkSuccess] = useState(false);
+  const [consultConflict, setConsultConflict] = useState<{
+    id: string;
+    name: string;
+    tokenNumber: string;
+  } | null>(null);
 
   // 1. Fetch patient details
   const loadPatient = useCallback(async () => {
@@ -126,9 +131,50 @@ export default function PatientConsultationPage() {
         if (res.ok) {
           const data = await res.json();
           setAnalysis(data);
+        } else {
+          const errData = await res.json().catch(() => ({}));
+          const errMsg = errData.error || `AI request failed (${res.status})`;
+          setAnalysis({
+            patientId,
+            consentId: consent?.id || "",
+            generatedAt: new Date().toISOString(),
+            cached: false,
+            aiFailed: true,
+            failureNotice: errMsg,
+            summary: "Clinical records retrieved under ABDM consent. AI clinical synthesis currently unavailable.",
+            summarySourceIds: [],
+            redFlags: [],
+            yellowFlags: [],
+            trends: [],
+            currentMedicines: [],
+            missingInformation: [],
+            askThePatient: [],
+            facilitiesUsed: [],
+            dateRange: {},
+            consentExpiry: consent?.expiryDate,
+          });
         }
       } catch (err) {
         console.error("AI Analysis load failed:", err);
+        setAnalysis({
+          patientId,
+          consentId: consent?.id || "",
+          generatedAt: new Date().toISOString(),
+          cached: false,
+          aiFailed: true,
+          failureNotice: "AI unavailable: Could not reach server, check connectivity",
+          summary: "Clinical records retrieved under ABDM consent. AI clinical synthesis currently unavailable.",
+          summarySourceIds: [],
+          redFlags: [],
+          yellowFlags: [],
+          trends: [],
+          currentMedicines: [],
+          missingInformation: [],
+          askThePatient: [],
+          facilitiesUsed: [],
+          dateRange: {},
+          consentExpiry: consent?.expiryDate,
+        });
       } finally {
         setLoadingAnalysis(false);
       }
@@ -227,9 +273,17 @@ export default function PatientConsultationPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ status: newStatus }),
       });
+      if (res.status === 409) {
+        const errData = await res.json();
+        if (errData.activePatient) {
+          setConsultConflict(errData.activePatient);
+        }
+        return;
+      }
       if (res.ok) {
         const data = await res.json();
         setPatient(data.patient);
+        setConsultConflict(null);
       }
     } catch (err) {
       console.error(err);
@@ -481,14 +535,28 @@ export default function PatientConsultationPage() {
               </span>
 
               {queueStatus === "Waiting" && (
-                <button
-                  type="button"
-                  onClick={() => handleStatusChange("In consultation")}
-                  disabled={statusUpdating}
-                  className="px-5 py-2.5 rounded-xl bg-blue text-white text-xs font-mono uppercase tracking-wider font-semibold hover:bg-blue/90 transition-colors disabled:opacity-50 shadow-sm"
-                >
-                  {statusUpdating ? "Updating…" : "Start Consultation"}
-                </button>
+                <div className="flex flex-col sm:items-end gap-2">
+                  <button
+                    type="button"
+                    onClick={() => handleStatusChange("In consultation")}
+                    disabled={statusUpdating}
+                    className="px-5 py-2.5 rounded-xl bg-blue text-white text-xs font-mono uppercase tracking-wider font-semibold hover:bg-blue/90 transition-colors disabled:opacity-50 shadow-sm"
+                  >
+                    {statusUpdating ? "Updating…" : "Start Consultation"}
+                  </button>
+
+                  {consultConflict && (
+                    <div className="p-3 bg-amber-50 border border-amber-300 rounded-xl text-xs text-amber-900 flex items-center gap-2 max-w-sm">
+                      <span className="font-bold text-amber-800">Finish the current consultation first:</span>
+                      <Link
+                        href={`/patient/${consultConflict.id}`}
+                        className="font-semibold text-blue underline hover:text-blue/80"
+                      >
+                        {consultConflict.name} ({consultConflict.tokenNumber}) &rarr;
+                      </Link>
+                    </div>
+                  )}
+                </div>
               )}
 
               {queueStatus === "In consultation" && (

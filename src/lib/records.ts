@@ -310,6 +310,61 @@ export function saveOpdQueue(patients: PatientQueueItem[]): void {
   fs.writeFileSync(filePath, JSON.stringify(patients, null, 2), "utf-8");
 }
 
+export interface StatusUpdateResult {
+  ok: boolean;
+  patient?: PatientQueueItem;
+  conflict?: boolean;
+  error?: string;
+  activePatient?: {
+    id: string;
+    name: string;
+    tokenNumber: string;
+  };
+}
+
+/**
+ * Updates a patient's queueStatus in today's active queue.
+ * Enforces single in-consultation constraint: only one patient can be In consultation at a time.
+ */
+export function updatePatientQueueStatus(
+  patientId: string,
+  newStatus: "Waiting" | "In consultation" | "Done"
+): StatusUpdateResult {
+  const queue = getOpdQueue();
+  const idx = queue.findIndex((p) => p.id === patientId);
+  if (idx === -1) {
+    return { ok: false, error: "Patient not found in today's queue" };
+  }
+
+  // Enforce single active consultation rule
+  if (newStatus === "In consultation") {
+    const activeOther = queue.find(
+      (p) => p.queueStatus === "In consultation" && p.id !== patientId
+    );
+    if (activeOther) {
+      return {
+        ok: false,
+        conflict: true,
+        error: "Finish the current consultation first",
+        activePatient: {
+          id: activeOther.id,
+          name: activeOther.name,
+          tokenNumber: activeOther.tokenNumber,
+        },
+      };
+    }
+  }
+
+  queue[idx] = {
+    ...queue[idx],
+    queueStatus: newStatus,
+    completedTimestamp: newStatus === "Done" ? Date.now() : undefined,
+  };
+  saveOpdQueue(queue);
+
+  return { ok: true, patient: queue[idx] };
+}
+
 /**
  * Returns the next available emergency token (e.g. "E1", "E2", "E3")
  */

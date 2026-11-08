@@ -49,7 +49,7 @@ async function testPatient(patientId, meta) {
     if (result.aiFailed) {
       console.log(`Failure Notice: ${result.failureNotice}`);
     } else {
-      console.log(`Model Used: ${process.env.GEMINI_MODEL || "gemini-3.8-flash"}`);
+      console.log(`Model Used: ${result.modelUsed || process.env.GEMINI_MODEL}`);
       console.log(`Summary: ${result.summary}`);
       console.log(`Red Flags Count: ${result.redFlags.length}`);
       console.log(`Yellow Flags Count: ${result.yellowFlags.length}`);
@@ -60,7 +60,7 @@ async function testPatient(patientId, meta) {
       patientId,
       name: meta.name,
       succeeded: !result.aiFailed,
-      model: process.env.GEMINI_MODEL || "gemini-3.8-flash",
+      model: result.modelUsed || process.env.GEMINI_MODEL,
       durationMs: duration,
       summary: result.summary,
       failureNotice: result.failureNotice,
