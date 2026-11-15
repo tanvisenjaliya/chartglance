@@ -52,8 +52,12 @@ const ANALYSIS_LOG_FILE = path.join(RUNTIME_DIR, "analysis-log.json");
 const DROPPED_LINES_FILE = path.join(RUNTIME_DIR, "dropped-lines.json");
 
 function ensureRuntimeDirs() {
-  if (!fs.existsSync(RUNTIME_DIR)) fs.mkdirSync(RUNTIME_DIR, { recursive: true });
-  if (!fs.existsSync(CACHE_DIR)) fs.mkdirSync(CACHE_DIR, { recursive: true });
+  try {
+    if (!fs.existsSync(RUNTIME_DIR)) fs.mkdirSync(RUNTIME_DIR, { recursive: true });
+    if (!fs.existsSync(CACHE_DIR)) fs.mkdirSync(CACHE_DIR, { recursive: true });
+  } catch {
+    // Read-only filesystem in Vercel serverless environment
+  }
 }
 
 function appendJsonLog(filePath: string, entry: unknown) {
