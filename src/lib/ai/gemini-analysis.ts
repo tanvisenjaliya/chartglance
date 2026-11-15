@@ -43,6 +43,7 @@ export interface AIAnalysisResult {
   dateRange: { from?: string; to?: string };
   consentExpiry?: string;
   modelUsed?: string;
+  promptTokens?: number;
 }
 
 const RUNTIME_DIR = path.join(process.cwd(), "data", "runtime");
@@ -73,6 +74,179 @@ function appendJsonLog(filePath: string, entry: unknown) {
   } catch (err) {
     console.error("Failed to append runtime log:", filePath, err);
   }
+}
+
+/**
+ * Extracts only the clinical guideline sections relevant to the patient's conditions/history.
+ * Minimises prompt tokens while providing exact national thresholds.
+ */
+function getRelevantClinicalReference(recordsText: string, complaint = ""): string {
+  const combined = `${recordsText} ${complaint}`.toLowerCase();
+  const sections: string[] = [];
+
+  const hasDiabetes =
+    combined.includes("diabet") ||
+    combined.includes("t2dm") ||
+    combined.includes("glucose") ||
+    combined.includes("sugar") ||
+    combined.includes("hba1c") ||
+    combined.includes("metformin") ||
+    combined.includes("glimepiride") ||
+    combined.includes("gliclazide");
+
+  const hasHTN =
+    combined.includes("hyperten") ||
+    combined.includes("bp") ||
+    combined.includes("blood pressure") ||
+    combined.includes("amlodipine") ||
+    combined.includes("telmisartan");
+
+  const hasTB =
+    combined.includes("tb") ||
+    combined.includes("tuberculosis") ||
+    combined.includes("cough") ||
+    combined.includes("sputum") ||
+    combined.includes("hrze") ||
+    combined.includes("nikshay");
+
+  const hasAnaemiaOrPreg =
+    combined.includes("pregnant") ||
+    combined.includes("pregnancy") ||
+    combined.includes("anc") ||
+    combined.includes("anaemia") ||
+    combined.includes("anemia") ||
+    combined.includes("haemoglobin") ||
+    combined.includes("hb ") ||
+    combined.includes("ifa");
+
+  const hasRenalOrElderly =
+    combined.includes("creatinine") ||
+    combined.includes("egfr") ||
+    combined.includes("ckd") ||
+    combined.includes("kidney") ||
+    combined.includes("renal") ||
+    combined.includes("elderly") ||
+    combined.includes("giddiness") ||
+    combined.includes("gliclazide") ||
+    combined.includes("glimepiride");
+
+  if (hasDiabetes) {
+    sections.push(
+      "NP-NCD Diabetes: Target HbA1c < 7.0%. Sub-optimal (7.0–8.9%) is Yellow Alert. Poor control (HbA1c ≥ 9.0% or rise ≥ 0.5% in ≥ 3mo) or FBG ≥ 200 mg/dL is Red Alert (intensify therapy / review compliance)."
+    );
+  }
+  if (hasHTN) {
+    sections.push(
+      "NP-NCD Hypertension: Target BP < 140/90 mmHg. Stage 2 HTN (160–179 / 100–109 mmHg) is Yellow Alert. Hypertensive Urgency/Crisis (BP ≥ 180 or ≥ 110 mmHg) is Red Alert (immediate rest, oral anti-hypertensive, screen for organ damage)."
+    );
+  }
+  if (hasTB) {
+    sections.push(
+      "NTEP Tuberculosis: Monthly FDC pickup schedule. 1–13 days overdue is Yellow Alert. > 14 days overdue without supply is Red Alert (immediate active home-tracing via ASHA/STS). Positive sputum smear at end of Intensive Phase is Red Alert."
+    );
+  }
+  if (hasAnaemiaOrPreg) {
+    sections.push(
+      "Anaemia Mukt Bharat / Maternal ANC: Pregnant target Hb ≥ 11.0 g/dL. Moderate anaemia (7.0–9.9 g/dL) is Yellow Alert. Severe anaemia (< 7.0 g/dL in pregnancy) is Red Alert requiring urgent parenteric iron / transfusion workup."
+    );
+  }
+  if (hasRenalOrElderly) {
+    sections.push(
+      "CKD & Pharmacotherapy Safety: Conflicting duplicate sulfonylureas (e.g. Glimepiride + Gliclazide) or Metformin in renal impairment is Red Alert (severe hypoglycaemia / lactic acidosis risk). Annual serum creatinine test indicated for diabetic/elderly patients."
+    );
+  }
+
+  if (sections.length === 0) {
+    sections.push(
+      "National Clinical Guidelines: BP ≥ 180/110 mmHg is Red Alert; HbA1c ≥ 9.0% is Red Alert; Severe anaemia Hb < 7.0 g/dL is Red Alert; TB pickup > 14d overdue is Red Alert."
+    );
+  }
+
+  return sections.join("\n\n");
+}
+
+/**
+ * Formats a FHIR resource entry into a compact single-line plain text string:
+ * "[<id>] YYYY-MM-DD · <Facility> · <Type> · Dx: <Condition> · <Lab>: <Value> · Rx: <Drug> · Note: <Text>"
+ */
+function formatCompactRecordItem(
+  e: { resource?: Record<string, unknown> },
+  orgMap: Map<string, string>
+): string {
+  const r = e.resource;
+  if (!r) return "";
+
+  const id = (r.id as string) || "rec";
+  const type = (r.resourceType as string) || "Record";
+  const date = (r.date || r.effectiveDateTime || r.authoredOn || r.recordedDate || r.start || "") as string;
+
+  // Resolve facility
+  let facility = "";
+  const authorRef =
+    ((r.author as Array<{ reference?: string }>)?.[0]?.reference) ||
+    ((r.recorder as { reference?: string })?.reference) ||
+    ((r.custodian as { reference?: string })?.reference) ||
+    ((r.performer as Array<{ reference?: string }>)?.[0]?.reference);
+  if (authorRef) {
+    const orgId = authorRef.replace(/^Organization\//, "");
+    facility = orgMap.get(orgId) || orgMap.get(authorRef) || "";
+  }
+
+  const parts: string[] = [`[${id}]`];
+  if (date) parts.push(date);
+  if (facility) parts.push(facility);
+  parts.push(type);
+
+  if (type === "Condition") {
+    const code = (r.code as { text?: string })?.text;
+    if (code) parts.push(`Dx: ${code}`);
+  }
+
+  if (type === "MedicationRequest") {
+    const med = (r.medicationCodeableConcept as { text?: string })?.text;
+    const dosage = (r.dosageInstruction as Array<{ text?: string }>)?.[0]?.text;
+    if (med) parts.push(`Rx: ${med}${dosage ? ` ${dosage}` : ""}`);
+  }
+
+  if (type === "Observation") {
+    const labName = (r.code as { text?: string })?.text;
+    let val = "";
+    if (r.valueQuantity) {
+      const q = r.valueQuantity as { value?: number; unit?: string };
+      val = `${q.value ?? ""} ${q.unit || ""}`.trim();
+    } else if (r.valueString) {
+      val = r.valueString as string;
+    }
+    if (labName || val) parts.push(`${labName || "Obs"}: ${val}`);
+  }
+
+  if (type === "DiagnosticReport") {
+    const title = (r.code as { text?: string })?.text || (r.title as string);
+    const conclusion = r.conclusion as string;
+    if (title) parts.push(`Report: ${title}`);
+    if (conclusion) parts.push(`Conclusion: ${conclusion}`);
+  }
+
+  let rawNote =
+    (r.clinicalNote as string) ||
+    ((r.text as { div?: string })?.div) ||
+    ((r.note as Array<{ text?: string }>)?.[0]?.text);
+  if (rawNote) {
+    const cleanedNote = rawNote
+      .replace(/<[^>]+>/g, " ")
+      .replace(/&amp;/g, "&")
+      .replace(/&lt;/g, "<")
+      .replace(/&gt;/g, ">")
+      .replace(/&quot;/g, '"')
+      .replace(/&#39;/g, "'")
+      .replace(/\s+/g, " ")
+      .trim();
+    if (cleanedNote) {
+      parts.push(`Note: ${cleanedNote.slice(0, 160)}`);
+    }
+  }
+
+  return parts.join(" · ");
 }
 
 /**
@@ -115,6 +289,7 @@ export interface GeminiCallOptions {
   systemInstruction?: string;
   responseMimeType?: string;
   temperature?: number;
+  maxOutputTokens?: number;
   timeoutMs?: number;
   modelOverride?: string;
 }
@@ -138,6 +313,7 @@ export interface GeminiCallResult {
   modelUsed: string;
   fallbackUsed: boolean;
   attempts: number;
+  promptTokens?: number;
 }
 
 /**
@@ -176,6 +352,8 @@ export async function callGemini(options: GeminiCallOptions): Promise<GeminiCall
     ],
     generationConfig: {
       temperature: options.temperature ?? 0.1,
+      maxOutputTokens: options.maxOutputTokens ?? 1500,
+      thinkingConfig: { thinkingLevel: "low" },
       ...(options.responseMimeType ? { responseMimeType: options.responseMimeType } : {}),
     },
   };
@@ -194,13 +372,14 @@ export async function callGemini(options: GeminiCallOptions): Promise<GeminiCall
     rawError?: GeminiRawError;
     requestUrlMasked: string;
     isTimeout?: boolean;
+    promptTokens?: number;
   }> => {
     // Note: Send key as query parameter (?key=...)
     const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(modelToUse)}:generateContent?key=${encodeURIComponent(apiKey)}`;
     const maskedUrl = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(modelToUse)}:generateContent?key=***`;
     console.log(`[GEMINI REQUEST] URL: ${maskedUrl}`);
 
-    const timeoutMs = options.timeoutMs ?? 45000;
+    const timeoutMs = options.timeoutMs ?? 30000;
 
     try {
       const res = await fetch(endpoint, {
@@ -221,9 +400,12 @@ export async function callGemini(options: GeminiCallOptions): Promise<GeminiCall
       }
 
       const data = await res.json();
-      const textContent = data.candidates?.[0]?.content?.parts?.[0]?.text;
+      const promptTokens = data.usageMetadata?.promptTokenCount as number | undefined;
+      const parts = data.candidates?.[0]?.content?.parts as Array<{ text?: string; thought?: boolean }> | undefined;
+      const textParts = parts?.filter((p) => !p.thought && typeof p.text === "string").map((p) => p.text);
+      const textContent = textParts && textParts.length > 0 ? textParts.join("") : parts?.[0]?.text;
       if (typeof textContent === "string") {
-        return { ok: true, status: 200, text: textContent, requestUrlMasked: maskedUrl };
+        return { ok: true, status: 200, text: textContent, promptTokens, requestUrlMasked: maskedUrl };
       }
       return { ok: false, status: 200, errorText: "Response contained no text parts", requestUrlMasked: maskedUrl };
     } catch (err: unknown) {
@@ -293,22 +475,17 @@ export async function callGemini(options: GeminiCallOptions): Promise<GeminiCall
   let fallbackUsed = false;
   let modelUsed = mainModel;
 
-  // Optional fallback model: if GEMINI_FALLBACK_MODEL is set in .env.local and the main model still fails with 503, try fallback model once
-  if (!result.ok && result.status === 503 && fallbackModel && fallbackModel !== mainModel) {
+  // Fallback model: if GEMINI_FALLBACK_MODEL is set and main model fails with 503 or times out (30s), try fallback model once with a 30s limit
+  if (!result.ok && (result.status === 503 || result.isTimeout || result.status === 408) && fallbackModel && fallbackModel !== mainModel) {
+    const triggerReason = result.isTimeout || result.status === 408 ? "timed out (30s)" : `failed with HTTP ${result.status}`;
     console.warn(
-      `[GEMINI FALLBACK] Primary model ${mainModel} failed with 503 after retries. Trying fallback model ${fallbackModel}...`
+      `[GEMINI FALLBACK] Primary model ${mainModel} ${triggerReason}. Trying fallback model ${fallbackModel} once with 30s limit...`
     );
     attempts++;
     const fallbackResult = await runSingleAttempt(fallbackModel);
-    if (fallbackResult.ok) {
-      result = fallbackResult;
-      fallbackUsed = true;
-      modelUsed = fallbackModel;
-    } else {
-      result = fallbackResult;
-      fallbackUsed = true;
-      modelUsed = fallbackModel;
-    }
+    result = fallbackResult;
+    fallbackUsed = true;
+    modelUsed = fallbackModel;
   }
 
   if (result.ok && typeof result.text === "string") {
@@ -320,6 +497,7 @@ export async function callGemini(options: GeminiCallOptions): Promise<GeminiCall
       modelUsed,
       fallbackUsed,
       attempts,
+      promptTokens: result.promptTokens,
     };
   }
 
@@ -332,7 +510,7 @@ export async function callGemini(options: GeminiCallOptions): Promise<GeminiCall
       ? `AI unavailable: Gemini overloaded (primary & fallback models unavailable) [Model tried: ${modelUsed}], try Re-analyse in a minute`
       : `AI unavailable: Gemini overloaded [Model tried: ${modelUsed}], try Re-analyse in a minute`;
   } else if (result.isTimeout || result.status === 408) {
-    errorReason = `AI unavailable: Gemini timed out (45s) [Model tried: ${modelUsed}], try Re-analyse in a minute`;
+    errorReason = `AI unavailable: Gemini timed out (30s) [Model tried: ${modelUsed}], try Re-analyse in a minute`;
   } else if (result.status === 401 || result.status === 403) {
     errorReason = `AI unavailable: API key rejected or unauthorized [Model tried: ${modelUsed}]`;
   } else if (result.status === 404) {
@@ -474,144 +652,120 @@ export async function getOrGenerateAnalysis(
   let failureNotice: string | undefined;
 
   const systemInstruction = `You are an experienced Primary Health Centre (PHC) medical officer's clinical assistant in rural India.
-You analyse the patient's full consented medical history alongside Indian national clinical guidelines (NP-NCD, NTEP, Anaemia Mukt Bharat, UIP, CKD).
+You analyse the patient's consented medical history alongside Indian national clinical guidelines (NP-NCD, NTEP, Anaemia Mukt Bharat, CKD).
 
 Definitions:
 - redFlag: Needs attention in this visit; risk of serious harm or rapid deterioration if missed.
-- yellowFlag: Should be addressed or checked at this visit; non-urgent warning, sub-optimal control, or routine follow-up.
+- yellowFlag: Should be addressed or checked at this visit; non-urgent warning or sub-optimal control.
 
-Strict Guardrails:
-1. Use ONLY the provided patient records and reference guidelines.
-2. NEVER diagnose, prescribe or recommend treatment.
-3. NEVER guess missing clinical values.
-4. EVERY single statement, redFlag, yellowFlag, trend, and medicine MUST cite valid sourceIds from the provided records.
-5. If records are sparse or older than 12 months, state it explicitly.
-6. Output MUST be strictly valid JSON matching the required schema. No Markdown wrapper outside JSON.
+Strict Guardrails & Section Rules:
+1. SUMMARY: Exactly 2–3 short sentences, maximum 60 words, synthesizing the patient's history from the records: key conditions, important trends, recent events, and span of history on record. NEVER repeat or mention today's chief complaint (the doctor can already see it).
+2. RED & YELLOW FLAGS: Must come strictly from the past records (prior lab values, historical trends, gaps in treatment, missed follow-ups, clinical notes). NEVER create a flag from today's complaint alone. If nothing in the records qualifies, return empty arrays ("redFlags": [], "yellowFlags": []).
+3. CURRENT MEDICINES: Include ONLY active chronic maintenance medicines likely still being taken. STRICTLY EXCLUDE: short courses (e.g. "x 3 days", "x 5 days", acute antibiotics/analgesics) once their duration has passed, and medicines older than 6 months with no repeat prescription. If none qualify, return [].
+4. MISSING INFORMATION: Gaps in the recorded medical history, NOT today's examination. Examples: no records in the last 12 months, no allergy documentation, or expected tests absent for the patient's conditions or age (e.g. no kidney function test for a diabetic, no BP or blood sugar screening on record for adults over 30).
+5. ASK THE PATIENT: Up to 3 questions to fill gaps in the history or verify adherence/compliance. NEVER ask questions aimed at diagnosing today's complaint.
+6. CITE SOURCE IDS: Every statement, flag, trend, and medicine MUST cite valid sourceIds from the provided records.
+7. Output MUST be strictly valid JSON matching the schema. No Markdown wrapper outside JSON.
 
-Worked Examples:
-
-[Example 1 - Pregnancy with severe anaemia]
-Input: 24F, ANC checkup, Hb 6.8 g/dL (p02-obs-22), G2P1 second trimester (p02-cond-13), on IFA tablets.
+Worked Example:
+Input: 52M, follow-up, HbA1c 9.2% (p01-obs-23), BP 182/112 (p01-obs-24), Metformin 500 BD (p01-med-27, chronic maintenance).
 Ideal Output:
 {
-  "summary": "24-year-old pregnant woman (second trimester, G2P1) presenting for routine antenatal checkup. Records show acute drop in haemoglobin to 6.8 g/dL despite IFA therapy.",
-  "summarySourceIds": ["p02-cond-13", "p02-obs-22"],
-  "redFlags": [
-    {
-      "title": "Severe anaemia in pregnancy (Hb < 7 g/dL)",
-      "reasoning": "Haemoglobin measured at 6.8 g/dL during second trimester indicates severe maternal anaemia requiring urgent parenteral iron/transfusion workup.",
-      "guideline": "Anaemia Mukt Bharat / Maternal ANC Guidelines: Hb < 7.0 g/dL is severe anaemia",
-      "sourceIds": ["p02-obs-22", "p02-cond-13"]
-    }
-  ],
-  "yellowFlags": [],
-  "trends": [
-    { "parameter": "Haemoglobin", "trend": "10.2 -> 8.4 -> 6.8 g/dL (declining)", "sourceIds": ["p02-obs-3", "p02-obs-15", "p02-obs-22"] }
-  ],
-  "currentMedicines": [
-    { "name": "Iron + folic acid (IFA)", "sourceIds": ["p02-med-7"] }
-  ],
-  "missingInformation": ["No blood group & Rh typing recorded", "No second trimester obstetric anomaly ultrasound on record"],
-  "askThePatient": [
-    "Are you experiencing any breathlessness, dizziness or palpitations?",
-    "Have you been taking your IFA tablets daily without gastric upset?"
-  ]
-}
-
-[Example 2 - Diabetes and severe hypertension]
-Input: 52M, follow-up, HbA1c 9.2% (p01-obs-23), BP 182/112 (p01-obs-24, p01-obs-25), Metformin 500 BD.
-Ideal Output:
-{
-  "summary": "52-year-old male with long-standing Type 2 Diabetes and Hypertension presenting for follow-up. Demonstrates poorly controlled glycaemia and hypertensive crisis readings on current oral regimen.",
+  "summary": "52-year-old male with long-standing Type 2 Diabetes and Hypertension documented across 2 years of primary health records. Serial readings demonstrate worsening glycaemic control culminating in HbA1c 9.2% and a hypertensive crisis reading of 182/112 mmHg on oral monotherapy.",
   "summarySourceIds": ["p01-cond-2", "p01-obs-23", "p01-obs-24"],
   "redFlags": [
     {
       "title": "Hypertensive crisis (BP ≥ 180/110 mmHg)",
-      "reasoning": "Latest blood pressure measured 182/112 mmHg, placing patient at immediate risk of acute cerebral, renal or cardiac events.",
+      "reasoning": "Historical blood pressure measured 182/112 mmHg in prior records, placing patient at immediate risk of acute cerebral, renal or cardiac events.",
       "guideline": "NP-NCD Hypertension Guidelines: BP ≥ 180/110 mmHg indicates hypertensive crisis",
-      "sourceIds": ["p01-obs-24", "p01-obs-25"]
+      "sourceIds": ["p01-obs-24"]
     },
     {
-      "title": "Uncontrolled diabetes with HbA1c ≥ 9.0%",
-      "reasoning": "HbA1c of 9.2% demonstrates severely decompensated blood glucose regulation on oral Metformin monotherapy.",
+      "title": "Uncontrolled diabetes (HbA1c ≥ 9.0%)",
+      "reasoning": "Prior HbA1c of 9.2% demonstrates severely decompensated blood glucose regulation on oral Metformin monotherapy.",
       "guideline": "NP-NCD Diabetes Guidelines: HbA1c ≥ 9.0% represents poor control requiring therapy intensification",
       "sourceIds": ["p01-obs-23"]
     }
   ],
   "yellowFlags": [],
   "trends": [
-    { "parameter": "HbA1c", "trend": "7.8% -> 8.5% -> 9.2% (rising)", "sourceIds": ["p01-obs-4", "p01-obs-14", "p01-obs-23"] },
-    { "parameter": "Systolic BP", "trend": "142 -> 158 -> 182 mmHg", "sourceIds": ["p01-obs-5", "p01-obs-15", "p01-obs-24"] }
+    { "parameter": "HbA1c", "trend": "7.8% -> 8.5% -> 9.2% (rising)", "sourceIds": ["p01-obs-4", "p01-obs-14", "p01-obs-23"] }
   ],
   "currentMedicines": [
-    { "name": "Metformin 500mg BD", "sourceIds": ["p01-med-27"] },
-    { "name": "Amlodipine 5mg OD", "sourceIds": ["p01-med-28"] }
+    { "name": "Metformin 500mg BD", "sourceIds": ["p01-med-27"] }
   ],
-  "missingInformation": ["No serum creatinine or renal function test on record for chronic diabetic", "No record of annual diabetic eye/fundus examination"],
+  "missingInformation": [
+    "No serum creatinine or renal function test on record for chronic diabetic",
+    "No documented annual diabetic eye or fundus examination"
+  ],
   "askThePatient": [
-    "Have you been experiencing severe headache, blurred vision, or chest pain today?",
-    "Have you missed any daily doses of Metformin or Amlodipine recently?"
+    "Have you been taking your daily Metformin regularly without missing doses?",
+    "Do you take any other daily medicines or home remedies not listed in these records?"
   ]
 }`;
 
-      // Strip redundant XHTML markup from notes
-      const cleanNoteText = (str?: string): string | undefined => {
-        if (!str) return undefined;
-        return str
-          .replace(/<[^>]+>/g, " ")
-          .replace(/&amp;/g, "&")
-          .replace(/&lt;/g, "<")
-          .replace(/&gt;/g, ">")
-          .replace(/&quot;/g, '"')
-          .replace(/&#39;/g, "'")
-          .replace(/\s+/g, " ")
-          .trim();
-      };
+  // Build organization map for facility names
+  const orgMap = new Map<string, string>();
+  for (const e of entries) {
+    const r = e.resource;
+    if (r && r.resourceType === "Organization" && r.id) {
+      orgMap.set(r.id as string, (r.name as string) || (r.id as string));
+    }
+  }
 
-      // Build simplified records representation for prompt
-      const recordsSummary = entries.map((e) => {
-        const r = e.resource;
-        if (!r) return null;
-        const rawNote = (r.clinicalNote as string) || (r.text as { div?: string })?.div;
-        return {
-          id: r.id,
-          type: r.resourceType,
-          date: r.date || r.effectiveDateTime || r.authoredOn || r.recordedDate || r.start,
-          text: (r.code as { text?: string })?.text ||
-            (r.medicationCodeableConcept as { text?: string })?.text ||
-            (r.title as string) ||
-            r.display ||
-            (r.valueQuantity ? `${(r.valueQuantity as { value?: number }).value} ${(r.valueQuantity as { unit?: string }).unit || ""}` : undefined),
-          note: cleanNoteText(rawNote),
-        };
-      }).filter(Boolean);
+  // Convert entries to compact one-line plain text strings
+  const compactRecords = entries
+    .filter(
+      (e) =>
+        e.resource &&
+        e.resource.resourceType !== "Organization" &&
+        e.resource.resourceType !== "Patient"
+    )
+    .map((e) => formatCompactRecordItem(e, orgMap))
+    .filter(Boolean);
 
-      const userPrompt = JSON.stringify({
-        patientProfile: {
-          id: patientId,
-          name: patientMeta.name,
-          age: patientMeta.age,
-          gender: patientMeta.gender,
-          complaint: patientMeta.complaint || "Routine consultation",
-          visitType: patientMeta.visitType || "Follow-up",
-        },
-        previousChartGlanceNotes: previousNotes.map((n) => ({
-          id: n.id,
-          date: n.date,
-          doctor: n.doctorName,
-          note: cleanNoteText(n.noteText),
-          followUp: n.followUp,
-        })),
-        consentedHealthRecords: recordsSummary,
-        clinicalReference: clinicalRefText,
-      });
+  // Filter clinical reference down to only relevant sections
+  const relevantGuidelines = getRelevantClinicalReference(
+    compactRecords.join(" "),
+    patientMeta.complaint
+  );
+
+  const notesText = previousNotes
+    .map(
+      (n) =>
+        `[${n.id}] ${n.date} · ${n.doctorName}: ${n.noteText}${
+          n.followUp ? ` (Follow-up: ${n.followUp})` : ""
+        }`
+    )
+    .join("\n");
+
+  const userPrompt = `Patient: ${patientMeta.name}, ${patientMeta.age} ${patientMeta.gender} · Visit: ${
+    patientMeta.visitType || "Follow-up"
+  } · Complaint: ${patientMeta.complaint || "Routine consultation"}
+
+Consented Medical Records (one per line):
+${compactRecords.map((line) => `- ${line}`).join("\n")}
+${notesText ? `\nPrevious Consultation Notes:\n${notesText}` : ""}
+
+Relevant Clinical Reference Guidelines:
+${relevantGuidelines}
+
+Content Rules to follow strictly:
+- SUMMARY: 2–3 short sentences, maximum 60 words. Summarize history from records only. DO NOT repeat or echo today's chief complaint.
+- RED & YELLOW FLAGS: Must derive strictly from past records/labs/trends. NEVER create a flag from today's complaint alone. If nothing qualifies, return [].
+- CURRENT MEDICINES: Include only active chronic maintenance drugs likely still being taken. Exclude short courses whose duration has passed (e.g. x 3d, x 5d) and meds older than 6 months without repeat. If none qualify, return [].
+- MISSING INFORMATION: Identify gaps in historical records (e.g. no records in 12m, no allergy data, missing annual diabetic renal/eye tests), NOT today's physical examination.
+- ASK THE PATIENT: Up to 3 questions to fill history gaps or check adherence. NO questions diagnosing today's complaint.
+
+Respond strictly with valid JSON schema (keys: summary, summarySourceIds, redFlags, yellowFlags, trends, currentMedicines, missingInformation, askThePatient). Cite valid sourceIds for every item.`;
 
   const geminiResult = await callGemini({
     userPrompt,
     systemInstruction,
     responseMimeType: "application/json",
     temperature: 0.1,
-    timeoutMs: 45000,
+    maxOutputTokens: 1500,
+    timeoutMs: 30000,
   });
 
   if (!geminiResult.ok) {
@@ -643,8 +797,77 @@ Ideal Output:
     return ids.filter((id) => typeof id === "string" && validIds.has(id));
   };
 
-  // Process AI Summary
+  // Build map of medication records for recency and course duration validation
+  const medRecordsMap = new Map<string, { date?: string; dosageText?: string; name: string }>();
+  for (const e of entries) {
+    const r = e.resource;
+    if (r && r.resourceType === "MedicationRequest") {
+      const id = (r.id as string) || "";
+      const date = (r.authoredOn || r.date || r.effectiveDateTime || "") as string;
+      const dosageText = ((r.dosageInstruction as Array<{ text?: string }>)?.[0]?.text) || "";
+      const name = ((r.medicationCodeableConcept as { text?: string })?.text) || "";
+      if (id) {
+        medRecordsMap.set(id, { date, dosageText, name: name.toLowerCase() });
+      }
+    }
+  }
+
+  const isMedicationActive = (med: { name?: string; sourceIds?: string[] }): boolean => {
+    if (!med.name || med.name === "No current medicines on record") return false;
+    const now = Date.now();
+    const sixMonthsMs = 180 * 24 * 60 * 60 * 1000;
+
+    for (const sid of med.sourceIds || []) {
+      const record = medRecordsMap.get(sid);
+      if (!record || !record.date) continue;
+
+      const recDate = new Date(record.date).getTime();
+      const ageMs = now - recDate;
+
+      // Exclude if older than 6 months (180 days)
+      if (ageMs > sixMonthsMs) {
+        return false;
+      }
+
+      // Exclude acute short courses once duration has passed (e.g. "x 3 days", "x 5 days", "for 7 days")
+      const dosage = (record.dosageText || "").toLowerCase();
+      const matchDays = dosage.match(/(?:x|for)\s*(\d+)\s*(?:d|day|days)/i);
+      if (matchDays) {
+        const days = parseInt(matchDays[1], 10);
+        const durationMs = days * 24 * 60 * 60 * 1000;
+        if (ageMs > durationMs) {
+          return false;
+        }
+      }
+    }
+    return true;
+  };
+
+  // 1. Process & Validate AI Summary: 2-3 short sentences, max 60 words, no complaint repeating
   let summary = rawAiResponse?.summary || "Clinical summary based on consented records.";
+  
+  // Remove echoes of today's complaint
+  if (patientMeta.complaint) {
+    const compText = patientMeta.complaint.trim().toLowerCase();
+    const complaintRegex = new RegExp(
+      `(?:presents?|presenting|admitted|visited)\\s+(?:with|for|complaining of|due to)?\\s*${compText.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}[.,;]?`,
+      "gi"
+    );
+    summary = summary.replace(complaintRegex, "").replace(/\s{2,}/g, " ").trim();
+  }
+
+  // Enforce maximum 60 words
+  const summaryWords = summary.split(/\s+/).filter(Boolean);
+  if (summaryWords.length > 60) {
+    const truncated = summaryWords.slice(0, 60).join(" ");
+    const lastPunct = Math.max(truncated.lastIndexOf("."), truncated.lastIndexOf("!"));
+    if (lastPunct > 25) {
+      summary = truncated.slice(0, lastPunct + 1);
+    } else {
+      summary = truncated + "...";
+    }
+  }
+
   let summarySourceIds = filterValidSourceIds(rawAiResponse?.summarySourceIds);
   if (rawAiResponse?.summary && summarySourceIds.length === 0 && validIds.size > 0) {
     droppedLines.push({
@@ -654,7 +877,7 @@ Ideal Output:
     });
   }
 
-  // Process AI Red Flags
+  // 2. Process AI Red Flags: must cite records, never complaint alone
   const aiRedFlags: AIAnalysisFlag[] = [];
   if (Array.isArray(rawAiResponse?.redFlags)) {
     for (const flag of rawAiResponse.redFlags) {
@@ -677,7 +900,7 @@ Ideal Output:
     }
   }
 
-  // Process AI Yellow Flags
+  // 3. Process AI Yellow Flags: must cite records, never complaint alone
   const yellowFlags: AIAnalysisFlag[] = [];
   if (Array.isArray(rawAiResponse?.yellowFlags)) {
     for (const flag of rawAiResponse.yellowFlags) {
@@ -721,12 +944,12 @@ Ideal Output:
     }
   }
 
-  // Process Current Medicines
+  // 4. Process Current Medicines: exclude short courses past duration & meds > 6 months
   const currentMedicines: AIMedicineItem[] = [];
   if (Array.isArray(rawAiResponse?.currentMedicines)) {
     for (const med of rawAiResponse.currentMedicines) {
       const valid = filterValidSourceIds(med.sourceIds);
-      if (valid.length > 0 && med.name) {
+      if (valid.length > 0 && med.name && isMedicationActive({ name: med.name, sourceIds: valid })) {
         currentMedicines.push({
           name: med.name,
           sourceIds: valid,
@@ -735,19 +958,32 @@ Ideal Output:
         droppedLines.push({
           patientId,
           item: med,
-          reason: "Medicine dropped: missing valid sourceIds or name",
+          reason: "Medicine dropped: expired short course, >6 months old, or missing valid sourceIds",
         });
       }
     }
   }
 
-  // Missing Information & Questions
+  // If no active medicines qualify, provide "No current medicines on record"
+  if (currentMedicines.length === 0) {
+    currentMedicines.push({
+      name: "No current medicines on record",
+      sourceIds: [],
+    });
+  }
+
+  // 5. Missing Information: filter out directives for today's physical exam
   let missingInformation = Array.isArray(rawAiResponse?.missingInformation)
-    ? rawAiResponse.missingInformation.filter((s) => typeof s === "string" && s.trim().length > 0)
+    ? rawAiResponse.missingInformation
+        .filter((s) => typeof s === "string" && s.trim().length > 0)
+        .filter((s) => !/^(?:examine|auscultate|check|measure|conduct physical|assess patient today)/i.test(s.trim()))
     : [];
 
+  // 6. Ask the Patient: up to 3 questions for history gaps / adherence, no diagnostic symptom probing
   let askThePatient = Array.isArray(rawAiResponse?.askThePatient)
-    ? rawAiResponse.askThePatient.slice(0, 3).filter((s) => typeof s === "string" && s.trim().length > 0)
+    ? rawAiResponse.askThePatient
+        .filter((s) => typeof s === "string" && s.trim().length > 0)
+        .slice(0, 3)
     : [];
 
   // Log dropped lines
@@ -799,14 +1035,23 @@ Ideal Output:
     summary = `Clinical summary based on ${entries.length} consented records at ${facilitiesSet.size || 1} health facilities.`;
     summarySourceIds = Array.from(validIds).slice(0, 3);
 
-    // Extract basic medicines from MedicationRequests
-    if (currentMedicines.length === 0) {
+    // Extract active medicines from MedicationRequests respecting recency
+    if (currentMedicines.length === 0 || (currentMedicines.length === 1 && currentMedicines[0].name === "No current medicines on record")) {
+      const activeFallback: AIMedicineItem[] = [];
       for (const e of entries) {
         const r = e.resource;
         if (r && r.resourceType === "MedicationRequest") {
           const medName = ((r.medicationCodeableConcept as { text?: string })?.text) || "Medication";
-          currentMedicines.push({ name: medName, sourceIds: [r.id as string] });
+          if (isMedicationActive({ name: medName, sourceIds: [r.id as string] })) {
+            activeFallback.push({ name: medName, sourceIds: [r.id as string] });
+          }
         }
+      }
+      currentMedicines.length = 0;
+      if (activeFallback.length > 0) {
+        currentMedicines.push(...activeFallback);
+      } else {
+        currentMedicines.push({ name: "No current medicines on record", sourceIds: [] });
       }
     }
 
@@ -859,6 +1104,7 @@ Ideal Output:
     },
     consentExpiry: consent.expiryDate,
     modelUsed: geminiResult.modelUsed,
+    promptTokens: geminiResult.promptTokens,
   };
 
   // 8. Cache result: only cache successful AI analyses; never cache failures

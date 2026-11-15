@@ -135,7 +135,7 @@
     ]
   },
   "P04": {
-    "id": "consent-P04-1793535443023",
+    "id": "consent-P04-1794215533404",
     "patientId": "P04",
     "abhaNumber": "91-5555-1122-4004",
     "abhaAddress": "manjula.rathod@sbx",
@@ -149,17 +149,17 @@
       "DischargeSummary"
     ],
     "dateRange": {
-      "from": "2023-11-02",
-      "to": "2026-11-01"
+      "from": "2023-11-10",
+      "to": "2026-11-09"
     },
-    "expiryDate": "2026-11-02T12:17:27.076Z",
+    "expiryDate": "2026-11-10T09:12:20.895Z",
     "status": "GRANTED",
-    "createdAt": "2026-11-01T12:17:23.022Z",
-    "updatedAt": "2026-11-01T12:17:27.076Z",
+    "createdAt": "2026-11-09T09:12:13.404Z",
+    "updatedAt": "2026-11-09T09:12:20.895Z",
     "facilityFetch": [
       {
         "facility": "PHC Navli (demo)",
-        "scheduledAt": 1793535450592.9543,
+        "scheduledAt": 1794215547632.302,
         "status": "received"
       }
     ]
@@ -247,19 +247,19 @@
       "from": "2023-11-02",
       "to": "2026-11-01"
     },
-    "expiryDate": "2026-11-02T13:17:38.397Z",
-    "status": "EXPIRED",
+    "expiryDate": "2026-11-10T09:01:09.563Z",
+    "status": "GRANTED",
     "createdAt": "2026-11-01T13:11:55.585Z",
-    "updatedAt": "2026-11-06T09:59:52.981Z",
+    "updatedAt": "2026-11-09T09:01:09.563Z",
     "facilityFetch": [
       {
         "facility": "CHC Kherwara, Rajasthan (demo)",
-        "scheduledAt": 1793539063470.3657,
+        "scheduledAt": 1794214874734.517,
         "status": "pending"
       },
       {
         "facility": "PHC Navli (demo)",
-        "scheduledAt": 1793539064267.5962,
+        "scheduledAt": 1794214873884.04,
         "status": "pending"
       }
     ]
@@ -360,5 +360,35 @@
       "outcome": "GRANTED",
       "resolveAt": 1793979840249.3574
     }
+  },
+  "B12": {
+    "id": "consent-B12-1794278470653",
+    "patientId": "B12",
+    "abhaNumber": "91-5555-0741-0012",
+    "abhaAddress": "jayesh.thakor@sbx",
+    "requesterName": "Dr. Aditi Sharma",
+    "requesterFacility": "PHC Navli (demo) (HIU-GJ-AND-042)",
+    "purpose": "CAREMGT",
+    "hiTypes": [
+      "OPConsultation",
+      "DiagnosticReport",
+      "Prescription",
+      "DischargeSummary"
+    ],
+    "dateRange": {
+      "from": "2023-11-11",
+      "to": "2026-11-10"
+    },
+    "expiryDate": "2026-11-11T02:41:14.070Z",
+    "status": "GRANTED",
+    "createdAt": "2026-11-10T02:41:10.652Z",
+    "updatedAt": "2026-11-10T02:41:14.070Z",
+    "facilityFetch": [
+      {
+        "facility": "PHC Navli (demo)",
+        "scheduledAt": 1794278477607.6213,
+        "status": "received"
+      }
+    ]
   }
 }

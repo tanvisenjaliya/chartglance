@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { AIAnalysisResult } from "@/lib/ai/gemini-analysis";
 
 interface SummaryCardProps {
@@ -28,6 +28,19 @@ export default function SummaryCard({
 }: SummaryCardProps) {
   // Accordion state to expand reasoning/guidelines for flags
   const [expandedFlags, setExpandedFlags] = useState<Record<string, boolean>>({});
+  const [elapsedSeconds, setElapsedSeconds] = useState(0);
+
+  useEffect(() => {
+    if (!loading) {
+      setElapsedSeconds(0);
+      return;
+    }
+    setElapsedSeconds(0);
+    const timer = setInterval(() => {
+      setElapsedSeconds((prev) => prev + 1);
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [loading]);
 
   const toggleFlag = (key: string) => {
     setExpandedFlags((prev) => ({ ...prev, [key]: !prev[key] }));
@@ -107,7 +120,9 @@ export default function SummaryCard({
           <span className="font-mono text-xs uppercase tracking-wider text-surface font-bold">
             10-Second Summary Card
           </span>
-          <span className="text-[11px] font-mono text-blue-200">Analysing…</span>
+          <span className="text-[11px] font-mono text-blue-200 animate-pulse">
+            Analysing records… ({elapsedSeconds} s)
+          </span>
         </div>
         <div className="p-5 space-y-5">
           <div className="space-y-2">
@@ -165,6 +180,11 @@ export default function SummaryCard({
           <h2 className="font-mono text-xs uppercase tracking-wider text-surface font-bold">
             10-Second Summary Card
           </h2>
+          {analysis.modelUsed && (
+            <span className="font-mono text-[10px] text-blue-200 bg-white/10 px-2 py-0.5 rounded border border-white/10 truncate max-w-[150px]">
+              {analysis.modelUsed}
+            </span>
+          )}
         </div>
         <button
           type="button"
@@ -397,11 +417,12 @@ export default function SummaryCard({
         )}
 
         {/* 5. CURRENT MEDS */}
-        {analysis.currentMedicines.length > 0 && (
-          <section className="space-y-2 pt-4">
-            <span className="font-mono text-[11px] uppercase tracking-wider font-bold text-slate block">
-              CURRENT MEDS
-            </span>
+        <section className="space-y-2 pt-4">
+          <span className="font-mono text-[11px] uppercase tracking-wider font-bold text-slate block">
+            CURRENT MEDS
+          </span>
+          {analysis.currentMedicines.length > 0 &&
+          analysis.currentMedicines[0].name !== "No current medicines on record" ? (
             <div className="space-y-1.5">
               {analysis.currentMedicines.map((med, idx) => (
                 <div
@@ -410,14 +431,20 @@ export default function SummaryCard({
                   className="p-2 rounded-lg border border-border bg-surface hover:bg-panel/40 cursor-pointer flex items-center justify-between text-xs"
                 >
                   <span className="font-medium text-navy">{med.name}</span>
-                  <span className="text-[10px] font-mono text-slate">
-                    {med.sourceIds.length} ref{med.sourceIds.length === 1 ? "" : "s"} &rarr;
-                  </span>
+                  {med.sourceIds?.length > 0 && (
+                    <span className="text-[10px] font-mono text-slate">
+                      {med.sourceIds.length} ref{med.sourceIds.length === 1 ? "" : "s"} &rarr;
+                    </span>
+                  )}
                 </div>
               ))}
             </div>
-          </section>
-        )}
+          ) : (
+            <p className="text-xs text-slate italic p-2 rounded-lg border border-dashed border-border/80 bg-panel/30">
+              No current medicines on record
+            </p>
+          )}
+        </section>
 
         {/* 6. MISSING (Dashed Border per Section 9) */}
         {analysis.missingInformation.length > 0 && (
@@ -462,6 +489,7 @@ export default function SummaryCard({
         <div className="flex flex-wrap items-center justify-between gap-2">
           <span>
             Sources: {analysis.facilitiesUsed.join(", ") || "PHC Navli (demo)"}
+            {analysis.modelUsed && ` · Model: ${analysis.modelUsed}`}
           </span>
           <span className="font-mono text-navy font-semibold">
             Consent: {hoursRemaining}h remaining
