@@ -38,17 +38,27 @@ interface DemoConfigFile {
   demoMode: boolean;
 }
 
+let memoryDemoConfig: DemoConfigFile | null = null;
+
 function readConfigFile(): DemoConfigFile {
+  if (memoryDemoConfig) return memoryDemoConfig;
   try {
     const raw = fs.readFileSync(CONFIG_FILE, "utf-8");
-    return JSON.parse(raw) as DemoConfigFile;
+    memoryDemoConfig = JSON.parse(raw) as DemoConfigFile;
+    return memoryDemoConfig;
   } catch {
-    return { demoMode: false };
+    memoryDemoConfig = { demoMode: false };
+    return memoryDemoConfig;
   }
 }
 
 function writeConfigFile(data: DemoConfigFile) {
-  fs.writeFileSync(CONFIG_FILE, JSON.stringify(data, null, 2), "utf-8");
+  memoryDemoConfig = data;
+  try {
+    fs.writeFileSync(CONFIG_FILE, JSON.stringify(data, null, 2), "utf-8");
+  } catch {
+    // Read-only filesystem in Vercel serverless environment
+  }
 }
 
 /** Returns true when Demo Mode is enabled (disables all random delays/failures). */

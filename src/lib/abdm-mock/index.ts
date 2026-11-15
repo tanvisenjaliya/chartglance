@@ -98,21 +98,31 @@ export interface RawClinicalRecord {
 
 const CONSENTS_FILE = path.join(process.cwd(), "data", "consents.json");
 
+let memoryConsents: Record<string, ConsentRecord> | null = null;
+
 function ensureConsentsFile(): Record<string, ConsentRecord> {
-  if (!fs.existsSync(CONSENTS_FILE)) {
-    fs.writeFileSync(CONSENTS_FILE, JSON.stringify({}, null, 2), "utf-8");
-    return {};
-  }
+  if (memoryConsents) return memoryConsents;
   try {
+    if (!fs.existsSync(CONSENTS_FILE)) {
+      memoryConsents = {};
+      return memoryConsents;
+    }
     const raw = fs.readFileSync(CONSENTS_FILE, "utf-8");
-    return JSON.parse(raw);
+    memoryConsents = JSON.parse(raw);
+    return memoryConsents || {};
   } catch {
-    return {};
+    memoryConsents = {};
+    return memoryConsents;
   }
 }
 
 function saveConsents(data: Record<string, ConsentRecord>) {
-  fs.writeFileSync(CONSENTS_FILE, JSON.stringify(data, null, 2), "utf-8");
+  memoryConsents = data;
+  try {
+    fs.writeFileSync(CONSENTS_FILE, JSON.stringify(data, null, 2), "utf-8");
+  } catch {
+    // Read-only filesystem in Vercel serverless environment
+  }
 }
 
 function seededRandom(seed: number): () => number {

@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { PatientQueueItem, FacilityMetadata, sortQueueLive } from "@/lib/queue-utils";
+import { getStoredQueue, saveStoredQueue, resetDemoStorage } from "@/lib/client-storage";
 import KpiBar, { FilterType, isInfant, isSenior } from "./KpiBar";
 import DoctorSidebar from "./DoctorSidebar";
 import QueueStatusBadge from "./QueueStatusBadge";
@@ -34,6 +35,15 @@ export default function OpdDashboard({
     name: string;
     tokenNumber: string;
   } | null>(null);
+
+  useEffect(() => {
+    const stored = getStoredQueue();
+    if (stored && stored.length > 0) {
+      setPatients(sortQueueLive(stored));
+    } else {
+      saveStoredQueue(sortQueueLive(initialPatients));
+    }
+  }, [initialPatients]);
 
   // Filter logic
   const filteredPatients = patients.filter((patient) => {
@@ -115,7 +125,9 @@ export default function OpdDashboard({
           completedTimestamp: newStatus === "Done" ? now : undefined,
         };
       });
-      return sortQueueLive(updated);
+      const sorted = sortQueueLive(updated);
+      saveStoredQueue(sorted);
+      return sorted;
     });
 
     try {
@@ -151,7 +163,21 @@ export default function OpdDashboard({
   };
 
   const handleEmergencyPatientAdded = (newPatient: PatientQueueItem) => {
-    setPatients((prev) => sortQueueLive([newPatient, ...prev]));
+    setPatients((prev) => {
+      const updated = sortQueueLive([newPatient, ...prev]);
+      saveStoredQueue(updated);
+      return updated;
+    });
+  };
+
+  const handleResetDemo = async () => {
+    resetDemoStorage();
+    try {
+      await fetch("/api/patients/reset", { method: "POST" });
+    } catch {
+      // Ignore
+    }
+    window.location.reload();
   };
 
   return (
@@ -537,18 +563,27 @@ export default function OpdDashboard({
           </div>
 
           <div className="flex items-center gap-4">
+            <button
+              type="button"
+              onClick={handleResetDemo}
+              className="text-xs text-slate hover:text-navy hover:underline font-medium cursor-pointer"
+            >
+              Reset demo
+            </button>
             <Link
               href="/register"
               className="text-xs text-blue hover:underline font-medium flex items-center gap-1"
             >
               Register Patient &rarr;
             </Link>
-            <Link
-              href="/dev"
-              className="text-xs text-blue hover:underline font-medium flex items-center gap-1"
-            >
-              Developer / FHIR Inspector &rarr;
-            </Link>
+            {process.env.NODE_ENV !== "production" && (
+              <Link
+                href="/dev"
+                className="text-xs text-blue hover:underline font-medium flex items-center gap-1"
+              >
+                Developer / FHIR Inspector &rarr;
+              </Link>
+            )}
           </div>
         </div>
       </footer>

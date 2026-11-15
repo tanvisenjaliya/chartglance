@@ -3,6 +3,14 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { FollowUpPeriod } from "@/lib/notes-store";
+import {
+  getStoredDraft,
+  saveStoredDraft,
+  clearStoredDraft,
+  saveStoredNote,
+  getStoredQueue,
+  saveStoredQueue,
+} from "@/lib/client-storage";
 
 interface ConsultationNoteBoxProps {
   patientId: string;
@@ -26,11 +34,16 @@ export default function ConsultationNoteBox({
   // 1. Load initial draft on mount
   useEffect(() => {
     async function loadDraft() {
+      const localDraft = getStoredDraft(patientId);
+      if (localDraft) {
+        setNoteText(localDraft.text || "");
+        setFollowUp(localDraft.followUp || "none");
+      }
       try {
         const res = await fetch(`/api/notes?patientId=${patientId}`);
         if (res.ok) {
           const data = await res.json();
-          if (data.draft) {
+          if (data.draft && !localDraft) {
             setNoteText(data.draft.noteText || "");
             setFollowUp(data.draft.followUp || "none");
           }
@@ -48,6 +61,7 @@ export default function ConsultationNoteBox({
   const triggerAutosave = useCallback(
     (text: string, period: FollowUpPeriod) => {
       if (!initialLoadDoneRef.current) return;
+      saveStoredDraft(patientId, { text, followUp: period, savedAt: new Date().toISOString() });
       if (debounceTimerRef.current) clearTimeout(debounceTimerRef.current);
 
       setAutosaveStatus("saving");
@@ -99,6 +113,16 @@ export default function ConsultationNoteBox({
       });
 
       if (res.ok) {
+        const data = await res.json().catch(() => ({}));
+        if (data.note) {
+          saveStoredNote(data.note);
+        }
+        clearStoredDraft(patientId);
+        const q = getStoredQueue() || [];
+        const updatedQ = q.map((p) =>
+          p.id === patientId ? { ...p, queueStatus: "Done" as const, completedTimestamp: Date.now() } : p
+        );
+        saveStoredQueue(updatedQ);
         if (onNoteSaved) onNoteSaved();
         router.push("/");
       }

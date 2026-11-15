@@ -71,8 +71,8 @@ function appendJsonLog(filePath: string, entry: unknown) {
     }
     logs.push(entry);
     fs.writeFileSync(filePath, JSON.stringify(logs, null, 2), "utf-8");
-  } catch (err) {
-    console.error("Failed to append runtime log:", filePath, err);
+  } catch {
+    // Read-only filesystem in Vercel serverless environment
   }
 }
 
@@ -227,7 +227,7 @@ function formatCompactRecordItem(
     if (conclusion) parts.push(`Conclusion: ${conclusion}`);
   }
 
-  let rawNote =
+  const rawNote =
     (r.clinicalNote as string) ||
     ((r.text as { div?: string })?.div) ||
     ((r.note as Array<{ text?: string }>)?.[0]?.text);
@@ -252,7 +252,7 @@ function formatCompactRecordItem(
 /**
  * Loads clinical reference guide markdown text.
  */
-function getClinicalReferenceText(): string {
+export function getClinicalReferenceText(): string {
   try {
     const filePath = path.join(process.cwd(), "data", "reference", "clinical-reference.md");
     if (fs.existsSync(filePath)) {
@@ -379,7 +379,7 @@ export async function callGemini(options: GeminiCallOptions): Promise<GeminiCall
     const maskedUrl = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(modelToUse)}:generateContent?key=***`;
     console.log(`[GEMINI REQUEST] URL: ${maskedUrl}`);
 
-    const timeoutMs = options.timeoutMs ?? 30000;
+    const timeoutMs = options.timeoutMs ?? 25000;
 
     try {
       const res = await fetch(endpoint, {
@@ -475,11 +475,11 @@ export async function callGemini(options: GeminiCallOptions): Promise<GeminiCall
   let fallbackUsed = false;
   let modelUsed = mainModel;
 
-  // Fallback model: if GEMINI_FALLBACK_MODEL is set and main model fails with 503 or times out (30s), try fallback model once with a 30s limit
+  // Fallback model: if GEMINI_FALLBACK_MODEL is set and main model fails with 503 or times out (25s), try fallback model once with a 25s limit
   if (!result.ok && (result.status === 503 || result.isTimeout || result.status === 408) && fallbackModel && fallbackModel !== mainModel) {
-    const triggerReason = result.isTimeout || result.status === 408 ? "timed out (30s)" : `failed with HTTP ${result.status}`;
+    const triggerReason = result.isTimeout || result.status === 408 ? "timed out (25s)" : `failed with HTTP ${result.status}`;
     console.warn(
-      `[GEMINI FALLBACK] Primary model ${mainModel} ${triggerReason}. Trying fallback model ${fallbackModel} once with 30s limit...`
+      `[GEMINI FALLBACK] Primary model ${mainModel} ${triggerReason}. Trying fallback model ${fallbackModel} once with 25s limit...`
     );
     attempts++;
     const fallbackResult = await runSingleAttempt(fallbackModel);
@@ -510,7 +510,7 @@ export async function callGemini(options: GeminiCallOptions): Promise<GeminiCall
       ? `AI unavailable: Gemini overloaded (primary & fallback models unavailable) [Model tried: ${modelUsed}], try Re-analyse in a minute`
       : `AI unavailable: Gemini overloaded [Model tried: ${modelUsed}], try Re-analyse in a minute`;
   } else if (result.isTimeout || result.status === 408) {
-    errorReason = `AI unavailable: Gemini timed out (30s) [Model tried: ${modelUsed}], try Re-analyse in a minute`;
+    errorReason = `AI unavailable: Gemini timed out (25s) [Model tried: ${modelUsed}], try Re-analyse in a minute`;
   } else if (result.status === 401 || result.status === 403) {
     errorReason = `AI unavailable: API key rejected or unauthorized [Model tried: ${modelUsed}]`;
   } else if (result.status === 404) {
@@ -587,7 +587,6 @@ export async function getOrGenerateAnalysis(
   // 2. Load Patient Data & Consent Records
   const bundle = getPatientRecordBundle(patientId);
   const previousNotes = notesStore.getNotes(patientId);
-  const clinicalRefText = getClinicalReferenceText();
 
   // Identify valid source IDs
   const validIds = collectAllValidIds(bundle, previousNotes);
@@ -612,7 +611,11 @@ export async function getOrGenerateAnalysis(
       dateRange: {},
       consentExpiry: consent.expiryDate,
     };
-    fs.writeFileSync(cachePath, JSON.stringify(emptyResult, null, 2), "utf-8");
+    try {
+      fs.writeFileSync(cachePath, JSON.stringify(emptyResult, null, 2), "utf-8");
+    } catch {
+      // Read-only filesystem in Vercel serverless environment
+    }
     return emptyResult;
   }
 

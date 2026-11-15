@@ -40,30 +40,34 @@ interface NotesStoreSchema {
 const RUNTIME_DIR = path.join(process.cwd(), "data", "runtime");
 const NOTES_FILE = path.join(RUNTIME_DIR, "notes.json");
 
+let memoryStore: NotesStoreSchema | null = null;
+
 function ensureNotesFile(): NotesStoreSchema {
-  if (!fs.existsSync(RUNTIME_DIR)) {
-    fs.mkdirSync(RUNTIME_DIR, { recursive: true });
-  }
-  if (!fs.existsSync(NOTES_FILE)) {
-    const initial: NotesStoreSchema = { notes: [], drafts: {} };
-    fs.writeFileSync(NOTES_FILE, JSON.stringify(initial, null, 2), "utf-8");
-    return initial;
-  }
+  if (memoryStore) return memoryStore;
   try {
+    if (!fs.existsSync(NOTES_FILE)) {
+      memoryStore = { notes: [], drafts: {} };
+      return memoryStore;
+    }
     const raw = fs.readFileSync(NOTES_FILE, "utf-8");
-    return JSON.parse(raw) as NotesStoreSchema;
+    memoryStore = JSON.parse(raw) as NotesStoreSchema;
+    return memoryStore;
   } catch {
-    const fallback: NotesStoreSchema = { notes: [], drafts: {} };
-    fs.writeFileSync(NOTES_FILE, JSON.stringify(fallback, null, 2), "utf-8");
-    return fallback;
+    memoryStore = { notes: [], drafts: {} };
+    return memoryStore;
   }
 }
 
 function persistStore(data: NotesStoreSchema): void {
-  if (!fs.existsSync(RUNTIME_DIR)) {
-    fs.mkdirSync(RUNTIME_DIR, { recursive: true });
+  memoryStore = data;
+  try {
+    if (!fs.existsSync(RUNTIME_DIR)) {
+      fs.mkdirSync(RUNTIME_DIR, { recursive: true });
+    }
+    fs.writeFileSync(NOTES_FILE, JSON.stringify(data, null, 2), "utf-8");
+  } catch {
+    // Read-only filesystem in Vercel serverless environment
   }
-  fs.writeFileSync(NOTES_FILE, JSON.stringify(data, null, 2), "utf-8");
 }
 
 /**

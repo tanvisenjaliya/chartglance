@@ -4,10 +4,16 @@ import { callGemini } from "@/lib/ai/gemini-analysis";
 export const dynamic = "force-dynamic";
 
 export async function GET() {
+  if (process.env.NODE_ENV === "production") {
+    return new NextResponse(null, { status: 404 });
+  }
   return handleAiCheck();
 }
 
 export async function POST() {
+  if (process.env.NODE_ENV === "production") {
+    return new NextResponse(null, { status: 404 });
+  }
   return handleAiCheck();
 }
 

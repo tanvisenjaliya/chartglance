@@ -102,11 +102,15 @@ export function buildFreshDailyQueue(dateStr: string): PatientQueueItem[] {
     };
   });
 
-  // Persist
-  const runtimeDir = path.join(process.cwd(), "data", "runtime");
-  if (!fs.existsSync(runtimeDir)) fs.mkdirSync(runtimeDir, { recursive: true });
-  const filePath = path.join(runtimeDir, `queue-${dateStr}.json`);
-  fs.writeFileSync(filePath, JSON.stringify(queue, null, 2), "utf-8");
+  // Persist if filesystem is writable (serverless fallback: client localStorage handles persistence)
+  try {
+    const runtimeDir = path.join(process.cwd(), "data", "runtime");
+    if (!fs.existsSync(runtimeDir)) fs.mkdirSync(runtimeDir, { recursive: true });
+    const filePath = path.join(runtimeDir, `queue-${dateStr}.json`);
+    fs.writeFileSync(filePath, JSON.stringify(queue, null, 2), "utf-8");
+  } catch {
+    // Read-only filesystem in Vercel serverless environment
+  }
 
   return queue;
 }
@@ -304,10 +308,14 @@ export function getOpdQueue(): PatientQueueItem[] {
  * Writes the active today's OPD queue back to data/runtime/queue-YYYY-MM-DD.json
  */
 export function saveOpdQueue(patients: PatientQueueItem[]): void {
-  const filePath = todayQueuePath();
-  const runtimeDir = path.dirname(filePath);
-  if (!fs.existsSync(runtimeDir)) fs.mkdirSync(runtimeDir, { recursive: true });
-  fs.writeFileSync(filePath, JSON.stringify(patients, null, 2), "utf-8");
+  try {
+    const filePath = todayQueuePath();
+    const runtimeDir = path.dirname(filePath);
+    if (!fs.existsSync(runtimeDir)) fs.mkdirSync(runtimeDir, { recursive: true });
+    fs.writeFileSync(filePath, JSON.stringify(patients, null, 2), "utf-8");
+  } catch {
+    // Read-only filesystem in Vercel serverless environment
+  }
 }
 
 export interface StatusUpdateResult {

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, notFound } from "next/navigation";
 
 interface PersonaMeta {
   id: string;
@@ -76,6 +76,9 @@ const PERSONAS: PersonaMeta[] = [
 ];
 
 export default function DevPage() {
+  if (process.env.NODE_ENV === "production") {
+    notFound();
+  }
   const router = useRouter();
   const [selectedPersonaId, setSelectedPersonaId] = useState("P01");
   const [resetting, setResetting] = useState(false);

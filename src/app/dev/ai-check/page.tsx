@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { notFound } from "next/navigation";
 
 interface RawErrorCause {
   code?: string | number;
@@ -44,6 +45,9 @@ interface AiCheckResponse {
 }
 
 export default function AiCheckPage() {
+  if (process.env.NODE_ENV === "production") {
+    notFound();
+  }
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<AiCheckResponse | null>(null);
   const [networkError, setNetworkError] = useState<string | null>(null);

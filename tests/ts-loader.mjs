@@ -1,7 +1,9 @@
+import { fileURLToPath } from "node:url";
+
 export async function resolve(specifier, context, nextResolve) {
   let targetSpecifier = specifier;
   if (specifier.startsWith("@/")) {
-    targetSpecifier = "/Users/tanvisenjaliya/Documents/chartglance/src/" + specifier.slice(2);
+    targetSpecifier = fileURLToPath(new URL("../src/" + specifier.slice(2), import.meta.url));
   }
   try {
     return await nextResolve(targetSpecifier, context);

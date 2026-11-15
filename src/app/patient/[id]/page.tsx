@@ -12,6 +12,18 @@ import ConsultationNoteBox from "@/components/ConsultationNoteBox";
 import PreviousVisitsList from "@/components/PreviousVisitsList";
 import SummaryCard from "@/components/SummaryCard";
 import type { AIAnalysisResult } from "@/lib/ai/gemini-analysis";
+import {
+  getStoredQueue,
+  saveStoredQueue,
+  getStoredConsent,
+  saveStoredConsent,
+  getStoredNotes,
+  getStoredAnalysis,
+  saveStoredAnalysis,
+  isDailyQuotaExceeded,
+  incrementDailyAnalysisCount,
+  resetDemoStorage,
+} from "@/lib/client-storage";
 
 export default function PatientConsultationPage() {
   const params = useParams();
@@ -52,6 +64,15 @@ export default function PatientConsultationPage() {
 
   // 1. Fetch patient details
   const loadPatient = useCallback(async () => {
+    const stored = getStoredQueue();
+    if (stored) {
+      const match = stored.find((p) => p.id === patientId);
+      if (match) {
+        setPatient(match);
+        setLoadingPatient(false);
+        return;
+      }
+    }
     try {
       const res = await fetch("/api/patients");
       if (res.ok) {
@@ -72,11 +93,22 @@ export default function PatientConsultationPage() {
 
   // 2. Fetch local previous visits (independent of ABDM consent)
   const fetchPreviousNotes = useCallback(async () => {
+    const localNotes = getStoredNotes(patientId);
+    if (localNotes.length > 0) {
+      setPreviousNotes(localNotes);
+    }
     try {
       const res = await fetch(`/api/notes?patientId=${patientId}`);
       if (res.ok) {
         const data = await res.json();
-        setPreviousNotes(data.notes || []);
+        const serverNotes: ConsultationNote[] = data.notes || [];
+        const map = new Map<string, ConsultationNote>();
+        serverNotes.forEach((n) => map.set(n.id, n));
+        localNotes.forEach((n) => map.set(n.id, n));
+        const merged = Array.from(map.values()).sort(
+          (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        );
+        setPreviousNotes(merged);
       }
     } catch {
       // Ignore
@@ -89,11 +121,18 @@ export default function PatientConsultationPage() {
 
   // 3. Fetch consent status and compositions
   const fetchConsentStatus = useCallback(async () => {
+    const localConsent = getStoredConsent(patientId);
+    if (localConsent) {
+      setConsent(localConsent);
+    }
     try {
       const res = await fetch(`/api/abdm/consent/${patientId}`);
       if (res.ok) {
         const data = await res.json();
-        setConsent(data.consent);
+        if (data.consent) {
+          setConsent(data.consent);
+          saveStoredConsent(patientId, data.consent);
+        }
         if (data.recordsData) {
           setCompositions(data.recordsData.compositions || []);
           setFacilityCount(data.recordsData.facilityCount || 0);
@@ -120,23 +159,68 @@ export default function PatientConsultationPage() {
     return () => clearInterval(interval);
   }, [consent?.status, pendingFacilities.length, fetchConsentStatus]);
 
-  // 4. Fetch AI Clinical Analysis
+  // 4. Fetch AI Clinical Analysis (with localStorage caching & 20 daily quota limit)
   const fetchAnalysis = useCallback(
     async (refresh = false) => {
       if (!patientId || consent?.status !== "GRANTED") return;
+
+      const consentId = consent?.id || "";
+      const consentExpiry = consent?.expiryDate;
+
+      // 1. If not a force-refresh, check browser localStorage cache first
+      if (!refresh) {
+        const cached = getStoredAnalysis(patientId);
+        if (cached) {
+          setAnalysis(cached);
+          setLoadingAnalysis(false);
+          return;
+        }
+      }
+
+      // 2. Check 20 analyses per day quota limit
+      if (isDailyQuotaExceeded()) {
+        setAnalysis({
+          patientId,
+          consentId,
+          generatedAt: new Date().toISOString(),
+          cached: false,
+          aiFailed: true,
+          failureNotice:
+            "Daily demo limit of 20 AI analyses reached for today. Existing cached analyses remain accessible. The limit resets at midnight.",
+          summary:
+            "Daily analysis quota reached (20/20). Reopening previously analysed patients will load from local cache.",
+          summarySourceIds: [],
+          redFlags: [],
+          yellowFlags: [],
+          trends: [],
+          currentMedicines: [],
+          missingInformation: [],
+          askThePatient: [],
+          facilitiesUsed: [],
+          dateRange: {},
+          consentExpiry,
+        });
+        setLoadingAnalysis(false);
+        return;
+      }
+
       setLoadingAnalysis(true);
       try {
         const url = `/api/ai/analysis/${patientId}${refresh ? "?refresh=true" : ""}`;
         const res = await fetch(url);
         if (res.ok) {
-          const data = await res.json();
+          const data: AIAnalysisResult = await res.json();
           setAnalysis(data);
+          if (!data.aiFailed) {
+            saveStoredAnalysis(patientId, data);
+            incrementDailyAnalysisCount();
+          }
         } else {
           const errData = await res.json().catch(() => ({}));
           const errMsg = errData.error || `AI request failed (${res.status})`;
           setAnalysis({
             patientId,
-            consentId: consent?.id || "",
+            consentId,
             generatedAt: new Date().toISOString(),
             cached: false,
             aiFailed: true,
@@ -151,14 +235,14 @@ export default function PatientConsultationPage() {
             askThePatient: [],
             facilitiesUsed: [],
             dateRange: {},
-            consentExpiry: consent?.expiryDate,
+            consentExpiry,
           });
         }
       } catch (err) {
         console.error("AI Analysis load failed:", err);
         setAnalysis({
           patientId,
-          consentId: consent?.id || "",
+          consentId,
           generatedAt: new Date().toISOString(),
           cached: false,
           aiFailed: true,
@@ -173,13 +257,13 @@ export default function PatientConsultationPage() {
           askThePatient: [],
           facilitiesUsed: [],
           dateRange: {},
-          consentExpiry: consent?.expiryDate,
+          consentExpiry,
         });
       } finally {
         setLoadingAnalysis(false);
       }
     },
-    [patientId, consent?.status]
+    [patientId, consent?.status, consent?.id, consent?.expiryDate]
   );
 
   useEffect(() => {
@@ -220,6 +304,7 @@ export default function PatientConsultationPage() {
       if (res.ok) {
         const data = await res.json();
         setConsent(data.consent);
+        if (data.consent) saveStoredConsent(patient.id, data.consent);
       }
     } catch (err) {
       console.error(err);
@@ -237,6 +322,7 @@ export default function PatientConsultationPage() {
       if (res.ok) {
         const data = await res.json();
         setConsent(data.consent);
+        if (data.consent) saveStoredConsent(patientId, data.consent);
         setCompositions([]);
         setPendingFacilities([]);
       }
@@ -284,6 +370,11 @@ export default function PatientConsultationPage() {
         const data = await res.json();
         setPatient(data.patient);
         setConsultConflict(null);
+        if (data.patient) {
+          const q = getStoredQueue() || [];
+          const updatedQ = q.map((p) => (p.id === patientId ? data.patient : p));
+          saveStoredQueue(updatedQ);
+        }
       }
     } catch (err) {
       console.error(err);
@@ -305,6 +396,11 @@ export default function PatientConsultationPage() {
       if (res.ok) {
         const data = await res.json();
         setPatient(data.patient);
+        if (data.patient) {
+          const q = getStoredQueue() || [];
+          const updatedQ = q.map((p) => (p.id === patientId ? data.patient : p));
+          saveStoredQueue(updatedQ);
+        }
         router.push("/");
       }
     } catch (err) {
@@ -1084,6 +1180,39 @@ export default function PatientConsultationPage() {
           </div>
         </div>
       )}
+
+      {/* Footer */}
+      <footer className="mt-12 border-t border-border bg-surface py-6 px-6">
+        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate">
+          <div>
+            <p>
+              ChartGlance &bull; Clinical Consultation View
+            </p>
+            <p className="mt-0.5 text-[11px] text-navy-muted">
+              Synthetic data only &bull; Relative dates dynamically resolved at load time
+            </p>
+          </div>
+
+          <div className="flex items-center gap-4">
+            <button
+              type="button"
+              onClick={() => {
+                resetDemoStorage();
+                window.location.href = "/";
+              }}
+              className="text-xs text-slate hover:text-navy hover:underline font-medium cursor-pointer"
+            >
+              Reset demo
+            </button>
+            <Link
+              href="/"
+              className="text-xs text-blue hover:underline font-medium flex items-center gap-1"
+            >
+              &larr; Back to OPD Queue
+            </Link>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }

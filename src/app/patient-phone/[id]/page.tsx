@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { ConsentRecord } from "@/lib/abdm-mock";
 import { PatientQueueItem } from "@/lib/queue-utils";
+import { getStoredConsent, saveStoredConsent } from "@/lib/client-storage";
 
 export default function PatientPhonePage() {
   const params = useParams();
@@ -36,11 +37,18 @@ export default function PatientPhonePage() {
 
   // Fetch consent status
   const fetchConsent = useCallback(async () => {
+    const localConsent = getStoredConsent(patientId);
+    if (localConsent) {
+      setConsent(localConsent);
+    }
     try {
       const res = await fetch(`/api/abdm/consent/${patientId}`);
       if (res.ok) {
         const data = await res.json();
-        setConsent(data.consent);
+        if (data.consent) {
+          setConsent(data.consent);
+          saveStoredConsent(patientId, data.consent);
+        }
       }
     } catch {
       // Ignore
@@ -68,6 +76,7 @@ export default function PatientPhonePage() {
       if (res.ok) {
         const data = await res.json();
         setConsent(data.consent);
+        if (data.consent) saveStoredConsent(patientId, data.consent);
       }
     } finally {
       setActionLoading(false);
@@ -83,6 +92,7 @@ export default function PatientPhonePage() {
       if (res.ok) {
         const data = await res.json();
         setConsent(data.consent);
+        if (data.consent) saveStoredConsent(patientId, data.consent);
       }
     } finally {
       setActionLoading(false);

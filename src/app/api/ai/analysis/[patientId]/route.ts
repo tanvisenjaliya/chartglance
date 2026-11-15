@@ -3,6 +3,7 @@ import { getOpdQueue, getAllRegistryPatients } from "@/lib/records";
 import { getOrGenerateAnalysis } from "@/lib/ai/gemini-analysis";
 
 export const dynamic = "force-dynamic";
+export const maxDuration = 60;
 
 export async function GET(
   req: NextRequest,
