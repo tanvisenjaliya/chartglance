@@ -1,0 +1,657 @@
+{
+  "resourceType": "Bundle",
+  "id": "bundle-B29",
+  "type": "collection",
+  "meta": {
+    "tag": [
+      {
+        "code": "SYNTHETIC",
+        "display": "Synthetic demo data. Not a real patient."
+      }
+    ]
+  },
+  "entry": [
+    {
+      "fullUrl": "urn:uuid:b29-rec-8",
+      "resource": {
+        "resourceType": "Composition",
+        "id": "b29-rec-8",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/OPConsultRecord"
+          ]
+        },
+        "status": "final",
+        "type": {
+          "text": "OP consultation"
+        },
+        "title": "OP consultation",
+        "date": "{{today-130d}}",
+        "subject": {
+          "reference": "Patient/B29"
+        },
+        "encounter": {
+          "reference": "Encounter/b29-enc-1"
+        },
+        "author": [
+          {
+            "reference": "Organization/HIP-GJ-AND-042"
+          }
+        ],
+        "custodian": {
+          "reference": "Organization/HIP-GJ-AND-042"
+        },
+        "section": [
+          {
+            "title": "Clinical note",
+            "text": {
+              "status": "generated",
+              "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">ANC regn, primi, ~10 wks. Hb 11.4. MCP card given.</div>"
+            },
+            "entry": [
+              {
+                "reference": "Condition/b29-cond-2"
+              },
+              {
+                "reference": "Observation/b29-obs-3"
+              },
+              {
+                "reference": "Observation/b29-obs-4"
+              },
+              {
+                "reference": "Observation/b29-obs-5"
+              },
+              {
+                "reference": "Observation/b29-obs-6"
+              },
+              {
+                "reference": "MedicationRequest/b29-med-7"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b29-rec-15",
+      "resource": {
+        "resourceType": "Composition",
+        "id": "b29-rec-15",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/DiagnosticReportRecord"
+          ]
+        },
+        "status": "final",
+        "type": {
+          "text": "Diagnostic report"
+        },
+        "title": "Diagnostic report",
+        "date": "{{today-20d}}",
+        "subject": {
+          "reference": "Patient/B29"
+        },
+        "encounter": {
+          "reference": "Encounter/b29-enc-9"
+        },
+        "author": [
+          {
+            "reference": "Organization/HIP-GJ-AND-001"
+          }
+        ],
+        "custodian": {
+          "reference": "Organization/HIP-GJ-AND-001"
+        },
+        "section": [
+          {
+            "title": "Clinical note",
+            "text": {
+              "status": "generated",
+              "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">OGTT (75 g, DIPSI): 2-hr value 162 mg/dL. FBS 104. GDM. Diet advice, SMBG. Review with MO in 2 wks.</div>"
+            },
+            "entry": [
+              {
+                "reference": "Condition/b29-cond-10"
+              },
+              {
+                "reference": "Observation/b29-obs-11"
+              },
+              {
+                "reference": "Observation/b29-obs-12"
+              },
+              {
+                "reference": "Appointment/b29-appt-13"
+              },
+              {
+                "reference": "Appointment/b29-appt-14"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:B29",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "B29",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Patient"
+          ]
+        },
+        "name": [
+          {
+            "text": "Mittal Desai"
+          }
+        ],
+        "gender": "female",
+        "birthDate": "{{today-27y}}",
+        "address": [
+          {
+            "text": "Anand, Anand district, Gujarat",
+            "city": "Anand",
+            "district": "Anand",
+            "state": "Gujarat",
+            "country": "IN"
+          }
+        ],
+        "identifier": [
+          {
+            "type": {
+              "text": "ABHA number"
+            },
+            "system": "https://healthid.abdm.gov.in",
+            "value": "91-5555-4429-0029"
+          },
+          {
+            "type": {
+              "text": "ABHA address"
+            },
+            "system": "https://healthid.abdm.gov.in",
+            "value": "mittal.desai@sbx"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:HIP-GJ-AND-001",
+      "resource": {
+        "resourceType": "Organization",
+        "id": "HIP-GJ-AND-001",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Organization"
+          ]
+        },
+        "name": "CHC Petlad (demo)",
+        "identifier": [
+          {
+            "system": "https://facility.abdm.gov.in",
+            "value": "HIP-GJ-AND-001"
+          }
+        ],
+        "type": [
+          {
+            "text": "Public CHC"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:HIP-GJ-AND-042",
+      "resource": {
+        "resourceType": "Organization",
+        "id": "HIP-GJ-AND-042",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Organization"
+          ]
+        },
+        "name": "PHC Navli (demo)",
+        "identifier": [
+          {
+            "system": "https://facility.abdm.gov.in",
+            "value": "HIP-GJ-AND-042"
+          }
+        ],
+        "type": [
+          {
+            "text": "Public PHC"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b29-enc-1",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "b29-enc-1",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Encounter"
+          ]
+        },
+        "status": "finished",
+        "class": {
+          "code": "AMB"
+        },
+        "subject": {
+          "reference": "Patient/B29"
+        },
+        "serviceProvider": {
+          "reference": "Organization/HIP-GJ-AND-042"
+        },
+        "period": {
+          "start": "{{today-130d}}"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b29-cond-2",
+      "resource": {
+        "resourceType": "Condition",
+        "id": "b29-cond-2",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Condition"
+          ]
+        },
+        "subject": {
+          "reference": "Patient/B29"
+        },
+        "encounter": {
+          "reference": "Encounter/b29-enc-1"
+        },
+        "code": {
+          "text": "Pregnancy, first trimester (G1P0)"
+        },
+        "clinicalStatus": {
+          "text": "active"
+        },
+        "recordedDate": "{{today-130d}}"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b29-obs-3",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "b29-obs-3",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Observation"
+          ]
+        },
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "718-7",
+              "display": "Haemoglobin"
+            }
+          ],
+          "text": "Haemoglobin"
+        },
+        "subject": {
+          "reference": "Patient/B29"
+        },
+        "encounter": {
+          "reference": "Encounter/b29-enc-1"
+        },
+        "effectiveDateTime": "{{today-130d}}",
+        "performer": [
+          {
+            "reference": "Organization/HIP-GJ-AND-042"
+          }
+        ],
+        "valueQuantity": {
+          "value": 11.4,
+          "unit": "g/dL"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b29-obs-4",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "b29-obs-4",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Observation"
+          ]
+        },
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "29463-7",
+              "display": "Body weight"
+            }
+          ],
+          "text": "Body weight"
+        },
+        "subject": {
+          "reference": "Patient/B29"
+        },
+        "encounter": {
+          "reference": "Encounter/b29-enc-1"
+        },
+        "effectiveDateTime": "{{today-130d}}",
+        "performer": [
+          {
+            "reference": "Organization/HIP-GJ-AND-042"
+          }
+        ],
+        "valueQuantity": {
+          "value": 56,
+          "unit": "kg"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b29-obs-5",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "b29-obs-5",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Observation"
+          ]
+        },
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "8480-6",
+              "display": "Systolic BP"
+            }
+          ],
+          "text": "Systolic BP"
+        },
+        "subject": {
+          "reference": "Patient/B29"
+        },
+        "encounter": {
+          "reference": "Encounter/b29-enc-1"
+        },
+        "effectiveDateTime": "{{today-130d}}",
+        "performer": [
+          {
+            "reference": "Organization/HIP-GJ-AND-042"
+          }
+        ],
+        "valueQuantity": {
+          "value": 108,
+          "unit": "mmHg"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b29-obs-6",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "b29-obs-6",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Observation"
+          ]
+        },
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "8462-4",
+              "display": "Diastolic BP"
+            }
+          ],
+          "text": "Diastolic BP"
+        },
+        "subject": {
+          "reference": "Patient/B29"
+        },
+        "encounter": {
+          "reference": "Encounter/b29-enc-1"
+        },
+        "effectiveDateTime": "{{today-130d}}",
+        "performer": [
+          {
+            "reference": "Organization/HIP-GJ-AND-042"
+          }
+        ],
+        "valueQuantity": {
+          "value": 68,
+          "unit": "mmHg"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b29-med-7",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "b29-med-7",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/MedicationRequest"
+          ]
+        },
+        "status": "active",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "text": "Folic acid"
+        },
+        "subject": {
+          "reference": "Patient/B29"
+        },
+        "encounter": {
+          "reference": "Encounter/b29-enc-1"
+        },
+        "authoredOn": "{{today-130d}}",
+        "requester": {
+          "reference": "Organization/HIP-GJ-AND-042"
+        },
+        "dosageInstruction": [
+          {
+            "text": "400 mcg OD"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b29-enc-9",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "b29-enc-9",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Encounter"
+          ]
+        },
+        "status": "finished",
+        "class": {
+          "code": "AMB"
+        },
+        "subject": {
+          "reference": "Patient/B29"
+        },
+        "serviceProvider": {
+          "reference": "Organization/HIP-GJ-AND-001"
+        },
+        "period": {
+          "start": "{{today-20d}}"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b29-cond-10",
+      "resource": {
+        "resourceType": "Condition",
+        "id": "b29-cond-10",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Condition"
+          ]
+        },
+        "subject": {
+          "reference": "Patient/B29"
+        },
+        "encounter": {
+          "reference": "Encounter/b29-enc-9"
+        },
+        "code": {
+          "text": "Gestational diabetes mellitus",
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "11687002",
+              "display": "Gestational diabetes mellitus"
+            }
+          ]
+        },
+        "clinicalStatus": {
+          "text": "active"
+        },
+        "recordedDate": "{{today-20d}}"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b29-obs-11",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "b29-obs-11",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Observation"
+          ]
+        },
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "1558-6",
+              "display": "Fasting blood glucose"
+            }
+          ],
+          "text": "Fasting blood glucose"
+        },
+        "subject": {
+          "reference": "Patient/B29"
+        },
+        "encounter": {
+          "reference": "Encounter/b29-enc-9"
+        },
+        "effectiveDateTime": "{{today-20d}}",
+        "performer": [
+          {
+            "reference": "Organization/HIP-GJ-AND-001"
+          }
+        ],
+        "valueQuantity": {
+          "value": 104,
+          "unit": "mg/dL"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b29-obs-12",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "b29-obs-12",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Observation"
+          ]
+        },
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "718-7",
+              "display": "Haemoglobin"
+            }
+          ],
+          "text": "Haemoglobin"
+        },
+        "subject": {
+          "reference": "Patient/B29"
+        },
+        "encounter": {
+          "reference": "Encounter/b29-enc-9"
+        },
+        "effectiveDateTime": "{{today-20d}}",
+        "performer": [
+          {
+            "reference": "Organization/HIP-GJ-AND-001"
+          }
+        ],
+        "valueQuantity": {
+          "value": 10.8,
+          "unit": "g/dL"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b29-appt-13",
+      "resource": {
+        "resourceType": "Appointment",
+        "id": "b29-appt-13",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Appointment"
+          ]
+        },
+        "status": "booked",
+        "description": "GDM review with blood sugar diary",
+        "start": "{{today-6d}}",
+        "participant": [
+          {
+            "actor": {
+              "reference": "Patient/B29"
+            },
+            "status": "accepted"
+          },
+          {
+            "actor": {
+              "reference": "Organization/HIP-GJ-AND-001"
+            },
+            "status": "accepted"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b29-appt-14",
+      "resource": {
+        "resourceType": "Appointment",
+        "id": "b29-appt-14",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Appointment"
+          ]
+        },
+        "status": "booked",
+        "description": "Next ANC visit",
+        "start": "{{today+7d}}",
+        "participant": [
+          {
+            "actor": {
+              "reference": "Patient/B29"
+            },
+            "status": "accepted"
+          },
+          {
+            "actor": {
+              "reference": "Organization/HIP-GJ-AND-001"
+            },
+            "status": "accepted"
+          }
+        ]
+      }
+    }
+  ]
+}

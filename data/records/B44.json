@@ -1,0 +1,249 @@
+{
+  "resourceType": "Bundle",
+  "id": "bundle-B44",
+  "type": "collection",
+  "meta": {
+    "tag": [
+      {
+        "code": "SYNTHETIC",
+        "display": "Synthetic demo data. Not a real patient."
+      }
+    ]
+  },
+  "entry": [
+    {
+      "fullUrl": "urn:uuid:b44-rec-5",
+      "resource": {
+        "resourceType": "Composition",
+        "id": "b44-rec-5",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/OPConsultRecord"
+          ]
+        },
+        "status": "final",
+        "type": {
+          "text": "OP consultation"
+        },
+        "title": "OP consultation",
+        "date": "{{today-120d}}",
+        "subject": {
+          "reference": "Patient/B44"
+        },
+        "encounter": {
+          "reference": "Encounter/b44-enc-1"
+        },
+        "author": [
+          {
+            "reference": "Organization/HIP-GJ-AND-101"
+          }
+        ],
+        "custodian": {
+          "reference": "Organization/HIP-GJ-AND-101"
+        },
+        "section": [
+          {
+            "title": "Clinical note",
+            "text": {
+              "status": "generated",
+              "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">LBP with L sciatica. SLR +ve at 40 deg. MRI: L4-5 disc prolapse. Physio, short NSAID course, pregabalin. Ortho review if weakness.</div>"
+            },
+            "entry": [
+              {
+                "reference": "Condition/b44-cond-2"
+              },
+              {
+                "reference": "MedicationRequest/b44-med-3"
+              },
+              {
+                "reference": "MedicationRequest/b44-med-4"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:B44",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "B44",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Patient"
+          ]
+        },
+        "name": [
+          {
+            "text": "Nilesh Rana"
+          }
+        ],
+        "gender": "male",
+        "birthDate": "{{today-40y}}",
+        "address": [
+          {
+            "text": "Khambhat, Anand district, Gujarat",
+            "city": "Khambhat",
+            "district": "Anand",
+            "state": "Gujarat",
+            "country": "IN"
+          }
+        ],
+        "identifier": [
+          {
+            "type": {
+              "text": "ABHA number"
+            },
+            "system": "https://healthid.abdm.gov.in",
+            "value": "91-5555-1944-0044"
+          },
+          {
+            "type": {
+              "text": "ABHA address"
+            },
+            "system": "https://healthid.abdm.gov.in",
+            "value": "nilesh.rana@sbx"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:HIP-GJ-AND-101",
+      "resource": {
+        "resourceType": "Organization",
+        "id": "HIP-GJ-AND-101",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Organization"
+          ]
+        },
+        "name": "General Hospital Anand (demo)",
+        "identifier": [
+          {
+            "system": "https://facility.abdm.gov.in",
+            "value": "HIP-GJ-AND-101"
+          }
+        ],
+        "type": [
+          {
+            "text": "Public district hospital"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b44-enc-1",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "b44-enc-1",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Encounter"
+          ]
+        },
+        "status": "finished",
+        "class": {
+          "code": "AMB"
+        },
+        "subject": {
+          "reference": "Patient/B44"
+        },
+        "serviceProvider": {
+          "reference": "Organization/HIP-GJ-AND-101"
+        },
+        "period": {
+          "start": "{{today-120d}}"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b44-cond-2",
+      "resource": {
+        "resourceType": "Condition",
+        "id": "b44-cond-2",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Condition"
+          ]
+        },
+        "subject": {
+          "reference": "Patient/B44"
+        },
+        "encounter": {
+          "reference": "Encounter/b44-enc-1"
+        },
+        "code": {
+          "text": "Lumbar disc prolapse (L4-L5)"
+        },
+        "clinicalStatus": {
+          "text": "active"
+        },
+        "recordedDate": "{{today-120d}}"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b44-med-3",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "b44-med-3",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/MedicationRequest"
+          ]
+        },
+        "status": "active",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "text": "Diclofenac"
+        },
+        "subject": {
+          "reference": "Patient/B44"
+        },
+        "encounter": {
+          "reference": "Encounter/b44-enc-1"
+        },
+        "authoredOn": "{{today-120d}}",
+        "requester": {
+          "reference": "Organization/HIP-GJ-AND-101"
+        },
+        "dosageInstruction": [
+          {
+            "text": "50 mg BD x 5 days"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b44-med-4",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "b44-med-4",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/MedicationRequest"
+          ]
+        },
+        "status": "active",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "text": "Pregabalin"
+        },
+        "subject": {
+          "reference": "Patient/B44"
+        },
+        "encounter": {
+          "reference": "Encounter/b44-enc-1"
+        },
+        "authoredOn": "{{today-120d}}",
+        "requester": {
+          "reference": "Organization/HIP-GJ-AND-101"
+        },
+        "dosageInstruction": [
+          {
+            "text": "75 mg OD at night"
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,435 @@
+{
+  "resourceType": "Bundle",
+  "id": "bundle-B38",
+  "type": "collection",
+  "meta": {
+    "tag": [
+      {
+        "code": "SYNTHETIC",
+        "display": "Synthetic demo data. Not a real patient."
+      }
+    ]
+  },
+  "entry": [
+    {
+      "fullUrl": "urn:uuid:b38-rec-10",
+      "resource": {
+        "resourceType": "Composition",
+        "id": "b38-rec-10",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/DischargeSummaryRecord"
+          ]
+        },
+        "status": "final",
+        "type": {
+          "text": "Discharge summary"
+        },
+        "title": "Discharge summary",
+        "date": "{{today-25d}}",
+        "subject": {
+          "reference": "Patient/B38"
+        },
+        "encounter": {
+          "reference": "Encounter/b38-enc-1"
+        },
+        "author": [
+          {
+            "reference": "Organization/HIP-GJ-AND-101"
+          }
+        ],
+        "custodian": {
+          "reference": "Organization/HIP-GJ-AND-101"
+        },
+        "section": [
+          {
+            "title": "Clinical note",
+            "text": {
+              "status": "generated",
+              "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Adm 5 days, R plantar ulcer with cellulitis. Debridement done. Started insulin. Dressing alt days at PHC. Off-loading footwear adv.</div>"
+            },
+            "entry": [
+              {
+                "reference": "Condition/b38-cond-2"
+              },
+              {
+                "reference": "Condition/b38-cond-3"
+              },
+              {
+                "reference": "Observation/b38-obs-4"
+              },
+              {
+                "reference": "Observation/b38-obs-5"
+              },
+              {
+                "reference": "MedicationRequest/b38-med-6"
+              },
+              {
+                "reference": "MedicationRequest/b38-med-7"
+              },
+              {
+                "reference": "MedicationRequest/b38-med-8"
+              },
+              {
+                "reference": "Appointment/b38-appt-9"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:B38",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "B38",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Patient"
+          ]
+        },
+        "name": [
+          {
+            "text": "Mahesh Gohil"
+          }
+        ],
+        "gender": "male",
+        "birthDate": "{{today-52y}}",
+        "address": [
+          {
+            "text": "Petlad, Anand district, Gujarat",
+            "city": "Petlad",
+            "district": "Anand",
+            "state": "Gujarat",
+            "country": "IN"
+          }
+        ],
+        "identifier": [
+          {
+            "type": {
+              "text": "ABHA number"
+            },
+            "system": "https://healthid.abdm.gov.in",
+            "value": "91-5555-1338-0038"
+          },
+          {
+            "type": {
+              "text": "ABHA address"
+            },
+            "system": "https://healthid.abdm.gov.in",
+            "value": "mahesh.gohil@sbx"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:HIP-GJ-AND-101",
+      "resource": {
+        "resourceType": "Organization",
+        "id": "HIP-GJ-AND-101",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Organization"
+          ]
+        },
+        "name": "General Hospital Anand (demo)",
+        "identifier": [
+          {
+            "system": "https://facility.abdm.gov.in",
+            "value": "HIP-GJ-AND-101"
+          }
+        ],
+        "type": [
+          {
+            "text": "Public district hospital"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b38-enc-1",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "b38-enc-1",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Encounter"
+          ]
+        },
+        "status": "finished",
+        "class": {
+          "code": "IMP"
+        },
+        "subject": {
+          "reference": "Patient/B38"
+        },
+        "serviceProvider": {
+          "reference": "Organization/HIP-GJ-AND-101"
+        },
+        "period": {
+          "start": "{{today-25d}}"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b38-cond-2",
+      "resource": {
+        "resourceType": "Condition",
+        "id": "b38-cond-2",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Condition"
+          ]
+        },
+        "subject": {
+          "reference": "Patient/B38"
+        },
+        "encounter": {
+          "reference": "Encounter/b38-enc-1"
+        },
+        "code": {
+          "text": "Type 2 diabetes mellitus",
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "44054006",
+              "display": "Type 2 diabetes mellitus"
+            }
+          ]
+        },
+        "clinicalStatus": {
+          "text": "active"
+        },
+        "recordedDate": "{{today-25d}}"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b38-cond-3",
+      "resource": {
+        "resourceType": "Condition",
+        "id": "b38-cond-3",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Condition"
+          ]
+        },
+        "subject": {
+          "reference": "Patient/B38"
+        },
+        "encounter": {
+          "reference": "Encounter/b38-enc-1"
+        },
+        "code": {
+          "text": "Diabetic foot ulcer (right foot)"
+        },
+        "clinicalStatus": {
+          "text": "active"
+        },
+        "recordedDate": "{{today-25d}}"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b38-obs-4",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "b38-obs-4",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Observation"
+          ]
+        },
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "4548-4",
+              "display": "HbA1c"
+            }
+          ],
+          "text": "HbA1c"
+        },
+        "subject": {
+          "reference": "Patient/B38"
+        },
+        "encounter": {
+          "reference": "Encounter/b38-enc-1"
+        },
+        "effectiveDateTime": "{{today-25d}}",
+        "performer": [
+          {
+            "reference": "Organization/HIP-GJ-AND-101"
+          }
+        ],
+        "valueQuantity": {
+          "value": 8.9,
+          "unit": "%"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b38-obs-5",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "b38-obs-5",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Observation"
+          ]
+        },
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "1558-6",
+              "display": "Fasting blood glucose"
+            }
+          ],
+          "text": "Fasting blood glucose"
+        },
+        "subject": {
+          "reference": "Patient/B38"
+        },
+        "encounter": {
+          "reference": "Encounter/b38-enc-1"
+        },
+        "effectiveDateTime": "{{today-25d}}",
+        "performer": [
+          {
+            "reference": "Organization/HIP-GJ-AND-101"
+          }
+        ],
+        "valueQuantity": {
+          "value": 198,
+          "unit": "mg/dL"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b38-med-6",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "b38-med-6",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/MedicationRequest"
+          ]
+        },
+        "status": "active",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "text": "Human premixed insulin 30/70"
+        },
+        "subject": {
+          "reference": "Patient/B38"
+        },
+        "encounter": {
+          "reference": "Encounter/b38-enc-1"
+        },
+        "authoredOn": "{{today-25d}}",
+        "requester": {
+          "reference": "Organization/HIP-GJ-AND-101"
+        },
+        "dosageInstruction": [
+          {
+            "text": "16 units BD before meals"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b38-med-7",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "b38-med-7",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/MedicationRequest"
+          ]
+        },
+        "status": "active",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "text": "Metformin"
+        },
+        "subject": {
+          "reference": "Patient/B38"
+        },
+        "encounter": {
+          "reference": "Encounter/b38-enc-1"
+        },
+        "authoredOn": "{{today-25d}}",
+        "requester": {
+          "reference": "Organization/HIP-GJ-AND-101"
+        },
+        "dosageInstruction": [
+          {
+            "text": "500 mg BD"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b38-med-8",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "b38-med-8",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/MedicationRequest"
+          ]
+        },
+        "status": "active",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "text": "Amoxicillin-clavulanate"
+        },
+        "subject": {
+          "reference": "Patient/B38"
+        },
+        "encounter": {
+          "reference": "Encounter/b38-enc-1"
+        },
+        "authoredOn": "{{today-25d}}",
+        "requester": {
+          "reference": "Organization/HIP-GJ-AND-101"
+        },
+        "dosageInstruction": [
+          {
+            "text": "625 mg TDS x 7 days"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b38-appt-9",
+      "resource": {
+        "resourceType": "Appointment",
+        "id": "b38-appt-9",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Appointment"
+          ]
+        },
+        "status": "booked",
+        "description": "Wound dressing review at PHC",
+        "start": "{{today-10d}}",
+        "participant": [
+          {
+            "actor": {
+              "reference": "Patient/B38"
+            },
+            "status": "accepted"
+          },
+          {
+            "actor": {
+              "reference": "Organization/HIP-GJ-AND-101"
+            },
+            "status": "accepted"
+          }
+        ]
+      }
+    }
+  ]
+}

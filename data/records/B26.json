@@ -1,0 +1,702 @@
+{
+  "resourceType": "Bundle",
+  "id": "bundle-B26",
+  "type": "collection",
+  "meta": {
+    "tag": [
+      {
+        "code": "SYNTHETIC",
+        "display": "Synthetic demo data. Not a real patient."
+      }
+    ]
+  },
+  "entry": [
+    {
+      "fullUrl": "urn:uuid:b26-rec-10",
+      "resource": {
+        "resourceType": "Composition",
+        "id": "b26-rec-10",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/OPConsultRecord"
+          ]
+        },
+        "status": "final",
+        "type": {
+          "text": "OP consultation"
+        },
+        "title": "OP consultation",
+        "date": "{{today-200d}}",
+        "subject": {
+          "reference": "Patient/B26"
+        },
+        "encounter": {
+          "reference": "Encounter/b26-enc-1"
+        },
+        "author": [
+          {
+            "reference": "Organization/HIP-GJ-AND-001"
+          }
+        ],
+        "custodian": {
+          "reference": "Organization/HIP-GJ-AND-001"
+        },
+        "section": [
+          {
+            "title": "Clinical note",
+            "text": {
+              "status": "generated",
+              "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">k/c/o T2DM x 9 yrs, HTN x 5 yrs. HbA1c 8.6. Glimepiride added. Diet counselling. Review 3 mo.</div>"
+            },
+            "entry": [
+              {
+                "reference": "Condition/b26-cond-2"
+              },
+              {
+                "reference": "Condition/b26-cond-3"
+              },
+              {
+                "reference": "Observation/b26-obs-4"
+              },
+              {
+                "reference": "Observation/b26-obs-5"
+              },
+              {
+                "reference": "Observation/b26-obs-6"
+              },
+              {
+                "reference": "MedicationRequest/b26-med-7"
+              },
+              {
+                "reference": "MedicationRequest/b26-med-8"
+              },
+              {
+                "reference": "MedicationRequest/b26-med-9"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b26-rec-16",
+      "resource": {
+        "resourceType": "Composition",
+        "id": "b26-rec-16",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/DiagnosticReportRecord"
+          ]
+        },
+        "status": "final",
+        "type": {
+          "text": "Diagnostic report"
+        },
+        "title": "Diagnostic report",
+        "date": "{{today-40d}}",
+        "subject": {
+          "reference": "Patient/B26"
+        },
+        "encounter": {
+          "reference": "Encounter/b26-enc-11"
+        },
+        "author": [
+          {
+            "reference": "Organization/HIP-GJ-AND-042"
+          }
+        ],
+        "custodian": {
+          "reference": "Organization/HIP-GJ-AND-042"
+        },
+        "section": [
+          {
+            "title": "Clinical note",
+            "text": {
+              "status": "generated",
+              "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">NCD clinic: HbA1c 10.1. BP 164/98. Pt says she skips evening dose. Refer MO.</div>"
+            },
+            "entry": [
+              {
+                "reference": "Observation/b26-obs-12"
+              },
+              {
+                "reference": "Observation/b26-obs-13"
+              },
+              {
+                "reference": "Observation/b26-obs-14"
+              },
+              {
+                "reference": "Appointment/b26-appt-15"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:B26",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "B26",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Patient"
+          ]
+        },
+        "name": [
+          {
+            "text": "Jashodaben Rabari"
+          }
+        ],
+        "gender": "female",
+        "birthDate": "{{today-58y}}",
+        "address": [
+          {
+            "text": "Borsad, Anand district, Gujarat",
+            "city": "Borsad",
+            "district": "Anand",
+            "state": "Gujarat",
+            "country": "IN"
+          }
+        ],
+        "identifier": [
+          {
+            "type": {
+              "text": "ABHA number"
+            },
+            "system": "https://healthid.abdm.gov.in",
+            "value": "91-5555-1126-0026"
+          },
+          {
+            "type": {
+              "text": "ABHA address"
+            },
+            "system": "https://healthid.abdm.gov.in",
+            "value": "jashodaben.rabari@sbx"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:HIP-GJ-AND-001",
+      "resource": {
+        "resourceType": "Organization",
+        "id": "HIP-GJ-AND-001",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Organization"
+          ]
+        },
+        "name": "CHC Petlad (demo)",
+        "identifier": [
+          {
+            "system": "https://facility.abdm.gov.in",
+            "value": "HIP-GJ-AND-001"
+          }
+        ],
+        "type": [
+          {
+            "text": "Public CHC"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:HIP-GJ-AND-042",
+      "resource": {
+        "resourceType": "Organization",
+        "id": "HIP-GJ-AND-042",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Organization"
+          ]
+        },
+        "name": "PHC Navli (demo)",
+        "identifier": [
+          {
+            "system": "https://facility.abdm.gov.in",
+            "value": "HIP-GJ-AND-042"
+          }
+        ],
+        "type": [
+          {
+            "text": "Public PHC"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b26-enc-1",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "b26-enc-1",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Encounter"
+          ]
+        },
+        "status": "finished",
+        "class": {
+          "code": "AMB"
+        },
+        "subject": {
+          "reference": "Patient/B26"
+        },
+        "serviceProvider": {
+          "reference": "Organization/HIP-GJ-AND-001"
+        },
+        "period": {
+          "start": "{{today-200d}}"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b26-cond-2",
+      "resource": {
+        "resourceType": "Condition",
+        "id": "b26-cond-2",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Condition"
+          ]
+        },
+        "subject": {
+          "reference": "Patient/B26"
+        },
+        "encounter": {
+          "reference": "Encounter/b26-enc-1"
+        },
+        "code": {
+          "text": "Type 2 diabetes mellitus",
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "44054006",
+              "display": "Type 2 diabetes mellitus"
+            }
+          ]
+        },
+        "clinicalStatus": {
+          "text": "active"
+        },
+        "recordedDate": "{{today-200d}}"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b26-cond-3",
+      "resource": {
+        "resourceType": "Condition",
+        "id": "b26-cond-3",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Condition"
+          ]
+        },
+        "subject": {
+          "reference": "Patient/B26"
+        },
+        "encounter": {
+          "reference": "Encounter/b26-enc-1"
+        },
+        "code": {
+          "text": "Hypertension",
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "38341003",
+              "display": "Hypertension"
+            }
+          ]
+        },
+        "clinicalStatus": {
+          "text": "active"
+        },
+        "recordedDate": "{{today-200d}}"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b26-obs-4",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "b26-obs-4",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Observation"
+          ]
+        },
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "4548-4",
+              "display": "HbA1c"
+            }
+          ],
+          "text": "HbA1c"
+        },
+        "subject": {
+          "reference": "Patient/B26"
+        },
+        "encounter": {
+          "reference": "Encounter/b26-enc-1"
+        },
+        "effectiveDateTime": "{{today-200d}}",
+        "performer": [
+          {
+            "reference": "Organization/HIP-GJ-AND-001"
+          }
+        ],
+        "valueQuantity": {
+          "value": 8.6,
+          "unit": "%"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b26-obs-5",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "b26-obs-5",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Observation"
+          ]
+        },
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "8480-6",
+              "display": "Systolic BP"
+            }
+          ],
+          "text": "Systolic BP"
+        },
+        "subject": {
+          "reference": "Patient/B26"
+        },
+        "encounter": {
+          "reference": "Encounter/b26-enc-1"
+        },
+        "effectiveDateTime": "{{today-200d}}",
+        "performer": [
+          {
+            "reference": "Organization/HIP-GJ-AND-001"
+          }
+        ],
+        "valueQuantity": {
+          "value": 158,
+          "unit": "mmHg"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b26-obs-6",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "b26-obs-6",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Observation"
+          ]
+        },
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "8462-4",
+              "display": "Diastolic BP"
+            }
+          ],
+          "text": "Diastolic BP"
+        },
+        "subject": {
+          "reference": "Patient/B26"
+        },
+        "encounter": {
+          "reference": "Encounter/b26-enc-1"
+        },
+        "effectiveDateTime": "{{today-200d}}",
+        "performer": [
+          {
+            "reference": "Organization/HIP-GJ-AND-001"
+          }
+        ],
+        "valueQuantity": {
+          "value": 94,
+          "unit": "mmHg"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b26-med-7",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "b26-med-7",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/MedicationRequest"
+          ]
+        },
+        "status": "active",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "text": "Metformin"
+        },
+        "subject": {
+          "reference": "Patient/B26"
+        },
+        "encounter": {
+          "reference": "Encounter/b26-enc-1"
+        },
+        "authoredOn": "{{today-200d}}",
+        "requester": {
+          "reference": "Organization/HIP-GJ-AND-001"
+        },
+        "dosageInstruction": [
+          {
+            "text": "1000 mg BD"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b26-med-8",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "b26-med-8",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/MedicationRequest"
+          ]
+        },
+        "status": "active",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "text": "Glimepiride"
+        },
+        "subject": {
+          "reference": "Patient/B26"
+        },
+        "encounter": {
+          "reference": "Encounter/b26-enc-1"
+        },
+        "authoredOn": "{{today-200d}}",
+        "requester": {
+          "reference": "Organization/HIP-GJ-AND-001"
+        },
+        "dosageInstruction": [
+          {
+            "text": "2 mg OD"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b26-med-9",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "b26-med-9",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/MedicationRequest"
+          ]
+        },
+        "status": "active",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "text": "Telmisartan"
+        },
+        "subject": {
+          "reference": "Patient/B26"
+        },
+        "encounter": {
+          "reference": "Encounter/b26-enc-1"
+        },
+        "authoredOn": "{{today-200d}}",
+        "requester": {
+          "reference": "Organization/HIP-GJ-AND-001"
+        },
+        "dosageInstruction": [
+          {
+            "text": "40 mg OD"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b26-enc-11",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "b26-enc-11",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Encounter"
+          ]
+        },
+        "status": "finished",
+        "class": {
+          "code": "AMB"
+        },
+        "subject": {
+          "reference": "Patient/B26"
+        },
+        "serviceProvider": {
+          "reference": "Organization/HIP-GJ-AND-042"
+        },
+        "period": {
+          "start": "{{today-40d}}"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b26-obs-12",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "b26-obs-12",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Observation"
+          ]
+        },
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "4548-4",
+              "display": "HbA1c"
+            }
+          ],
+          "text": "HbA1c"
+        },
+        "subject": {
+          "reference": "Patient/B26"
+        },
+        "encounter": {
+          "reference": "Encounter/b26-enc-11"
+        },
+        "effectiveDateTime": "{{today-40d}}",
+        "performer": [
+          {
+            "reference": "Organization/HIP-GJ-AND-042"
+          }
+        ],
+        "valueQuantity": {
+          "value": 10.1,
+          "unit": "%"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b26-obs-13",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "b26-obs-13",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Observation"
+          ]
+        },
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "8480-6",
+              "display": "Systolic BP"
+            }
+          ],
+          "text": "Systolic BP"
+        },
+        "subject": {
+          "reference": "Patient/B26"
+        },
+        "encounter": {
+          "reference": "Encounter/b26-enc-11"
+        },
+        "effectiveDateTime": "{{today-40d}}",
+        "performer": [
+          {
+            "reference": "Organization/HIP-GJ-AND-042"
+          }
+        ],
+        "valueQuantity": {
+          "value": 164,
+          "unit": "mmHg"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b26-obs-14",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "b26-obs-14",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Observation"
+          ]
+        },
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "8462-4",
+              "display": "Diastolic BP"
+            }
+          ],
+          "text": "Diastolic BP"
+        },
+        "subject": {
+          "reference": "Patient/B26"
+        },
+        "encounter": {
+          "reference": "Encounter/b26-enc-11"
+        },
+        "effectiveDateTime": "{{today-40d}}",
+        "performer": [
+          {
+            "reference": "Organization/HIP-GJ-AND-042"
+          }
+        ],
+        "valueQuantity": {
+          "value": 98,
+          "unit": "mmHg"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b26-appt-15",
+      "resource": {
+        "resourceType": "Appointment",
+        "id": "b26-appt-15",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Appointment"
+          ]
+        },
+        "status": "booked",
+        "description": "Diabetes review with MO",
+        "start": "{{today-25d}}",
+        "participant": [
+          {
+            "actor": {
+              "reference": "Patient/B26"
+            },
+            "status": "accepted"
+          },
+          {
+            "actor": {
+              "reference": "Organization/HIP-GJ-AND-042"
+            },
+            "status": "accepted"
+          }
+        ]
+      }
+    }
+  ]
+}

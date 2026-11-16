@@ -1,0 +1,316 @@
+{
+  "resourceType": "Bundle",
+  "id": "bundle-B48",
+  "type": "collection",
+  "meta": {
+    "tag": [
+      {
+        "code": "SYNTHETIC",
+        "display": "Synthetic demo data. Not a real patient."
+      }
+    ]
+  },
+  "entry": [
+    {
+      "fullUrl": "urn:uuid:b48-rec-7",
+      "resource": {
+        "resourceType": "Composition",
+        "id": "b48-rec-7",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/DischargeSummaryRecord"
+          ]
+        },
+        "status": "final",
+        "type": {
+          "text": "Discharge summary"
+        },
+        "title": "Discharge summary",
+        "date": "{{today-70d}}",
+        "subject": {
+          "reference": "Patient/B48"
+        },
+        "encounter": {
+          "reference": "Encounter/b48-enc-1"
+        },
+        "author": [
+          {
+            "reference": "Organization/HIP-GJ-AND-101"
+          }
+        ],
+        "custodian": {
+          "reference": "Organization/HIP-GJ-AND-101"
+        },
+        "section": [
+          {
+            "title": "Clinical note",
+            "text": {
+              "status": "generated",
+              "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Fall at home on outstretched hand. Closed reduction + cast 6 wks. Osteoporosis suspected. Fall prevention advice. Physio after cast removal.</div>"
+            },
+            "entry": [
+              {
+                "reference": "Condition/b48-cond-2"
+              },
+              {
+                "reference": "Condition/b48-cond-3"
+              },
+              {
+                "reference": "MedicationRequest/b48-med-4"
+              },
+              {
+                "reference": "MedicationRequest/b48-med-5"
+              },
+              {
+                "reference": "Appointment/b48-appt-6"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:B48",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "B48",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Patient"
+          ]
+        },
+        "name": [
+          {
+            "text": "Champaben Raval"
+          }
+        ],
+        "gender": "female",
+        "birthDate": "{{today-78y}}",
+        "address": [
+          {
+            "text": "Umreth, Anand district, Gujarat",
+            "city": "Umreth",
+            "district": "Anand",
+            "state": "Gujarat",
+            "country": "IN"
+          }
+        ],
+        "identifier": [
+          {
+            "type": {
+              "text": "ABHA number"
+            },
+            "system": "https://healthid.abdm.gov.in",
+            "value": "91-5555-2348-0048"
+          },
+          {
+            "type": {
+              "text": "ABHA address"
+            },
+            "system": "https://healthid.abdm.gov.in",
+            "value": "champaben.raval@sbx"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:HIP-GJ-AND-101",
+      "resource": {
+        "resourceType": "Organization",
+        "id": "HIP-GJ-AND-101",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Organization"
+          ]
+        },
+        "name": "General Hospital Anand (demo)",
+        "identifier": [
+          {
+            "system": "https://facility.abdm.gov.in",
+            "value": "HIP-GJ-AND-101"
+          }
+        ],
+        "type": [
+          {
+            "text": "Public district hospital"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b48-enc-1",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "b48-enc-1",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Encounter"
+          ]
+        },
+        "status": "finished",
+        "class": {
+          "code": "IMP"
+        },
+        "subject": {
+          "reference": "Patient/B48"
+        },
+        "serviceProvider": {
+          "reference": "Organization/HIP-GJ-AND-101"
+        },
+        "period": {
+          "start": "{{today-70d}}"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b48-cond-2",
+      "resource": {
+        "resourceType": "Condition",
+        "id": "b48-cond-2",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Condition"
+          ]
+        },
+        "subject": {
+          "reference": "Patient/B48"
+        },
+        "encounter": {
+          "reference": "Encounter/b48-enc-1"
+        },
+        "code": {
+          "text": "Distal radius fracture (left, Colles)"
+        },
+        "clinicalStatus": {
+          "text": "active"
+        },
+        "recordedDate": "{{today-70d}}"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b48-cond-3",
+      "resource": {
+        "resourceType": "Condition",
+        "id": "b48-cond-3",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Condition"
+          ]
+        },
+        "subject": {
+          "reference": "Patient/B48"
+        },
+        "encounter": {
+          "reference": "Encounter/b48-enc-1"
+        },
+        "code": {
+          "text": "Osteoporosis",
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "64859006",
+              "display": "Osteoporosis"
+            }
+          ]
+        },
+        "clinicalStatus": {
+          "text": "active"
+        },
+        "recordedDate": "{{today-70d}}"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b48-med-4",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "b48-med-4",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/MedicationRequest"
+          ]
+        },
+        "status": "active",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "text": "Calcium + vitamin D3"
+        },
+        "subject": {
+          "reference": "Patient/B48"
+        },
+        "encounter": {
+          "reference": "Encounter/b48-enc-1"
+        },
+        "authoredOn": "{{today-70d}}",
+        "requester": {
+          "reference": "Organization/HIP-GJ-AND-101"
+        },
+        "dosageInstruction": [
+          {
+            "text": "500 mg + 250 IU BD"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b48-med-5",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "b48-med-5",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/MedicationRequest"
+          ]
+        },
+        "status": "active",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "text": "Alendronate"
+        },
+        "subject": {
+          "reference": "Patient/B48"
+        },
+        "encounter": {
+          "reference": "Encounter/b48-enc-1"
+        },
+        "authoredOn": "{{today-70d}}",
+        "requester": {
+          "reference": "Organization/HIP-GJ-AND-101"
+        },
+        "dosageInstruction": [
+          {
+            "text": "70 mg Once weekly"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b48-appt-6",
+      "resource": {
+        "resourceType": "Appointment",
+        "id": "b48-appt-6",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Appointment"
+          ]
+        },
+        "status": "booked",
+        "description": "Cast removal and physiotherapy",
+        "start": "{{today-28d}}",
+        "participant": [
+          {
+            "actor": {
+              "reference": "Patient/B48"
+            },
+            "status": "accepted"
+          },
+          {
+            "actor": {
+              "reference": "Organization/HIP-GJ-AND-101"
+            },
+            "status": "accepted"
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,509 @@
+{
+  "resourceType": "Bundle",
+  "id": "bundle-B27",
+  "type": "collection",
+  "meta": {
+    "tag": [
+      {
+        "code": "SYNTHETIC",
+        "display": "Synthetic demo data. Not a real patient."
+      }
+    ]
+  },
+  "entry": [
+    {
+      "fullUrl": "urn:uuid:b27-rec-12",
+      "resource": {
+        "resourceType": "Composition",
+        "id": "b27-rec-12",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/DischargeSummaryRecord"
+          ]
+        },
+        "status": "final",
+        "type": {
+          "text": "Discharge summary"
+        },
+        "title": "Discharge summary",
+        "date": "{{today-150d}}",
+        "subject": {
+          "reference": "Patient/B27"
+        },
+        "encounter": {
+          "reference": "Encounter/b27-enc-1"
+        },
+        "author": [
+          {
+            "reference": "Organization/HIP-GJ-AND-101"
+          }
+        ],
+        "custodian": {
+          "reference": "Organization/HIP-GJ-AND-101"
+        },
+        "section": [
+          {
+            "title": "Clinical note",
+            "text": {
+              "status": "generated",
+              "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Adm with sudden L-sided weakness. CT: R MCA infarct. Out of window for thrombolysis. Disch on aspirin, statin, amlodipine. Physiotherapy at CHC weekly.</div>"
+            },
+            "entry": [
+              {
+                "reference": "Condition/b27-cond-2"
+              },
+              {
+                "reference": "Condition/b27-cond-3"
+              },
+              {
+                "reference": "Observation/b27-obs-4"
+              },
+              {
+                "reference": "Observation/b27-obs-5"
+              },
+              {
+                "reference": "Observation/b27-obs-6"
+              },
+              {
+                "reference": "MedicationRequest/b27-med-7"
+              },
+              {
+                "reference": "MedicationRequest/b27-med-8"
+              },
+              {
+                "reference": "MedicationRequest/b27-med-9"
+              },
+              {
+                "reference": "Appointment/b27-appt-10"
+              },
+              {
+                "reference": "Appointment/b27-appt-11"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:B27",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "B27",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Patient"
+          ]
+        },
+        "name": [
+          {
+            "text": "Rameshbhai Parmar"
+          }
+        ],
+        "gender": "male",
+        "birthDate": "{{today-66y}}",
+        "address": [
+          {
+            "text": "Tarapur, Anand district, Gujarat",
+            "city": "Tarapur",
+            "district": "Anand",
+            "state": "Gujarat",
+            "country": "IN"
+          }
+        ],
+        "identifier": [
+          {
+            "type": {
+              "text": "ABHA number"
+            },
+            "system": "https://healthid.abdm.gov.in",
+            "value": "91-5555-2227-0027"
+          },
+          {
+            "type": {
+              "text": "ABHA address"
+            },
+            "system": "https://healthid.abdm.gov.in",
+            "value": "rameshbhai.parmar@sbx"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:HIP-GJ-AND-101",
+      "resource": {
+        "resourceType": "Organization",
+        "id": "HIP-GJ-AND-101",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Organization"
+          ]
+        },
+        "name": "General Hospital Anand (demo)",
+        "identifier": [
+          {
+            "system": "https://facility.abdm.gov.in",
+            "value": "HIP-GJ-AND-101"
+          }
+        ],
+        "type": [
+          {
+            "text": "Public district hospital"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b27-enc-1",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "b27-enc-1",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Encounter"
+          ]
+        },
+        "status": "finished",
+        "class": {
+          "code": "IMP"
+        },
+        "subject": {
+          "reference": "Patient/B27"
+        },
+        "serviceProvider": {
+          "reference": "Organization/HIP-GJ-AND-101"
+        },
+        "period": {
+          "start": "{{today-150d}}"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b27-cond-2",
+      "resource": {
+        "resourceType": "Condition",
+        "id": "b27-cond-2",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Condition"
+          ]
+        },
+        "subject": {
+          "reference": "Patient/B27"
+        },
+        "encounter": {
+          "reference": "Encounter/b27-enc-1"
+        },
+        "code": {
+          "text": "Ischaemic stroke (left hemiparesis)"
+        },
+        "clinicalStatus": {
+          "text": "active"
+        },
+        "recordedDate": "{{today-150d}}"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b27-cond-3",
+      "resource": {
+        "resourceType": "Condition",
+        "id": "b27-cond-3",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Condition"
+          ]
+        },
+        "subject": {
+          "reference": "Patient/B27"
+        },
+        "encounter": {
+          "reference": "Encounter/b27-enc-1"
+        },
+        "code": {
+          "text": "Hypertension",
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "38341003",
+              "display": "Hypertension"
+            }
+          ]
+        },
+        "clinicalStatus": {
+          "text": "active"
+        },
+        "recordedDate": "{{today-150d}}"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b27-obs-4",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "b27-obs-4",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Observation"
+          ]
+        },
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "8480-6",
+              "display": "Systolic BP"
+            }
+          ],
+          "text": "Systolic BP"
+        },
+        "subject": {
+          "reference": "Patient/B27"
+        },
+        "encounter": {
+          "reference": "Encounter/b27-enc-1"
+        },
+        "effectiveDateTime": "{{today-150d}}",
+        "performer": [
+          {
+            "reference": "Organization/HIP-GJ-AND-101"
+          }
+        ],
+        "valueQuantity": {
+          "value": 170,
+          "unit": "mmHg"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b27-obs-5",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "b27-obs-5",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Observation"
+          ]
+        },
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "8462-4",
+              "display": "Diastolic BP"
+            }
+          ],
+          "text": "Diastolic BP"
+        },
+        "subject": {
+          "reference": "Patient/B27"
+        },
+        "encounter": {
+          "reference": "Encounter/b27-enc-1"
+        },
+        "effectiveDateTime": "{{today-150d}}",
+        "performer": [
+          {
+            "reference": "Organization/HIP-GJ-AND-101"
+          }
+        ],
+        "valueQuantity": {
+          "value": 100,
+          "unit": "mmHg"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b27-obs-6",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "b27-obs-6",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Observation"
+          ]
+        },
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "2093-3",
+              "display": "Total cholesterol"
+            }
+          ],
+          "text": "Total cholesterol"
+        },
+        "subject": {
+          "reference": "Patient/B27"
+        },
+        "encounter": {
+          "reference": "Encounter/b27-enc-1"
+        },
+        "effectiveDateTime": "{{today-150d}}",
+        "performer": [
+          {
+            "reference": "Organization/HIP-GJ-AND-101"
+          }
+        ],
+        "valueQuantity": {
+          "value": 232,
+          "unit": "mg/dL"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b27-med-7",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "b27-med-7",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/MedicationRequest"
+          ]
+        },
+        "status": "active",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "text": "Aspirin"
+        },
+        "subject": {
+          "reference": "Patient/B27"
+        },
+        "encounter": {
+          "reference": "Encounter/b27-enc-1"
+        },
+        "authoredOn": "{{today-150d}}",
+        "requester": {
+          "reference": "Organization/HIP-GJ-AND-101"
+        },
+        "dosageInstruction": [
+          {
+            "text": "75 mg OD"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b27-med-8",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "b27-med-8",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/MedicationRequest"
+          ]
+        },
+        "status": "active",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "text": "Atorvastatin"
+        },
+        "subject": {
+          "reference": "Patient/B27"
+        },
+        "encounter": {
+          "reference": "Encounter/b27-enc-1"
+        },
+        "authoredOn": "{{today-150d}}",
+        "requester": {
+          "reference": "Organization/HIP-GJ-AND-101"
+        },
+        "dosageInstruction": [
+          {
+            "text": "20 mg OD at night"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b27-med-9",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "b27-med-9",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/MedicationRequest"
+          ]
+        },
+        "status": "active",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "text": "Amlodipine"
+        },
+        "subject": {
+          "reference": "Patient/B27"
+        },
+        "encounter": {
+          "reference": "Encounter/b27-enc-1"
+        },
+        "authoredOn": "{{today-150d}}",
+        "requester": {
+          "reference": "Organization/HIP-GJ-AND-101"
+        },
+        "dosageInstruction": [
+          {
+            "text": "5 mg OD"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b27-appt-10",
+      "resource": {
+        "resourceType": "Appointment",
+        "id": "b27-appt-10",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Appointment"
+          ]
+        },
+        "status": "booked",
+        "description": "Physiotherapy review",
+        "start": "{{today-120d}}",
+        "participant": [
+          {
+            "actor": {
+              "reference": "Patient/B27"
+            },
+            "status": "accepted"
+          },
+          {
+            "actor": {
+              "reference": "Organization/HIP-GJ-AND-101"
+            },
+            "status": "accepted"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b27-appt-11",
+      "resource": {
+        "resourceType": "Appointment",
+        "id": "b27-appt-11",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Appointment"
+          ]
+        },
+        "status": "booked",
+        "description": "Stroke follow-up with BP check",
+        "start": "{{today-60d}}",
+        "participant": [
+          {
+            "actor": {
+              "reference": "Patient/B27"
+            },
+            "status": "accepted"
+          },
+          {
+            "actor": {
+              "reference": "Organization/HIP-GJ-AND-101"
+            },
+            "status": "accepted"
+          }
+        ]
+      }
+    }
+  ]
+}

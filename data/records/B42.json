@@ -1,0 +1,551 @@
+{
+  "resourceType": "Bundle",
+  "id": "bundle-B42",
+  "type": "collection",
+  "meta": {
+    "tag": [
+      {
+        "code": "SYNTHETIC",
+        "display": "Synthetic demo data. Not a real patient."
+      }
+    ]
+  },
+  "entry": [
+    {
+      "fullUrl": "urn:uuid:b42-rec-6",
+      "resource": {
+        "resourceType": "Composition",
+        "id": "b42-rec-6",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/OPConsultRecord"
+          ]
+        },
+        "status": "final",
+        "type": {
+          "text": "OP consultation"
+        },
+        "title": "OP consultation",
+        "date": "{{today-70d}}",
+        "subject": {
+          "reference": "Patient/B42"
+        },
+        "encounter": {
+          "reference": "Encounter/b42-enc-1"
+        },
+        "author": [
+          {
+            "reference": "Organization/HIP-GJ-AND-042"
+          }
+        ],
+        "custodian": {
+          "reference": "Organization/HIP-GJ-AND-042"
+        },
+        "section": [
+          {
+            "title": "Clinical note",
+            "text": {
+              "status": "generated",
+              "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">HTN. BP 156/92. Amlodipine 5 OD started. Monthly refill.</div>"
+            },
+            "entry": [
+              {
+                "reference": "Condition/b42-cond-2"
+              },
+              {
+                "reference": "Observation/b42-obs-3"
+              },
+              {
+                "reference": "Observation/b42-obs-4"
+              },
+              {
+                "reference": "MedicationRequest/b42-med-5"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b42-rec-12",
+      "resource": {
+        "resourceType": "Composition",
+        "id": "b42-rec-12",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/OPConsultRecord"
+          ]
+        },
+        "status": "final",
+        "type": {
+          "text": "OP consultation"
+        },
+        "title": "OP consultation",
+        "date": "{{today-30d}}",
+        "subject": {
+          "reference": "Patient/B42"
+        },
+        "encounter": {
+          "reference": "Encounter/b42-enc-7"
+        },
+        "author": [
+          {
+            "reference": "Organization/HIP-GJ-AND-207"
+          }
+        ],
+        "custodian": {
+          "reference": "Organization/HIP-GJ-AND-207"
+        },
+        "section": [
+          {
+            "title": "Clinical note",
+            "text": {
+              "status": "generated",
+              "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Pvt clinic. c/o giddiness. BP 112/68. Started cilnidipine 10. (Pt did not mention PHC medicines.)</div>"
+            },
+            "entry": [
+              {
+                "reference": "Condition/b42-cond-8"
+              },
+              {
+                "reference": "Observation/b42-obs-9"
+              },
+              {
+                "reference": "Observation/b42-obs-10"
+              },
+              {
+                "reference": "MedicationRequest/b42-med-11"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:B42",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "B42",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Patient"
+          ]
+        },
+        "name": [
+          {
+            "text": "Arvind Senma"
+          }
+        ],
+        "gender": "male",
+        "birthDate": "{{today-63y}}",
+        "address": [
+          {
+            "text": "Borsad, Anand district, Gujarat",
+            "city": "Borsad",
+            "district": "Anand",
+            "state": "Gujarat",
+            "country": "IN"
+          }
+        ],
+        "identifier": [
+          {
+            "type": {
+              "text": "ABHA number"
+            },
+            "system": "https://healthid.abdm.gov.in",
+            "value": "91-5555-1742-0042"
+          },
+          {
+            "type": {
+              "text": "ABHA address"
+            },
+            "system": "https://healthid.abdm.gov.in",
+            "value": "arvind.senma@sbx"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:HIP-GJ-AND-042",
+      "resource": {
+        "resourceType": "Organization",
+        "id": "HIP-GJ-AND-042",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Organization"
+          ]
+        },
+        "name": "PHC Navli (demo)",
+        "identifier": [
+          {
+            "system": "https://facility.abdm.gov.in",
+            "value": "HIP-GJ-AND-042"
+          }
+        ],
+        "type": [
+          {
+            "text": "Public PHC"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:HIP-GJ-AND-207",
+      "resource": {
+        "resourceType": "Organization",
+        "id": "HIP-GJ-AND-207",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Organization"
+          ]
+        },
+        "name": "Shiv Care Hospital, Anand (fictional)",
+        "identifier": [
+          {
+            "system": "https://facility.abdm.gov.in",
+            "value": "HIP-GJ-AND-207"
+          }
+        ],
+        "type": [
+          {
+            "text": "Private hospital"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b42-enc-1",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "b42-enc-1",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Encounter"
+          ]
+        },
+        "status": "finished",
+        "class": {
+          "code": "AMB"
+        },
+        "subject": {
+          "reference": "Patient/B42"
+        },
+        "serviceProvider": {
+          "reference": "Organization/HIP-GJ-AND-042"
+        },
+        "period": {
+          "start": "{{today-70d}}"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b42-cond-2",
+      "resource": {
+        "resourceType": "Condition",
+        "id": "b42-cond-2",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Condition"
+          ]
+        },
+        "subject": {
+          "reference": "Patient/B42"
+        },
+        "encounter": {
+          "reference": "Encounter/b42-enc-1"
+        },
+        "code": {
+          "text": "Hypertension",
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "38341003",
+              "display": "Hypertension"
+            }
+          ]
+        },
+        "clinicalStatus": {
+          "text": "active"
+        },
+        "recordedDate": "{{today-70d}}"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b42-obs-3",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "b42-obs-3",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Observation"
+          ]
+        },
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "8480-6",
+              "display": "Systolic BP"
+            }
+          ],
+          "text": "Systolic BP"
+        },
+        "subject": {
+          "reference": "Patient/B42"
+        },
+        "encounter": {
+          "reference": "Encounter/b42-enc-1"
+        },
+        "effectiveDateTime": "{{today-70d}}",
+        "performer": [
+          {
+            "reference": "Organization/HIP-GJ-AND-042"
+          }
+        ],
+        "valueQuantity": {
+          "value": 156,
+          "unit": "mmHg"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b42-obs-4",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "b42-obs-4",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Observation"
+          ]
+        },
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "8462-4",
+              "display": "Diastolic BP"
+            }
+          ],
+          "text": "Diastolic BP"
+        },
+        "subject": {
+          "reference": "Patient/B42"
+        },
+        "encounter": {
+          "reference": "Encounter/b42-enc-1"
+        },
+        "effectiveDateTime": "{{today-70d}}",
+        "performer": [
+          {
+            "reference": "Organization/HIP-GJ-AND-042"
+          }
+        ],
+        "valueQuantity": {
+          "value": 92,
+          "unit": "mmHg"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b42-med-5",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "b42-med-5",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/MedicationRequest"
+          ]
+        },
+        "status": "active",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "text": "Amlodipine"
+        },
+        "subject": {
+          "reference": "Patient/B42"
+        },
+        "encounter": {
+          "reference": "Encounter/b42-enc-1"
+        },
+        "authoredOn": "{{today-70d}}",
+        "requester": {
+          "reference": "Organization/HIP-GJ-AND-042"
+        },
+        "dosageInstruction": [
+          {
+            "text": "5 mg OD"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b42-enc-7",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "b42-enc-7",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Encounter"
+          ]
+        },
+        "status": "finished",
+        "class": {
+          "code": "AMB"
+        },
+        "subject": {
+          "reference": "Patient/B42"
+        },
+        "serviceProvider": {
+          "reference": "Organization/HIP-GJ-AND-207"
+        },
+        "period": {
+          "start": "{{today-30d}}"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b42-cond-8",
+      "resource": {
+        "resourceType": "Condition",
+        "id": "b42-cond-8",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Condition"
+          ]
+        },
+        "subject": {
+          "reference": "Patient/B42"
+        },
+        "encounter": {
+          "reference": "Encounter/b42-enc-7"
+        },
+        "code": {
+          "text": "Hypertension",
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "38341003",
+              "display": "Hypertension"
+            }
+          ]
+        },
+        "clinicalStatus": {
+          "text": "active"
+        },
+        "recordedDate": "{{today-30d}}"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b42-obs-9",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "b42-obs-9",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Observation"
+          ]
+        },
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "8480-6",
+              "display": "Systolic BP"
+            }
+          ],
+          "text": "Systolic BP"
+        },
+        "subject": {
+          "reference": "Patient/B42"
+        },
+        "encounter": {
+          "reference": "Encounter/b42-enc-7"
+        },
+        "effectiveDateTime": "{{today-30d}}",
+        "performer": [
+          {
+            "reference": "Organization/HIP-GJ-AND-207"
+          }
+        ],
+        "valueQuantity": {
+          "value": 112,
+          "unit": "mmHg"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b42-obs-10",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "b42-obs-10",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Observation"
+          ]
+        },
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "8462-4",
+              "display": "Diastolic BP"
+            }
+          ],
+          "text": "Diastolic BP"
+        },
+        "subject": {
+          "reference": "Patient/B42"
+        },
+        "encounter": {
+          "reference": "Encounter/b42-enc-7"
+        },
+        "effectiveDateTime": "{{today-30d}}",
+        "performer": [
+          {
+            "reference": "Organization/HIP-GJ-AND-207"
+          }
+        ],
+        "valueQuantity": {
+          "value": 68,
+          "unit": "mmHg"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b42-med-11",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "b42-med-11",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/MedicationRequest"
+          ]
+        },
+        "status": "active",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "text": "Cilnidipine"
+        },
+        "subject": {
+          "reference": "Patient/B42"
+        },
+        "encounter": {
+          "reference": "Encounter/b42-enc-7"
+        },
+        "authoredOn": "{{today-30d}}",
+        "requester": {
+          "reference": "Organization/HIP-GJ-AND-207"
+        },
+        "dosageInstruction": [
+          {
+            "text": "10 mg OD"
+          }
+        ]
+      }
+    }
+  ]
+}

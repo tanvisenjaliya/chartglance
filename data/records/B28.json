@@ -1,0 +1,440 @@
+{
+  "resourceType": "Bundle",
+  "id": "bundle-B28",
+  "type": "collection",
+  "meta": {
+    "tag": [
+      {
+        "code": "SYNTHETIC",
+        "display": "Synthetic demo data. Not a real patient."
+      }
+    ]
+  },
+  "entry": [
+    {
+      "fullUrl": "urn:uuid:b28-rec-3",
+      "resource": {
+        "resourceType": "Composition",
+        "id": "b28-rec-3",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/OPConsultRecord"
+          ]
+        },
+        "status": "final",
+        "type": {
+          "text": "OP consultation"
+        },
+        "title": "OP consultation",
+        "date": "{{today-400d}}",
+        "subject": {
+          "reference": "Patient/B28"
+        },
+        "encounter": {
+          "reference": "Encounter/b28-enc-1"
+        },
+        "author": [
+          {
+            "reference": "Organization/HIP-GJ-AND-101"
+          }
+        ],
+        "custodian": {
+          "reference": "Organization/HIP-GJ-AND-101"
+        },
+        "section": [
+          {
+            "title": "Clinical note",
+            "text": {
+              "status": "generated",
+              "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Echo: mild MR, rheumatic. Secondary prophylaxis: inj benzathine penicillin 12 lakh units deep IM every 21 days, long term. Given at PHC.</div>"
+            },
+            "entry": [
+              {
+                "reference": "Condition/b28-cond-2"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b28-rec-10",
+      "resource": {
+        "resourceType": "Composition",
+        "id": "b28-rec-10",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/PrescriptionRecord"
+          ]
+        },
+        "status": "final",
+        "type": {
+          "text": "Prescription"
+        },
+        "title": "Prescription",
+        "date": "{{today-97d}}",
+        "subject": {
+          "reference": "Patient/B28"
+        },
+        "encounter": {
+          "reference": "Encounter/b28-enc-4"
+        },
+        "author": [
+          {
+            "reference": "Organization/HIP-GJ-AND-042"
+          }
+        ],
+        "custodian": {
+          "reference": "Organization/HIP-GJ-AND-042"
+        },
+        "section": [
+          {
+            "title": "Clinical note",
+            "text": {
+              "status": "generated",
+              "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Secondary prophylaxis injections given. Next due as per card.</div>"
+            },
+            "entry": [
+              {
+                "reference": "MedicationRequest/b28-med-5"
+              },
+              {
+                "reference": "MedicationDispense/b28-disp-6"
+              },
+              {
+                "reference": "MedicationDispense/b28-disp-7"
+              },
+              {
+                "reference": "MedicationDispense/b28-disp-8"
+              },
+              {
+                "reference": "Appointment/b28-appt-9"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:B28",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "B28",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Patient"
+          ]
+        },
+        "name": [
+          {
+            "text": "Harshil Patel"
+          }
+        ],
+        "gender": "male",
+        "birthDate": "{{today-11y}}",
+        "address": [
+          {
+            "text": "Karamsad, Anand district, Gujarat",
+            "city": "Karamsad",
+            "district": "Anand",
+            "state": "Gujarat",
+            "country": "IN"
+          }
+        ],
+        "identifier": [
+          {
+            "type": {
+              "text": "ABHA number"
+            },
+            "system": "https://healthid.abdm.gov.in",
+            "value": "91-5555-3328-0028"
+          },
+          {
+            "type": {
+              "text": "ABHA address"
+            },
+            "system": "https://healthid.abdm.gov.in",
+            "value": "harshil.patel@sbx"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:HIP-GJ-AND-101",
+      "resource": {
+        "resourceType": "Organization",
+        "id": "HIP-GJ-AND-101",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Organization"
+          ]
+        },
+        "name": "General Hospital Anand (demo)",
+        "identifier": [
+          {
+            "system": "https://facility.abdm.gov.in",
+            "value": "HIP-GJ-AND-101"
+          }
+        ],
+        "type": [
+          {
+            "text": "Public district hospital"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:HIP-GJ-AND-042",
+      "resource": {
+        "resourceType": "Organization",
+        "id": "HIP-GJ-AND-042",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Organization"
+          ]
+        },
+        "name": "PHC Navli (demo)",
+        "identifier": [
+          {
+            "system": "https://facility.abdm.gov.in",
+            "value": "HIP-GJ-AND-042"
+          }
+        ],
+        "type": [
+          {
+            "text": "Public PHC"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b28-enc-1",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "b28-enc-1",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Encounter"
+          ]
+        },
+        "status": "finished",
+        "class": {
+          "code": "AMB"
+        },
+        "subject": {
+          "reference": "Patient/B28"
+        },
+        "serviceProvider": {
+          "reference": "Organization/HIP-GJ-AND-101"
+        },
+        "period": {
+          "start": "{{today-400d}}"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b28-cond-2",
+      "resource": {
+        "resourceType": "Condition",
+        "id": "b28-cond-2",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Condition"
+          ]
+        },
+        "subject": {
+          "reference": "Patient/B28"
+        },
+        "encounter": {
+          "reference": "Encounter/b28-enc-1"
+        },
+        "code": {
+          "text": "Rheumatic heart disease (mild mitral regurgitation)"
+        },
+        "clinicalStatus": {
+          "text": "active"
+        },
+        "recordedDate": "{{today-400d}}"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b28-enc-4",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "b28-enc-4",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Encounter"
+          ]
+        },
+        "status": "finished",
+        "class": {
+          "code": "AMB"
+        },
+        "subject": {
+          "reference": "Patient/B28"
+        },
+        "serviceProvider": {
+          "reference": "Organization/HIP-GJ-AND-042"
+        },
+        "period": {
+          "start": "{{today-97d}}"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b28-med-5",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "b28-med-5",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/MedicationRequest"
+          ]
+        },
+        "status": "active",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "text": "Benzathine penicillin"
+        },
+        "subject": {
+          "reference": "Patient/B28"
+        },
+        "encounter": {
+          "reference": "Encounter/b28-enc-4"
+        },
+        "authoredOn": "{{today-97d}}",
+        "requester": {
+          "reference": "Organization/HIP-GJ-AND-042"
+        },
+        "dosageInstruction": [
+          {
+            "text": "1.2 MU deep IM Every 21 days"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b28-disp-6",
+      "resource": {
+        "resourceType": "MedicationDispense",
+        "id": "b28-disp-6",
+        "status": "completed",
+        "medicationCodeableConcept": {
+          "text": "Benzathine penicillin"
+        },
+        "subject": {
+          "reference": "Patient/B28"
+        },
+        "authorizingPrescription": [
+          {
+            "reference": "MedicationRequest/b28-med-5"
+          }
+        ],
+        "whenHandedOver": "{{today-97d}}",
+        "performer": [
+          {
+            "actor": {
+              "reference": "Organization/HIP-GJ-AND-042"
+            }
+          }
+        ],
+        "quantity": {
+          "value": 30,
+          "unit": "days supply"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b28-disp-7",
+      "resource": {
+        "resourceType": "MedicationDispense",
+        "id": "b28-disp-7",
+        "status": "completed",
+        "medicationCodeableConcept": {
+          "text": "Benzathine penicillin"
+        },
+        "subject": {
+          "reference": "Patient/B28"
+        },
+        "authorizingPrescription": [
+          {
+            "reference": "MedicationRequest/b28-med-5"
+          }
+        ],
+        "whenHandedOver": "{{today-76d}}",
+        "performer": [
+          {
+            "actor": {
+              "reference": "Organization/HIP-GJ-AND-042"
+            }
+          }
+        ],
+        "quantity": {
+          "value": 30,
+          "unit": "days supply"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b28-disp-8",
+      "resource": {
+        "resourceType": "MedicationDispense",
+        "id": "b28-disp-8",
+        "status": "completed",
+        "medicationCodeableConcept": {
+          "text": "Benzathine penicillin"
+        },
+        "subject": {
+          "reference": "Patient/B28"
+        },
+        "authorizingPrescription": [
+          {
+            "reference": "MedicationRequest/b28-med-5"
+          }
+        ],
+        "whenHandedOver": "{{today-55d}}",
+        "performer": [
+          {
+            "actor": {
+              "reference": "Organization/HIP-GJ-AND-042"
+            }
+          }
+        ],
+        "quantity": {
+          "value": 30,
+          "unit": "days supply"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b28-appt-9",
+      "resource": {
+        "resourceType": "Appointment",
+        "id": "b28-appt-9",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Appointment"
+          ]
+        },
+        "status": "booked",
+        "description": "Benzathine penicillin injection due",
+        "start": "{{today-34d}}",
+        "participant": [
+          {
+            "actor": {
+              "reference": "Patient/B28"
+            },
+            "status": "accepted"
+          },
+          {
+            "actor": {
+              "reference": "Organization/HIP-GJ-AND-042"
+            },
+            "status": "accepted"
+          }
+        ]
+      }
+    }
+  ]
+}

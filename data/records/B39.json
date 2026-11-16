@@ -1,0 +1,316 @@
+{
+  "resourceType": "Bundle",
+  "id": "bundle-B39",
+  "type": "collection",
+  "meta": {
+    "tag": [
+      {
+        "code": "SYNTHETIC",
+        "display": "Synthetic demo data. Not a real patient."
+      }
+    ]
+  },
+  "entry": [
+    {
+      "fullUrl": "urn:uuid:b39-rec-7",
+      "resource": {
+        "resourceType": "Composition",
+        "id": "b39-rec-7",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/DiagnosticReportRecord"
+          ]
+        },
+        "status": "final",
+        "type": {
+          "text": "Diagnostic report"
+        },
+        "title": "Diagnostic report",
+        "date": "{{today-60d}}",
+        "subject": {
+          "reference": "Patient/B39"
+        },
+        "encounter": {
+          "reference": "Encounter/b39-enc-1"
+        },
+        "author": [
+          {
+            "reference": "Organization/HIP-GJ-AND-042"
+          }
+        ],
+        "custodian": {
+          "reference": "Organization/HIP-GJ-AND-042"
+        },
+        "section": [
+          {
+            "title": "Clinical note",
+            "text": {
+              "status": "generated",
+              "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Hb 8.6. Solubility +ve; HPLC: HbAS (trait). Counselled on trait, pre-marital screening. IFA daily, rpt Hb 2 mo.</div>"
+            },
+            "entry": [
+              {
+                "reference": "Condition/b39-cond-2"
+              },
+              {
+                "reference": "Condition/b39-cond-3"
+              },
+              {
+                "reference": "Observation/b39-obs-4"
+              },
+              {
+                "reference": "MedicationRequest/b39-med-5"
+              },
+              {
+                "reference": "Appointment/b39-appt-6"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:B39",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "B39",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Patient"
+          ]
+        },
+        "name": [
+          {
+            "text": "Divya Solanki"
+          }
+        ],
+        "gender": "female",
+        "birthDate": "{{today-19y}}",
+        "address": [
+          {
+            "text": "Bakrol, Anand district, Gujarat",
+            "city": "Bakrol",
+            "district": "Anand",
+            "state": "Gujarat",
+            "country": "IN"
+          }
+        ],
+        "identifier": [
+          {
+            "type": {
+              "text": "ABHA number"
+            },
+            "system": "https://healthid.abdm.gov.in",
+            "value": "91-5555-1439-0039"
+          },
+          {
+            "type": {
+              "text": "ABHA address"
+            },
+            "system": "https://healthid.abdm.gov.in",
+            "value": "divya.solanki@sbx"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:HIP-GJ-AND-042",
+      "resource": {
+        "resourceType": "Organization",
+        "id": "HIP-GJ-AND-042",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Organization"
+          ]
+        },
+        "name": "PHC Navli (demo)",
+        "identifier": [
+          {
+            "system": "https://facility.abdm.gov.in",
+            "value": "HIP-GJ-AND-042"
+          }
+        ],
+        "type": [
+          {
+            "text": "Public PHC"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b39-enc-1",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "b39-enc-1",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Encounter"
+          ]
+        },
+        "status": "finished",
+        "class": {
+          "code": "AMB"
+        },
+        "subject": {
+          "reference": "Patient/B39"
+        },
+        "serviceProvider": {
+          "reference": "Organization/HIP-GJ-AND-042"
+        },
+        "period": {
+          "start": "{{today-60d}}"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b39-cond-2",
+      "resource": {
+        "resourceType": "Condition",
+        "id": "b39-cond-2",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Condition"
+          ]
+        },
+        "subject": {
+          "reference": "Patient/B39"
+        },
+        "encounter": {
+          "reference": "Encounter/b39-enc-1"
+        },
+        "code": {
+          "text": "Iron deficiency anaemia"
+        },
+        "clinicalStatus": {
+          "text": "active"
+        },
+        "recordedDate": "{{today-60d}}"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b39-cond-3",
+      "resource": {
+        "resourceType": "Condition",
+        "id": "b39-cond-3",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Condition"
+          ]
+        },
+        "subject": {
+          "reference": "Patient/B39"
+        },
+        "encounter": {
+          "reference": "Encounter/b39-enc-1"
+        },
+        "code": {
+          "text": "Sickle cell trait (HbAS)"
+        },
+        "clinicalStatus": {
+          "text": "active"
+        },
+        "recordedDate": "{{today-60d}}"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b39-obs-4",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "b39-obs-4",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Observation"
+          ]
+        },
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "718-7",
+              "display": "Haemoglobin"
+            }
+          ],
+          "text": "Haemoglobin"
+        },
+        "subject": {
+          "reference": "Patient/B39"
+        },
+        "encounter": {
+          "reference": "Encounter/b39-enc-1"
+        },
+        "effectiveDateTime": "{{today-60d}}",
+        "performer": [
+          {
+            "reference": "Organization/HIP-GJ-AND-042"
+          }
+        ],
+        "valueQuantity": {
+          "value": 8.6,
+          "unit": "g/dL"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b39-med-5",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "b39-med-5",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/MedicationRequest"
+          ]
+        },
+        "status": "active",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "text": "Iron + folic acid (IFA)"
+        },
+        "subject": {
+          "reference": "Patient/B39"
+        },
+        "encounter": {
+          "reference": "Encounter/b39-enc-1"
+        },
+        "authoredOn": "{{today-60d}}",
+        "requester": {
+          "reference": "Organization/HIP-GJ-AND-042"
+        },
+        "dosageInstruction": [
+          {
+            "text": "1 tab OD"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b39-appt-6",
+      "resource": {
+        "resourceType": "Appointment",
+        "id": "b39-appt-6",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Appointment"
+          ]
+        },
+        "status": "booked",
+        "description": "Repeat haemoglobin",
+        "start": "{{today+0d}}",
+        "participant": [
+          {
+            "actor": {
+              "reference": "Patient/B39"
+            },
+            "status": "accepted"
+          },
+          {
+            "actor": {
+              "reference": "Organization/HIP-GJ-AND-042"
+            },
+            "status": "accepted"
+          }
+        ]
+      }
+    }
+  ]
+}

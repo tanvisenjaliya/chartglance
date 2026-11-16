@@ -1,0 +1,1143 @@
+{
+  "resourceType": "Bundle",
+  "id": "bundle-B45",
+  "type": "collection",
+  "meta": {
+    "tag": [
+      {
+        "code": "SYNTHETIC",
+        "display": "Synthetic demo data. Not a real patient."
+      }
+    ]
+  },
+  "entry": [
+    {
+      "fullUrl": "urn:uuid:b45-rec-13",
+      "resource": {
+        "resourceType": "Composition",
+        "id": "b45-rec-13",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/OPConsultRecord"
+          ]
+        },
+        "status": "final",
+        "type": {
+          "text": "OP consultation"
+        },
+        "title": "OP consultation",
+        "date": "{{today-180d}}",
+        "subject": {
+          "reference": "Patient/B45"
+        },
+        "encounter": {
+          "reference": "Encounter/b45-enc-1"
+        },
+        "author": [
+          {
+            "reference": "Organization/HIP-GJ-AND-001"
+          }
+        ],
+        "custodian": {
+          "reference": "Organization/HIP-GJ-AND-001"
+        },
+        "section": [
+          {
+            "title": "Clinical note",
+            "text": {
+              "status": "generated",
+              "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Multimorbid, well controlled. Good adherence. Eye exam done (no retinopathy). Review 3 mo.</div>"
+            },
+            "entry": [
+              {
+                "reference": "Condition/b45-cond-2"
+              },
+              {
+                "reference": "Condition/b45-cond-3"
+              },
+              {
+                "reference": "Condition/b45-cond-4"
+              },
+              {
+                "reference": "Observation/b45-obs-5"
+              },
+              {
+                "reference": "Observation/b45-obs-6"
+              },
+              {
+                "reference": "Observation/b45-obs-7"
+              },
+              {
+                "reference": "Observation/b45-obs-8"
+              },
+              {
+                "reference": "MedicationRequest/b45-med-9"
+              },
+              {
+                "reference": "MedicationRequest/b45-med-10"
+              },
+              {
+                "reference": "MedicationRequest/b45-med-11"
+              },
+              {
+                "reference": "MedicationRequest/b45-med-12"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b45-rec-28",
+      "resource": {
+        "resourceType": "Composition",
+        "id": "b45-rec-28",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/OPConsultRecord"
+          ]
+        },
+        "status": "final",
+        "type": {
+          "text": "OP consultation"
+        },
+        "title": "OP consultation",
+        "date": "{{today-90d}}",
+        "subject": {
+          "reference": "Patient/B45"
+        },
+        "encounter": {
+          "reference": "Encounter/b45-enc-14"
+        },
+        "author": [
+          {
+            "reference": "Organization/HIP-GJ-AND-042"
+          }
+        ],
+        "custodian": {
+          "reference": "Organization/HIP-GJ-AND-042"
+        },
+        "section": [
+          {
+            "title": "Clinical note",
+            "text": {
+              "status": "generated",
+              "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">All parameters at target. Cont same. Review 3 mo.</div>"
+            },
+            "entry": [
+              {
+                "reference": "Condition/b45-cond-15"
+              },
+              {
+                "reference": "Condition/b45-cond-16"
+              },
+              {
+                "reference": "Condition/b45-cond-17"
+              },
+              {
+                "reference": "Observation/b45-obs-18"
+              },
+              {
+                "reference": "Observation/b45-obs-19"
+              },
+              {
+                "reference": "Observation/b45-obs-20"
+              },
+              {
+                "reference": "Observation/b45-obs-21"
+              },
+              {
+                "reference": "Observation/b45-obs-22"
+              },
+              {
+                "reference": "MedicationRequest/b45-med-23"
+              },
+              {
+                "reference": "MedicationRequest/b45-med-24"
+              },
+              {
+                "reference": "MedicationRequest/b45-med-25"
+              },
+              {
+                "reference": "MedicationRequest/b45-med-26"
+              },
+              {
+                "reference": "Appointment/b45-appt-27"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:B45",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "B45",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Patient"
+          ]
+        },
+        "name": [
+          {
+            "text": "Kokilaben Patel"
+          }
+        ],
+        "gender": "female",
+        "birthDate": "{{today-69y}}",
+        "address": [
+          {
+            "text": "Anand, Anand district, Gujarat",
+            "city": "Anand",
+            "district": "Anand",
+            "state": "Gujarat",
+            "country": "IN"
+          }
+        ],
+        "identifier": [
+          {
+            "type": {
+              "text": "ABHA number"
+            },
+            "system": "https://healthid.abdm.gov.in",
+            "value": "91-5555-2045-0045"
+          },
+          {
+            "type": {
+              "text": "ABHA address"
+            },
+            "system": "https://healthid.abdm.gov.in",
+            "value": "kokilaben.patel@sbx"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:HIP-GJ-AND-001",
+      "resource": {
+        "resourceType": "Organization",
+        "id": "HIP-GJ-AND-001",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Organization"
+          ]
+        },
+        "name": "CHC Petlad (demo)",
+        "identifier": [
+          {
+            "system": "https://facility.abdm.gov.in",
+            "value": "HIP-GJ-AND-001"
+          }
+        ],
+        "type": [
+          {
+            "text": "Public CHC"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:HIP-GJ-AND-042",
+      "resource": {
+        "resourceType": "Organization",
+        "id": "HIP-GJ-AND-042",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Organization"
+          ]
+        },
+        "name": "PHC Navli (demo)",
+        "identifier": [
+          {
+            "system": "https://facility.abdm.gov.in",
+            "value": "HIP-GJ-AND-042"
+          }
+        ],
+        "type": [
+          {
+            "text": "Public PHC"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b45-enc-1",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "b45-enc-1",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Encounter"
+          ]
+        },
+        "status": "finished",
+        "class": {
+          "code": "AMB"
+        },
+        "subject": {
+          "reference": "Patient/B45"
+        },
+        "serviceProvider": {
+          "reference": "Organization/HIP-GJ-AND-001"
+        },
+        "period": {
+          "start": "{{today-180d}}"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b45-cond-2",
+      "resource": {
+        "resourceType": "Condition",
+        "id": "b45-cond-2",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Condition"
+          ]
+        },
+        "subject": {
+          "reference": "Patient/B45"
+        },
+        "encounter": {
+          "reference": "Encounter/b45-enc-1"
+        },
+        "code": {
+          "text": "Type 2 diabetes mellitus",
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "44054006",
+              "display": "Type 2 diabetes mellitus"
+            }
+          ]
+        },
+        "clinicalStatus": {
+          "text": "active"
+        },
+        "recordedDate": "{{today-180d}}"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b45-cond-3",
+      "resource": {
+        "resourceType": "Condition",
+        "id": "b45-cond-3",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Condition"
+          ]
+        },
+        "subject": {
+          "reference": "Patient/B45"
+        },
+        "encounter": {
+          "reference": "Encounter/b45-enc-1"
+        },
+        "code": {
+          "text": "Hypertension",
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "38341003",
+              "display": "Hypertension"
+            }
+          ]
+        },
+        "clinicalStatus": {
+          "text": "active"
+        },
+        "recordedDate": "{{today-180d}}"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b45-cond-4",
+      "resource": {
+        "resourceType": "Condition",
+        "id": "b45-cond-4",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Condition"
+          ]
+        },
+        "subject": {
+          "reference": "Patient/B45"
+        },
+        "encounter": {
+          "reference": "Encounter/b45-enc-1"
+        },
+        "code": {
+          "text": "Hypothyroidism",
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "40930008",
+              "display": "Hypothyroidism"
+            }
+          ]
+        },
+        "clinicalStatus": {
+          "text": "active"
+        },
+        "recordedDate": "{{today-180d}}"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b45-obs-5",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "b45-obs-5",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Observation"
+          ]
+        },
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "4548-4",
+              "display": "HbA1c"
+            }
+          ],
+          "text": "HbA1c"
+        },
+        "subject": {
+          "reference": "Patient/B45"
+        },
+        "encounter": {
+          "reference": "Encounter/b45-enc-1"
+        },
+        "effectiveDateTime": "{{today-180d}}",
+        "performer": [
+          {
+            "reference": "Organization/HIP-GJ-AND-001"
+          }
+        ],
+        "valueQuantity": {
+          "value": 7.4,
+          "unit": "%"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b45-obs-6",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "b45-obs-6",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Observation"
+          ]
+        },
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "8480-6",
+              "display": "Systolic BP"
+            }
+          ],
+          "text": "Systolic BP"
+        },
+        "subject": {
+          "reference": "Patient/B45"
+        },
+        "encounter": {
+          "reference": "Encounter/b45-enc-1"
+        },
+        "effectiveDateTime": "{{today-180d}}",
+        "performer": [
+          {
+            "reference": "Organization/HIP-GJ-AND-001"
+          }
+        ],
+        "valueQuantity": {
+          "value": 136,
+          "unit": "mmHg"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b45-obs-7",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "b45-obs-7",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Observation"
+          ]
+        },
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "8462-4",
+              "display": "Diastolic BP"
+            }
+          ],
+          "text": "Diastolic BP"
+        },
+        "subject": {
+          "reference": "Patient/B45"
+        },
+        "encounter": {
+          "reference": "Encounter/b45-enc-1"
+        },
+        "effectiveDateTime": "{{today-180d}}",
+        "performer": [
+          {
+            "reference": "Organization/HIP-GJ-AND-001"
+          }
+        ],
+        "valueQuantity": {
+          "value": 82,
+          "unit": "mmHg"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b45-obs-8",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "b45-obs-8",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Observation"
+          ]
+        },
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "2160-0",
+              "display": "Serum creatinine"
+            }
+          ],
+          "text": "Serum creatinine"
+        },
+        "subject": {
+          "reference": "Patient/B45"
+        },
+        "encounter": {
+          "reference": "Encounter/b45-enc-1"
+        },
+        "effectiveDateTime": "{{today-180d}}",
+        "performer": [
+          {
+            "reference": "Organization/HIP-GJ-AND-001"
+          }
+        ],
+        "valueQuantity": {
+          "value": 1.0,
+          "unit": "mg/dL"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b45-med-9",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "b45-med-9",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/MedicationRequest"
+          ]
+        },
+        "status": "active",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "text": "Metformin"
+        },
+        "subject": {
+          "reference": "Patient/B45"
+        },
+        "encounter": {
+          "reference": "Encounter/b45-enc-1"
+        },
+        "authoredOn": "{{today-180d}}",
+        "requester": {
+          "reference": "Organization/HIP-GJ-AND-001"
+        },
+        "dosageInstruction": [
+          {
+            "text": "500 mg BD"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b45-med-10",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "b45-med-10",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/MedicationRequest"
+          ]
+        },
+        "status": "active",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "text": "Telmisartan"
+        },
+        "subject": {
+          "reference": "Patient/B45"
+        },
+        "encounter": {
+          "reference": "Encounter/b45-enc-1"
+        },
+        "authoredOn": "{{today-180d}}",
+        "requester": {
+          "reference": "Organization/HIP-GJ-AND-001"
+        },
+        "dosageInstruction": [
+          {
+            "text": "40 mg OD"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b45-med-11",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "b45-med-11",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/MedicationRequest"
+          ]
+        },
+        "status": "active",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "text": "Levothyroxine"
+        },
+        "subject": {
+          "reference": "Patient/B45"
+        },
+        "encounter": {
+          "reference": "Encounter/b45-enc-1"
+        },
+        "authoredOn": "{{today-180d}}",
+        "requester": {
+          "reference": "Organization/HIP-GJ-AND-001"
+        },
+        "dosageInstruction": [
+          {
+            "text": "50 mcg OD (empty stomach)"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b45-med-12",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "b45-med-12",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/MedicationRequest"
+          ]
+        },
+        "status": "active",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "text": "Atorvastatin"
+        },
+        "subject": {
+          "reference": "Patient/B45"
+        },
+        "encounter": {
+          "reference": "Encounter/b45-enc-1"
+        },
+        "authoredOn": "{{today-180d}}",
+        "requester": {
+          "reference": "Organization/HIP-GJ-AND-001"
+        },
+        "dosageInstruction": [
+          {
+            "text": "10 mg OD at night"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b45-enc-14",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "b45-enc-14",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Encounter"
+          ]
+        },
+        "status": "finished",
+        "class": {
+          "code": "AMB"
+        },
+        "subject": {
+          "reference": "Patient/B45"
+        },
+        "serviceProvider": {
+          "reference": "Organization/HIP-GJ-AND-042"
+        },
+        "period": {
+          "start": "{{today-90d}}"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b45-cond-15",
+      "resource": {
+        "resourceType": "Condition",
+        "id": "b45-cond-15",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Condition"
+          ]
+        },
+        "subject": {
+          "reference": "Patient/B45"
+        },
+        "encounter": {
+          "reference": "Encounter/b45-enc-14"
+        },
+        "code": {
+          "text": "Type 2 diabetes mellitus",
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "44054006",
+              "display": "Type 2 diabetes mellitus"
+            }
+          ]
+        },
+        "clinicalStatus": {
+          "text": "active"
+        },
+        "recordedDate": "{{today-90d}}"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b45-cond-16",
+      "resource": {
+        "resourceType": "Condition",
+        "id": "b45-cond-16",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Condition"
+          ]
+        },
+        "subject": {
+          "reference": "Patient/B45"
+        },
+        "encounter": {
+          "reference": "Encounter/b45-enc-14"
+        },
+        "code": {
+          "text": "Hypertension",
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "38341003",
+              "display": "Hypertension"
+            }
+          ]
+        },
+        "clinicalStatus": {
+          "text": "active"
+        },
+        "recordedDate": "{{today-90d}}"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b45-cond-17",
+      "resource": {
+        "resourceType": "Condition",
+        "id": "b45-cond-17",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Condition"
+          ]
+        },
+        "subject": {
+          "reference": "Patient/B45"
+        },
+        "encounter": {
+          "reference": "Encounter/b45-enc-14"
+        },
+        "code": {
+          "text": "Hypothyroidism",
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "40930008",
+              "display": "Hypothyroidism"
+            }
+          ]
+        },
+        "clinicalStatus": {
+          "text": "active"
+        },
+        "recordedDate": "{{today-90d}}"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b45-obs-18",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "b45-obs-18",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Observation"
+          ]
+        },
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "4548-4",
+              "display": "HbA1c"
+            }
+          ],
+          "text": "HbA1c"
+        },
+        "subject": {
+          "reference": "Patient/B45"
+        },
+        "encounter": {
+          "reference": "Encounter/b45-enc-14"
+        },
+        "effectiveDateTime": "{{today-90d}}",
+        "performer": [
+          {
+            "reference": "Organization/HIP-GJ-AND-042"
+          }
+        ],
+        "valueQuantity": {
+          "value": 7.1,
+          "unit": "%"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b45-obs-19",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "b45-obs-19",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Observation"
+          ]
+        },
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "8480-6",
+              "display": "Systolic BP"
+            }
+          ],
+          "text": "Systolic BP"
+        },
+        "subject": {
+          "reference": "Patient/B45"
+        },
+        "encounter": {
+          "reference": "Encounter/b45-enc-14"
+        },
+        "effectiveDateTime": "{{today-90d}}",
+        "performer": [
+          {
+            "reference": "Organization/HIP-GJ-AND-042"
+          }
+        ],
+        "valueQuantity": {
+          "value": 132,
+          "unit": "mmHg"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b45-obs-20",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "b45-obs-20",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Observation"
+          ]
+        },
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "8462-4",
+              "display": "Diastolic BP"
+            }
+          ],
+          "text": "Diastolic BP"
+        },
+        "subject": {
+          "reference": "Patient/B45"
+        },
+        "encounter": {
+          "reference": "Encounter/b45-enc-14"
+        },
+        "effectiveDateTime": "{{today-90d}}",
+        "performer": [
+          {
+            "reference": "Organization/HIP-GJ-AND-042"
+          }
+        ],
+        "valueQuantity": {
+          "value": 80,
+          "unit": "mmHg"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b45-obs-21",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "b45-obs-21",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Observation"
+          ]
+        },
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "2160-0",
+              "display": "Serum creatinine"
+            }
+          ],
+          "text": "Serum creatinine"
+        },
+        "subject": {
+          "reference": "Patient/B45"
+        },
+        "encounter": {
+          "reference": "Encounter/b45-enc-14"
+        },
+        "effectiveDateTime": "{{today-90d}}",
+        "performer": [
+          {
+            "reference": "Organization/HIP-GJ-AND-042"
+          }
+        ],
+        "valueQuantity": {
+          "value": 1.1,
+          "unit": "mg/dL"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b45-obs-22",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "b45-obs-22",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Observation"
+          ]
+        },
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "3016-3",
+              "display": "TSH"
+            }
+          ],
+          "text": "TSH"
+        },
+        "subject": {
+          "reference": "Patient/B45"
+        },
+        "encounter": {
+          "reference": "Encounter/b45-enc-14"
+        },
+        "effectiveDateTime": "{{today-90d}}",
+        "performer": [
+          {
+            "reference": "Organization/HIP-GJ-AND-042"
+          }
+        ],
+        "valueQuantity": {
+          "value": 2.4,
+          "unit": "mIU/L"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b45-med-23",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "b45-med-23",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/MedicationRequest"
+          ]
+        },
+        "status": "active",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "text": "Metformin"
+        },
+        "subject": {
+          "reference": "Patient/B45"
+        },
+        "encounter": {
+          "reference": "Encounter/b45-enc-14"
+        },
+        "authoredOn": "{{today-90d}}",
+        "requester": {
+          "reference": "Organization/HIP-GJ-AND-042"
+        },
+        "dosageInstruction": [
+          {
+            "text": "500 mg BD"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b45-med-24",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "b45-med-24",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/MedicationRequest"
+          ]
+        },
+        "status": "active",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "text": "Telmisartan"
+        },
+        "subject": {
+          "reference": "Patient/B45"
+        },
+        "encounter": {
+          "reference": "Encounter/b45-enc-14"
+        },
+        "authoredOn": "{{today-90d}}",
+        "requester": {
+          "reference": "Organization/HIP-GJ-AND-042"
+        },
+        "dosageInstruction": [
+          {
+            "text": "40 mg OD"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b45-med-25",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "b45-med-25",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/MedicationRequest"
+          ]
+        },
+        "status": "active",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "text": "Levothyroxine"
+        },
+        "subject": {
+          "reference": "Patient/B45"
+        },
+        "encounter": {
+          "reference": "Encounter/b45-enc-14"
+        },
+        "authoredOn": "{{today-90d}}",
+        "requester": {
+          "reference": "Organization/HIP-GJ-AND-042"
+        },
+        "dosageInstruction": [
+          {
+            "text": "50 mcg OD (empty stomach)"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b45-med-26",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "b45-med-26",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/MedicationRequest"
+          ]
+        },
+        "status": "active",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "text": "Atorvastatin"
+        },
+        "subject": {
+          "reference": "Patient/B45"
+        },
+        "encounter": {
+          "reference": "Encounter/b45-enc-14"
+        },
+        "authoredOn": "{{today-90d}}",
+        "requester": {
+          "reference": "Organization/HIP-GJ-AND-042"
+        },
+        "dosageInstruction": [
+          {
+            "text": "10 mg OD at night"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b45-appt-27",
+      "resource": {
+        "resourceType": "Appointment",
+        "id": "b45-appt-27",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Appointment"
+          ]
+        },
+        "status": "booked",
+        "description": "3-monthly NCD review",
+        "start": "{{today+0d}}",
+        "participant": [
+          {
+            "actor": {
+              "reference": "Patient/B45"
+            },
+            "status": "accepted"
+          },
+          {
+            "actor": {
+              "reference": "Organization/HIP-GJ-AND-042"
+            },
+            "status": "accepted"
+          }
+        ]
+      }
+    }
+  ]
+}

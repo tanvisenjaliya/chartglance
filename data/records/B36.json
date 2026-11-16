@@ -1,0 +1,285 @@
+{
+  "resourceType": "Bundle",
+  "id": "bundle-B36",
+  "type": "collection",
+  "meta": {
+    "tag": [
+      {
+        "code": "SYNTHETIC",
+        "display": "Synthetic demo data. Not a real patient."
+      }
+    ]
+  },
+  "entry": [
+    {
+      "fullUrl": "urn:uuid:b36-rec-6",
+      "resource": {
+        "resourceType": "Composition",
+        "id": "b36-rec-6",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/DiagnosticReportRecord"
+          ]
+        },
+        "status": "final",
+        "type": {
+          "text": "Diagnostic report"
+        },
+        "title": "Diagnostic report",
+        "date": "{{today-90d}}",
+        "subject": {
+          "reference": "Patient/B36"
+        },
+        "encounter": {
+          "reference": "Encounter/b36-enc-1"
+        },
+        "author": [
+          {
+            "reference": "Organization/HIP-GJ-AND-101"
+          }
+        ],
+        "custodian": {
+          "reference": "Organization/HIP-GJ-AND-101"
+        },
+        "section": [
+          {
+            "title": "Clinical note",
+            "text": {
+              "status": "generated",
+              "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Daily alcohol ~10 yrs. ALT 142. USG: grade 2 fatty liver. Counselled; referred to de-addiction OPD. Repeat LFT 3 mo.</div>"
+            },
+            "entry": [
+              {
+                "reference": "Condition/b36-cond-2"
+              },
+              {
+                "reference": "Observation/b36-obs-3"
+              },
+              {
+                "reference": "Appointment/b36-appt-4"
+              },
+              {
+                "reference": "Appointment/b36-appt-5"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:B36",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "B36",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Patient"
+          ]
+        },
+        "name": [
+          {
+            "text": "Jignesh Prajapati"
+          }
+        ],
+        "gender": "male",
+        "birthDate": "{{today-33y}}",
+        "address": [
+          {
+            "text": "Boriavi, Anand district, Gujarat",
+            "city": "Boriavi",
+            "district": "Anand",
+            "state": "Gujarat",
+            "country": "IN"
+          }
+        ],
+        "identifier": [
+          {
+            "type": {
+              "text": "ABHA number"
+            },
+            "system": "https://healthid.abdm.gov.in",
+            "value": "91-5555-1136-0036"
+          },
+          {
+            "type": {
+              "text": "ABHA address"
+            },
+            "system": "https://healthid.abdm.gov.in",
+            "value": "jignesh.prajapati@sbx"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:HIP-GJ-AND-101",
+      "resource": {
+        "resourceType": "Organization",
+        "id": "HIP-GJ-AND-101",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Organization"
+          ]
+        },
+        "name": "General Hospital Anand (demo)",
+        "identifier": [
+          {
+            "system": "https://facility.abdm.gov.in",
+            "value": "HIP-GJ-AND-101"
+          }
+        ],
+        "type": [
+          {
+            "text": "Public district hospital"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b36-enc-1",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "b36-enc-1",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Encounter"
+          ]
+        },
+        "status": "finished",
+        "class": {
+          "code": "AMB"
+        },
+        "subject": {
+          "reference": "Patient/B36"
+        },
+        "serviceProvider": {
+          "reference": "Organization/HIP-GJ-AND-101"
+        },
+        "period": {
+          "start": "{{today-90d}}"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b36-cond-2",
+      "resource": {
+        "resourceType": "Condition",
+        "id": "b36-cond-2",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Condition"
+          ]
+        },
+        "subject": {
+          "reference": "Patient/B36"
+        },
+        "encounter": {
+          "reference": "Encounter/b36-enc-1"
+        },
+        "code": {
+          "text": "Alcohol-related fatty liver"
+        },
+        "clinicalStatus": {
+          "text": "active"
+        },
+        "recordedDate": "{{today-90d}}"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b36-obs-3",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "b36-obs-3",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Observation"
+          ]
+        },
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "1742-6",
+              "display": "ALT (SGPT)"
+            }
+          ],
+          "text": "ALT (SGPT)"
+        },
+        "subject": {
+          "reference": "Patient/B36"
+        },
+        "encounter": {
+          "reference": "Encounter/b36-enc-1"
+        },
+        "effectiveDateTime": "{{today-90d}}",
+        "performer": [
+          {
+            "reference": "Organization/HIP-GJ-AND-101"
+          }
+        ],
+        "valueQuantity": {
+          "value": 142,
+          "unit": "U/L"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b36-appt-4",
+      "resource": {
+        "resourceType": "Appointment",
+        "id": "b36-appt-4",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Appointment"
+          ]
+        },
+        "status": "booked",
+        "description": "Repeat liver function test",
+        "start": "{{today+0d}}",
+        "participant": [
+          {
+            "actor": {
+              "reference": "Patient/B36"
+            },
+            "status": "accepted"
+          },
+          {
+            "actor": {
+              "reference": "Organization/HIP-GJ-AND-101"
+            },
+            "status": "accepted"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b36-appt-5",
+      "resource": {
+        "resourceType": "Appointment",
+        "id": "b36-appt-5",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Appointment"
+          ]
+        },
+        "status": "booked",
+        "description": "De-addiction OPD referral",
+        "start": "{{today-80d}}",
+        "participant": [
+          {
+            "actor": {
+              "reference": "Patient/B36"
+            },
+            "status": "accepted"
+          },
+          {
+            "actor": {
+              "reference": "Organization/HIP-GJ-AND-101"
+            },
+            "status": "accepted"
+          }
+        ]
+      }
+    }
+  ]
+}

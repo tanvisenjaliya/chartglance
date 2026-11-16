@@ -1,0 +1,337 @@
+{
+  "resourceType": "Bundle",
+  "id": "bundle-B31",
+  "type": "collection",
+  "meta": {
+    "tag": [
+      {
+        "code": "SYNTHETIC",
+        "display": "Synthetic demo data. Not a real patient."
+      }
+    ]
+  },
+  "entry": [
+    {
+      "fullUrl": "urn:uuid:b31-rec-7",
+      "resource": {
+        "resourceType": "Composition",
+        "id": "b31-rec-7",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/OPConsultRecord"
+          ]
+        },
+        "status": "final",
+        "type": {
+          "text": "OP consultation"
+        },
+        "title": "OP consultation",
+        "date": "{{today-220d}}",
+        "subject": {
+          "reference": "Patient/B31"
+        },
+        "encounter": {
+          "reference": "Encounter/b31-enc-1"
+        },
+        "author": [
+          {
+            "reference": "Organization/HIP-GJ-AND-207"
+          }
+        ],
+        "custodian": {
+          "reference": "Organization/HIP-GJ-AND-207"
+        },
+        "section": [
+          {
+            "title": "Clinical note",
+            "text": {
+              "status": "generated",
+              "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Oligomenorrhoea, acne. USG: polycystic ovaries. PCOS. Metformin, lifestyle. Review 3 mo.</div>"
+            },
+            "entry": [
+              {
+                "reference": "Condition/b31-cond-2"
+              },
+              {
+                "reference": "Observation/b31-obs-3"
+              },
+              {
+                "reference": "Observation/b31-obs-4"
+              },
+              {
+                "reference": "MedicationRequest/b31-med-5"
+              },
+              {
+                "reference": "Appointment/b31-appt-6"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:B31",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "B31",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Patient"
+          ]
+        },
+        "name": [
+          {
+            "text": "Sonal Christian"
+          }
+        ],
+        "gender": "female",
+        "birthDate": "{{today-38y}}",
+        "address": [
+          {
+            "text": "Anand, Anand district, Gujarat",
+            "city": "Anand",
+            "district": "Anand",
+            "state": "Gujarat",
+            "country": "IN"
+          }
+        ],
+        "identifier": [
+          {
+            "type": {
+              "text": "ABHA number"
+            },
+            "system": "https://healthid.abdm.gov.in",
+            "value": "91-5555-6631-0031"
+          },
+          {
+            "type": {
+              "text": "ABHA address"
+            },
+            "system": "https://healthid.abdm.gov.in",
+            "value": "sonal.christian@sbx"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:HIP-GJ-AND-207",
+      "resource": {
+        "resourceType": "Organization",
+        "id": "HIP-GJ-AND-207",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Organization"
+          ]
+        },
+        "name": "Shiv Care Hospital, Anand (fictional)",
+        "identifier": [
+          {
+            "system": "https://facility.abdm.gov.in",
+            "value": "HIP-GJ-AND-207"
+          }
+        ],
+        "type": [
+          {
+            "text": "Private hospital"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b31-enc-1",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "b31-enc-1",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Encounter"
+          ]
+        },
+        "status": "finished",
+        "class": {
+          "code": "AMB"
+        },
+        "subject": {
+          "reference": "Patient/B31"
+        },
+        "serviceProvider": {
+          "reference": "Organization/HIP-GJ-AND-207"
+        },
+        "period": {
+          "start": "{{today-220d}}"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b31-cond-2",
+      "resource": {
+        "resourceType": "Condition",
+        "id": "b31-cond-2",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Condition"
+          ]
+        },
+        "subject": {
+          "reference": "Patient/B31"
+        },
+        "encounter": {
+          "reference": "Encounter/b31-enc-1"
+        },
+        "code": {
+          "text": "Polycystic ovary syndrome",
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "69878008",
+              "display": "Polycystic ovary syndrome"
+            }
+          ]
+        },
+        "clinicalStatus": {
+          "text": "active"
+        },
+        "recordedDate": "{{today-220d}}"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b31-obs-3",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "b31-obs-3",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Observation"
+          ]
+        },
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "29463-7",
+              "display": "Body weight"
+            }
+          ],
+          "text": "Body weight"
+        },
+        "subject": {
+          "reference": "Patient/B31"
+        },
+        "encounter": {
+          "reference": "Encounter/b31-enc-1"
+        },
+        "effectiveDateTime": "{{today-220d}}",
+        "performer": [
+          {
+            "reference": "Organization/HIP-GJ-AND-207"
+          }
+        ],
+        "valueQuantity": {
+          "value": 74,
+          "unit": "kg"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b31-obs-4",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "b31-obs-4",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Observation"
+          ]
+        },
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "1558-6",
+              "display": "Fasting blood glucose"
+            }
+          ],
+          "text": "Fasting blood glucose"
+        },
+        "subject": {
+          "reference": "Patient/B31"
+        },
+        "encounter": {
+          "reference": "Encounter/b31-enc-1"
+        },
+        "effectiveDateTime": "{{today-220d}}",
+        "performer": [
+          {
+            "reference": "Organization/HIP-GJ-AND-207"
+          }
+        ],
+        "valueQuantity": {
+          "value": 96,
+          "unit": "mg/dL"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b31-med-5",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "b31-med-5",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/MedicationRequest"
+          ]
+        },
+        "status": "active",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "text": "Metformin"
+        },
+        "subject": {
+          "reference": "Patient/B31"
+        },
+        "encounter": {
+          "reference": "Encounter/b31-enc-1"
+        },
+        "authoredOn": "{{today-220d}}",
+        "requester": {
+          "reference": "Organization/HIP-GJ-AND-207"
+        },
+        "dosageInstruction": [
+          {
+            "text": "500 mg BD"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b31-appt-6",
+      "resource": {
+        "resourceType": "Appointment",
+        "id": "b31-appt-6",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Appointment"
+          ]
+        },
+        "status": "booked",
+        "description": "PCOS review",
+        "start": "{{today-130d}}",
+        "participant": [
+          {
+            "actor": {
+              "reference": "Patient/B31"
+            },
+            "status": "accepted"
+          },
+          {
+            "actor": {
+              "reference": "Organization/HIP-GJ-AND-207"
+            },
+            "status": "accepted"
+          }
+        ]
+      }
+    }
+  ]
+}

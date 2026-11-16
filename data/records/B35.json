@@ -1,0 +1,548 @@
+{
+  "resourceType": "Bundle",
+  "id": "bundle-B35",
+  "type": "collection",
+  "meta": {
+    "tag": [
+      {
+        "code": "SYNTHETIC",
+        "display": "Synthetic demo data. Not a real patient."
+      }
+    ]
+  },
+  "entry": [
+    {
+      "fullUrl": "urn:uuid:b35-rec-5",
+      "resource": {
+        "resourceType": "Composition",
+        "id": "b35-rec-5",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/DiagnosticReportRecord"
+          ]
+        },
+        "status": "final",
+        "type": {
+          "text": "Diagnostic report"
+        },
+        "title": "Diagnostic report",
+        "date": "{{today-300d}}",
+        "subject": {
+          "reference": "Patient/B35"
+        },
+        "encounter": {
+          "reference": "Encounter/b35-enc-1"
+        },
+        "author": [
+          {
+            "reference": "Organization/HIP-GJ-AND-001"
+          }
+        ],
+        "custodian": {
+          "reference": "Organization/HIP-GJ-AND-001"
+        },
+        "section": [
+          {
+            "title": "Clinical note",
+            "text": {
+              "status": "generated",
+              "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">TSH 9.4. Started thyroxine 50 mcg.</div>"
+            },
+            "entry": [
+              {
+                "reference": "Condition/b35-cond-2"
+              },
+              {
+                "reference": "Observation/b35-obs-3"
+              },
+              {
+                "reference": "MedicationRequest/b35-med-4"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b35-rec-13",
+      "resource": {
+        "resourceType": "Composition",
+        "id": "b35-rec-13",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/DiagnosticReportRecord"
+          ]
+        },
+        "status": "final",
+        "type": {
+          "text": "Diagnostic report"
+        },
+        "title": "Diagnostic report",
+        "date": "{{today-75d}}",
+        "subject": {
+          "reference": "Patient/B35"
+        },
+        "encounter": {
+          "reference": "Encounter/b35-enc-6"
+        },
+        "author": [
+          {
+            "reference": "Organization/HIP-GJ-AND-001"
+          }
+        ],
+        "custodian": {
+          "reference": "Organization/HIP-GJ-AND-001"
+        },
+        "section": [
+          {
+            "title": "Clinical note",
+            "text": {
+              "status": "generated",
+              "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">TSH 3.1 on 75 mcg (dose incr earlier). Hb 10.2, menorrhagia. IFA started. Gynae opinion adv.</div>"
+            },
+            "entry": [
+              {
+                "reference": "Condition/b35-cond-7"
+              },
+              {
+                "reference": "Condition/b35-cond-8"
+              },
+              {
+                "reference": "Observation/b35-obs-9"
+              },
+              {
+                "reference": "Observation/b35-obs-10"
+              },
+              {
+                "reference": "MedicationRequest/b35-med-11"
+              },
+              {
+                "reference": "MedicationRequest/b35-med-12"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:B35",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "B35",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Patient"
+          ]
+        },
+        "name": [
+          {
+            "text": "Sakina Vohra"
+          }
+        ],
+        "gender": "female",
+        "birthDate": "{{today-44y}}",
+        "address": [
+          {
+            "text": "Khambhat, Anand district, Gujarat",
+            "city": "Khambhat",
+            "district": "Anand",
+            "state": "Gujarat",
+            "country": "IN"
+          }
+        ],
+        "identifier": [
+          {
+            "type": {
+              "text": "ABHA number"
+            },
+            "system": "https://healthid.abdm.gov.in",
+            "value": "91-5555-1035-0035"
+          },
+          {
+            "type": {
+              "text": "ABHA address"
+            },
+            "system": "https://healthid.abdm.gov.in",
+            "value": "sakina.vohra@sbx"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:HIP-GJ-AND-001",
+      "resource": {
+        "resourceType": "Organization",
+        "id": "HIP-GJ-AND-001",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Organization"
+          ]
+        },
+        "name": "CHC Petlad (demo)",
+        "identifier": [
+          {
+            "system": "https://facility.abdm.gov.in",
+            "value": "HIP-GJ-AND-001"
+          }
+        ],
+        "type": [
+          {
+            "text": "Public CHC"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b35-enc-1",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "b35-enc-1",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Encounter"
+          ]
+        },
+        "status": "finished",
+        "class": {
+          "code": "AMB"
+        },
+        "subject": {
+          "reference": "Patient/B35"
+        },
+        "serviceProvider": {
+          "reference": "Organization/HIP-GJ-AND-001"
+        },
+        "period": {
+          "start": "{{today-300d}}"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b35-cond-2",
+      "resource": {
+        "resourceType": "Condition",
+        "id": "b35-cond-2",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Condition"
+          ]
+        },
+        "subject": {
+          "reference": "Patient/B35"
+        },
+        "encounter": {
+          "reference": "Encounter/b35-enc-1"
+        },
+        "code": {
+          "text": "Hypothyroidism",
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "40930008",
+              "display": "Hypothyroidism"
+            }
+          ]
+        },
+        "clinicalStatus": {
+          "text": "active"
+        },
+        "recordedDate": "{{today-300d}}"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b35-obs-3",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "b35-obs-3",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Observation"
+          ]
+        },
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "3016-3",
+              "display": "TSH"
+            }
+          ],
+          "text": "TSH"
+        },
+        "subject": {
+          "reference": "Patient/B35"
+        },
+        "encounter": {
+          "reference": "Encounter/b35-enc-1"
+        },
+        "effectiveDateTime": "{{today-300d}}",
+        "performer": [
+          {
+            "reference": "Organization/HIP-GJ-AND-001"
+          }
+        ],
+        "valueQuantity": {
+          "value": 9.4,
+          "unit": "mIU/L"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b35-med-4",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "b35-med-4",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/MedicationRequest"
+          ]
+        },
+        "status": "active",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "text": "Levothyroxine"
+        },
+        "subject": {
+          "reference": "Patient/B35"
+        },
+        "encounter": {
+          "reference": "Encounter/b35-enc-1"
+        },
+        "authoredOn": "{{today-300d}}",
+        "requester": {
+          "reference": "Organization/HIP-GJ-AND-001"
+        },
+        "dosageInstruction": [
+          {
+            "text": "50 mcg OD (empty stomach)"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b35-enc-6",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "b35-enc-6",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Encounter"
+          ]
+        },
+        "status": "finished",
+        "class": {
+          "code": "AMB"
+        },
+        "subject": {
+          "reference": "Patient/B35"
+        },
+        "serviceProvider": {
+          "reference": "Organization/HIP-GJ-AND-001"
+        },
+        "period": {
+          "start": "{{today-75d}}"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b35-cond-7",
+      "resource": {
+        "resourceType": "Condition",
+        "id": "b35-cond-7",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Condition"
+          ]
+        },
+        "subject": {
+          "reference": "Patient/B35"
+        },
+        "encounter": {
+          "reference": "Encounter/b35-enc-6"
+        },
+        "code": {
+          "text": "Hypothyroidism",
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "40930008",
+              "display": "Hypothyroidism"
+            }
+          ]
+        },
+        "clinicalStatus": {
+          "text": "active"
+        },
+        "recordedDate": "{{today-75d}}"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b35-cond-8",
+      "resource": {
+        "resourceType": "Condition",
+        "id": "b35-cond-8",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Condition"
+          ]
+        },
+        "subject": {
+          "reference": "Patient/B35"
+        },
+        "encounter": {
+          "reference": "Encounter/b35-enc-6"
+        },
+        "code": {
+          "text": "Iron deficiency anaemia"
+        },
+        "clinicalStatus": {
+          "text": "active"
+        },
+        "recordedDate": "{{today-75d}}"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b35-obs-9",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "b35-obs-9",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Observation"
+          ]
+        },
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "3016-3",
+              "display": "TSH"
+            }
+          ],
+          "text": "TSH"
+        },
+        "subject": {
+          "reference": "Patient/B35"
+        },
+        "encounter": {
+          "reference": "Encounter/b35-enc-6"
+        },
+        "effectiveDateTime": "{{today-75d}}",
+        "performer": [
+          {
+            "reference": "Organization/HIP-GJ-AND-001"
+          }
+        ],
+        "valueQuantity": {
+          "value": 3.1,
+          "unit": "mIU/L"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b35-obs-10",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "b35-obs-10",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Observation"
+          ]
+        },
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "718-7",
+              "display": "Haemoglobin"
+            }
+          ],
+          "text": "Haemoglobin"
+        },
+        "subject": {
+          "reference": "Patient/B35"
+        },
+        "encounter": {
+          "reference": "Encounter/b35-enc-6"
+        },
+        "effectiveDateTime": "{{today-75d}}",
+        "performer": [
+          {
+            "reference": "Organization/HIP-GJ-AND-001"
+          }
+        ],
+        "valueQuantity": {
+          "value": 10.2,
+          "unit": "g/dL"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b35-med-11",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "b35-med-11",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/MedicationRequest"
+          ]
+        },
+        "status": "active",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "text": "Levothyroxine"
+        },
+        "subject": {
+          "reference": "Patient/B35"
+        },
+        "encounter": {
+          "reference": "Encounter/b35-enc-6"
+        },
+        "authoredOn": "{{today-75d}}",
+        "requester": {
+          "reference": "Organization/HIP-GJ-AND-001"
+        },
+        "dosageInstruction": [
+          {
+            "text": "75 mcg OD (empty stomach)"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b35-med-12",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "b35-med-12",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/MedicationRequest"
+          ]
+        },
+        "status": "active",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "text": "Iron + folic acid (IFA)"
+        },
+        "subject": {
+          "reference": "Patient/B35"
+        },
+        "encounter": {
+          "reference": "Encounter/b35-enc-6"
+        },
+        "authoredOn": "{{today-75d}}",
+        "requester": {
+          "reference": "Organization/HIP-GJ-AND-001"
+        },
+        "dosageInstruction": [
+          {
+            "text": "1 tab OD"
+          }
+        ]
+      }
+    }
+  ]
+}

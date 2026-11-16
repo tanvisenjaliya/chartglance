@@ -1,0 +1,442 @@
+{
+  "resourceType": "Bundle",
+  "id": "bundle-B43",
+  "type": "collection",
+  "meta": {
+    "tag": [
+      {
+        "code": "SYNTHETIC",
+        "display": "Synthetic demo data. Not a real patient."
+      }
+    ]
+  },
+  "entry": [
+    {
+      "fullUrl": "urn:uuid:b43-rec-10",
+      "resource": {
+        "resourceType": "Composition",
+        "id": "b43-rec-10",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/DischargeSummaryRecord"
+          ]
+        },
+        "status": "final",
+        "type": {
+          "text": "Discharge summary"
+        },
+        "title": "Discharge summary",
+        "date": "{{today-10d}}",
+        "subject": {
+          "reference": "Patient/B43"
+        },
+        "encounter": {
+          "reference": "Encounter/b43-enc-1"
+        },
+        "author": [
+          {
+            "reference": "Organization/HIP-GJ-AND-207"
+          }
+        ],
+        "custodian": {
+          "reference": "Organization/HIP-GJ-AND-207"
+        },
+        "section": [
+          {
+            "title": "Clinical note",
+            "text": {
+              "status": "generated",
+              "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Em LSCS for fetal distress. Live male 3.1 kg. Post-op uneventful. Hb 9.0. Suture removal day 7-10 at PHC.</div>"
+            },
+            "entry": [
+              {
+                "reference": "Condition/b43-cond-2"
+              },
+              {
+                "reference": "Observation/b43-obs-3"
+              },
+              {
+                "reference": "Observation/b43-obs-4"
+              },
+              {
+                "reference": "Observation/b43-obs-5"
+              },
+              {
+                "reference": "MedicationRequest/b43-med-6"
+              },
+              {
+                "reference": "MedicationRequest/b43-med-7"
+              },
+              {
+                "reference": "MedicationRequest/b43-med-8"
+              },
+              {
+                "reference": "Appointment/b43-appt-9"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:B43",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "B43",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Patient"
+          ]
+        },
+        "name": [
+          {
+            "text": "Neha Patel"
+          }
+        ],
+        "gender": "female",
+        "birthDate": "{{today-30y}}",
+        "address": [
+          {
+            "text": "Karamsad, Anand district, Gujarat",
+            "city": "Karamsad",
+            "district": "Anand",
+            "state": "Gujarat",
+            "country": "IN"
+          }
+        ],
+        "identifier": [
+          {
+            "type": {
+              "text": "ABHA number"
+            },
+            "system": "https://healthid.abdm.gov.in",
+            "value": "91-5555-1843-0043"
+          },
+          {
+            "type": {
+              "text": "ABHA address"
+            },
+            "system": "https://healthid.abdm.gov.in",
+            "value": "neha.patel@sbx"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:HIP-GJ-AND-207",
+      "resource": {
+        "resourceType": "Organization",
+        "id": "HIP-GJ-AND-207",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Organization"
+          ]
+        },
+        "name": "Shiv Care Hospital, Anand (fictional)",
+        "identifier": [
+          {
+            "system": "https://facility.abdm.gov.in",
+            "value": "HIP-GJ-AND-207"
+          }
+        ],
+        "type": [
+          {
+            "text": "Private hospital"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b43-enc-1",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "b43-enc-1",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Encounter"
+          ]
+        },
+        "status": "finished",
+        "class": {
+          "code": "IMP"
+        },
+        "subject": {
+          "reference": "Patient/B43"
+        },
+        "serviceProvider": {
+          "reference": "Organization/HIP-GJ-AND-207"
+        },
+        "period": {
+          "start": "{{today-10d}}"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b43-cond-2",
+      "resource": {
+        "resourceType": "Condition",
+        "id": "b43-cond-2",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Condition"
+          ]
+        },
+        "subject": {
+          "reference": "Patient/B43"
+        },
+        "encounter": {
+          "reference": "Encounter/b43-enc-1"
+        },
+        "code": {
+          "text": "Lower segment caesarean section (post-partum)"
+        },
+        "clinicalStatus": {
+          "text": "active"
+        },
+        "recordedDate": "{{today-10d}}"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b43-obs-3",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "b43-obs-3",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Observation"
+          ]
+        },
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "718-7",
+              "display": "Haemoglobin"
+            }
+          ],
+          "text": "Haemoglobin"
+        },
+        "subject": {
+          "reference": "Patient/B43"
+        },
+        "encounter": {
+          "reference": "Encounter/b43-enc-1"
+        },
+        "effectiveDateTime": "{{today-10d}}",
+        "performer": [
+          {
+            "reference": "Organization/HIP-GJ-AND-207"
+          }
+        ],
+        "valueQuantity": {
+          "value": 9.0,
+          "unit": "g/dL"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b43-obs-4",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "b43-obs-4",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Observation"
+          ]
+        },
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "8480-6",
+              "display": "Systolic BP"
+            }
+          ],
+          "text": "Systolic BP"
+        },
+        "subject": {
+          "reference": "Patient/B43"
+        },
+        "encounter": {
+          "reference": "Encounter/b43-enc-1"
+        },
+        "effectiveDateTime": "{{today-10d}}",
+        "performer": [
+          {
+            "reference": "Organization/HIP-GJ-AND-207"
+          }
+        ],
+        "valueQuantity": {
+          "value": 118,
+          "unit": "mmHg"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b43-obs-5",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "b43-obs-5",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Observation"
+          ]
+        },
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "8462-4",
+              "display": "Diastolic BP"
+            }
+          ],
+          "text": "Diastolic BP"
+        },
+        "subject": {
+          "reference": "Patient/B43"
+        },
+        "encounter": {
+          "reference": "Encounter/b43-enc-1"
+        },
+        "effectiveDateTime": "{{today-10d}}",
+        "performer": [
+          {
+            "reference": "Organization/HIP-GJ-AND-207"
+          }
+        ],
+        "valueQuantity": {
+          "value": 76,
+          "unit": "mmHg"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b43-med-6",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "b43-med-6",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/MedicationRequest"
+          ]
+        },
+        "status": "active",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "text": "Iron + folic acid (IFA)"
+        },
+        "subject": {
+          "reference": "Patient/B43"
+        },
+        "encounter": {
+          "reference": "Encounter/b43-enc-1"
+        },
+        "authoredOn": "{{today-10d}}",
+        "requester": {
+          "reference": "Organization/HIP-GJ-AND-207"
+        },
+        "dosageInstruction": [
+          {
+            "text": "1 tab OD"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b43-med-7",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "b43-med-7",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/MedicationRequest"
+          ]
+        },
+        "status": "active",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "text": "Calcium"
+        },
+        "subject": {
+          "reference": "Patient/B43"
+        },
+        "encounter": {
+          "reference": "Encounter/b43-enc-1"
+        },
+        "authoredOn": "{{today-10d}}",
+        "requester": {
+          "reference": "Organization/HIP-GJ-AND-207"
+        },
+        "dosageInstruction": [
+          {
+            "text": "500 mg BD"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b43-med-8",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "b43-med-8",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/MedicationRequest"
+          ]
+        },
+        "status": "active",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "text": "Paracetamol"
+        },
+        "subject": {
+          "reference": "Patient/B43"
+        },
+        "encounter": {
+          "reference": "Encounter/b43-enc-1"
+        },
+        "authoredOn": "{{today-10d}}",
+        "requester": {
+          "reference": "Organization/HIP-GJ-AND-207"
+        },
+        "dosageInstruction": [
+          {
+            "text": "500 mg SOS"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b43-appt-9",
+      "resource": {
+        "resourceType": "Appointment",
+        "id": "b43-appt-9",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Appointment"
+          ]
+        },
+        "status": "booked",
+        "description": "Suture removal / wound check",
+        "start": "{{today-1d}}",
+        "participant": [
+          {
+            "actor": {
+              "reference": "Patient/B43"
+            },
+            "status": "accepted"
+          },
+          {
+            "actor": {
+              "reference": "Organization/HIP-GJ-AND-207"
+            },
+            "status": "accepted"
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,442 @@
+{
+  "resourceType": "Bundle",
+  "id": "bundle-B37",
+  "type": "collection",
+  "meta": {
+    "tag": [
+      {
+        "code": "SYNTHETIC",
+        "display": "Synthetic demo data. Not a real patient."
+      }
+    ]
+  },
+  "entry": [
+    {
+      "fullUrl": "urn:uuid:b37-rec-10",
+      "resource": {
+        "resourceType": "Composition",
+        "id": "b37-rec-10",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/OPConsultRecord"
+          ]
+        },
+        "status": "final",
+        "type": {
+          "text": "OP consultation"
+        },
+        "title": "OP consultation",
+        "date": "{{today-300d}}",
+        "subject": {
+          "reference": "Patient/B37"
+        },
+        "encounter": {
+          "reference": "Encounter/b37-enc-1"
+        },
+        "author": [
+          {
+            "reference": "Organization/HIP-GJ-AND-001"
+          }
+        ],
+        "custodian": {
+          "reference": "Organization/HIP-GJ-AND-001"
+        },
+        "section": [
+          {
+            "title": "Clinical note",
+            "text": {
+              "status": "generated",
+              "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Very elderly, lives with son. BP 148/86. B/L knee OA. B/L mature cataract - referred eye camp, not done. Fall risk.</div>"
+            },
+            "entry": [
+              {
+                "reference": "Condition/b37-cond-2"
+              },
+              {
+                "reference": "Condition/b37-cond-3"
+              },
+              {
+                "reference": "Condition/b37-cond-4"
+              },
+              {
+                "reference": "Observation/b37-obs-5"
+              },
+              {
+                "reference": "Observation/b37-obs-6"
+              },
+              {
+                "reference": "Observation/b37-obs-7"
+              },
+              {
+                "reference": "MedicationRequest/b37-med-8"
+              },
+              {
+                "reference": "Appointment/b37-appt-9"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:B37",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "B37",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Patient"
+          ]
+        },
+        "name": [
+          {
+            "text": "Parvatiben Thakor"
+          }
+        ],
+        "gender": "female",
+        "birthDate": "{{today-85y}}",
+        "address": [
+          {
+            "text": "Navli, Anand district, Gujarat",
+            "city": "Navli",
+            "district": "Anand",
+            "state": "Gujarat",
+            "country": "IN"
+          }
+        ],
+        "identifier": [
+          {
+            "type": {
+              "text": "ABHA number"
+            },
+            "system": "https://healthid.abdm.gov.in",
+            "value": "91-5555-1237-0037"
+          },
+          {
+            "type": {
+              "text": "ABHA address"
+            },
+            "system": "https://healthid.abdm.gov.in",
+            "value": "parvatiben.thakor@sbx"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:HIP-GJ-AND-001",
+      "resource": {
+        "resourceType": "Organization",
+        "id": "HIP-GJ-AND-001",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Organization"
+          ]
+        },
+        "name": "CHC Petlad (demo)",
+        "identifier": [
+          {
+            "system": "https://facility.abdm.gov.in",
+            "value": "HIP-GJ-AND-001"
+          }
+        ],
+        "type": [
+          {
+            "text": "Public CHC"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b37-enc-1",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "b37-enc-1",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Encounter"
+          ]
+        },
+        "status": "finished",
+        "class": {
+          "code": "AMB"
+        },
+        "subject": {
+          "reference": "Patient/B37"
+        },
+        "serviceProvider": {
+          "reference": "Organization/HIP-GJ-AND-001"
+        },
+        "period": {
+          "start": "{{today-300d}}"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b37-cond-2",
+      "resource": {
+        "resourceType": "Condition",
+        "id": "b37-cond-2",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Condition"
+          ]
+        },
+        "subject": {
+          "reference": "Patient/B37"
+        },
+        "encounter": {
+          "reference": "Encounter/b37-enc-1"
+        },
+        "code": {
+          "text": "Hypertension",
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "38341003",
+              "display": "Hypertension"
+            }
+          ]
+        },
+        "clinicalStatus": {
+          "text": "active"
+        },
+        "recordedDate": "{{today-300d}}"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b37-cond-3",
+      "resource": {
+        "resourceType": "Condition",
+        "id": "b37-cond-3",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Condition"
+          ]
+        },
+        "subject": {
+          "reference": "Patient/B37"
+        },
+        "encounter": {
+          "reference": "Encounter/b37-enc-1"
+        },
+        "code": {
+          "text": "Osteoarthritis",
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "396275006",
+              "display": "Osteoarthritis"
+            }
+          ]
+        },
+        "clinicalStatus": {
+          "text": "active"
+        },
+        "recordedDate": "{{today-300d}}"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b37-cond-4",
+      "resource": {
+        "resourceType": "Condition",
+        "id": "b37-cond-4",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Condition"
+          ]
+        },
+        "subject": {
+          "reference": "Patient/B37"
+        },
+        "encounter": {
+          "reference": "Encounter/b37-enc-1"
+        },
+        "code": {
+          "text": "Cataract, both eyes"
+        },
+        "clinicalStatus": {
+          "text": "active"
+        },
+        "recordedDate": "{{today-300d}}"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b37-obs-5",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "b37-obs-5",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Observation"
+          ]
+        },
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "8480-6",
+              "display": "Systolic BP"
+            }
+          ],
+          "text": "Systolic BP"
+        },
+        "subject": {
+          "reference": "Patient/B37"
+        },
+        "encounter": {
+          "reference": "Encounter/b37-enc-1"
+        },
+        "effectiveDateTime": "{{today-300d}}",
+        "performer": [
+          {
+            "reference": "Organization/HIP-GJ-AND-001"
+          }
+        ],
+        "valueQuantity": {
+          "value": 148,
+          "unit": "mmHg"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b37-obs-6",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "b37-obs-6",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Observation"
+          ]
+        },
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "8462-4",
+              "display": "Diastolic BP"
+            }
+          ],
+          "text": "Diastolic BP"
+        },
+        "subject": {
+          "reference": "Patient/B37"
+        },
+        "encounter": {
+          "reference": "Encounter/b37-enc-1"
+        },
+        "effectiveDateTime": "{{today-300d}}",
+        "performer": [
+          {
+            "reference": "Organization/HIP-GJ-AND-001"
+          }
+        ],
+        "valueQuantity": {
+          "value": 86,
+          "unit": "mmHg"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b37-obs-7",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "b37-obs-7",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Observation"
+          ]
+        },
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "29463-7",
+              "display": "Body weight"
+            }
+          ],
+          "text": "Body weight"
+        },
+        "subject": {
+          "reference": "Patient/B37"
+        },
+        "encounter": {
+          "reference": "Encounter/b37-enc-1"
+        },
+        "effectiveDateTime": "{{today-300d}}",
+        "performer": [
+          {
+            "reference": "Organization/HIP-GJ-AND-001"
+          }
+        ],
+        "valueQuantity": {
+          "value": 44,
+          "unit": "kg"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b37-med-8",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "b37-med-8",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/MedicationRequest"
+          ]
+        },
+        "status": "active",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "text": "Amlodipine"
+        },
+        "subject": {
+          "reference": "Patient/B37"
+        },
+        "encounter": {
+          "reference": "Encounter/b37-enc-1"
+        },
+        "authoredOn": "{{today-300d}}",
+        "requester": {
+          "reference": "Organization/HIP-GJ-AND-001"
+        },
+        "dosageInstruction": [
+          {
+            "text": "5 mg OD"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b37-appt-9",
+      "resource": {
+        "resourceType": "Appointment",
+        "id": "b37-appt-9",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Appointment"
+          ]
+        },
+        "status": "booked",
+        "description": "Eye camp: cataract surgery assessment",
+        "start": "{{today-240d}}",
+        "participant": [
+          {
+            "actor": {
+              "reference": "Patient/B37"
+            },
+            "status": "accepted"
+          },
+          {
+            "actor": {
+              "reference": "Organization/HIP-GJ-AND-001"
+            },
+            "status": "accepted"
+          }
+        ]
+      }
+    }
+  ]
+}

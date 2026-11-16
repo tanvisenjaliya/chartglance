@@ -1,0 +1,467 @@
+{
+  "resourceType": "Bundle",
+  "id": "bundle-B49",
+  "type": "collection",
+  "meta": {
+    "tag": [
+      {
+        "code": "SYNTHETIC",
+        "display": "Synthetic demo data. Not a real patient."
+      }
+    ]
+  },
+  "entry": [
+    {
+      "fullUrl": "urn:uuid:b49-rec-5",
+      "resource": {
+        "resourceType": "Composition",
+        "id": "b49-rec-5",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/OPConsultRecord"
+          ]
+        },
+        "status": "final",
+        "type": {
+          "text": "OP consultation"
+        },
+        "title": "OP consultation",
+        "date": "{{today-150d}}",
+        "subject": {
+          "reference": "Patient/B49"
+        },
+        "encounter": {
+          "reference": "Encounter/b49-enc-1"
+        },
+        "author": [
+          {
+            "reference": "Organization/HIP-GJ-AND-042"
+          }
+        ],
+        "custodian": {
+          "reference": "Organization/HIP-GJ-AND-042"
+        },
+        "section": [
+          {
+            "title": "Clinical note",
+            "text": {
+              "status": "generated",
+              "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">T2DM x 6 yrs. HbA1c 8.7. Incr metformin. Annual eye and foot exam adv.</div>"
+            },
+            "entry": [
+              {
+                "reference": "Condition/b49-cond-2"
+              },
+              {
+                "reference": "Observation/b49-obs-3"
+              },
+              {
+                "reference": "MedicationRequest/b49-med-4"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b49-rec-10",
+      "resource": {
+        "resourceType": "Composition",
+        "id": "b49-rec-10",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/OPConsultRecord"
+          ]
+        },
+        "status": "final",
+        "type": {
+          "text": "OP consultation"
+        },
+        "title": "OP consultation",
+        "date": "{{today-50d}}",
+        "subject": {
+          "reference": "Patient/B49"
+        },
+        "encounter": {
+          "reference": "Encounter/b49-enc-6"
+        },
+        "author": [
+          {
+            "reference": "Organization/HIP-GJ-AND-207"
+          }
+        ],
+        "custodian": {
+          "reference": "Organization/HIP-GJ-AND-207"
+        },
+        "section": [
+          {
+            "title": "Clinical note",
+            "text": {
+              "status": "generated",
+              "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Pvt diabetologist. HbA1c 8.1. Added sitagliptin 100 OD. Cont metformin.</div>"
+            },
+            "entry": [
+              {
+                "reference": "Condition/b49-cond-7"
+              },
+              {
+                "reference": "Observation/b49-obs-8"
+              },
+              {
+                "reference": "MedicationRequest/b49-med-9"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:B49",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "B49",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Patient"
+          ]
+        },
+        "name": [
+          {
+            "text": "Yusuf Saiyed"
+          }
+        ],
+        "gender": "male",
+        "birthDate": "{{today-54y}}",
+        "address": [
+          {
+            "text": "Petlad, Anand district, Gujarat",
+            "city": "Petlad",
+            "district": "Anand",
+            "state": "Gujarat",
+            "country": "IN"
+          }
+        ],
+        "identifier": [
+          {
+            "type": {
+              "text": "ABHA number"
+            },
+            "system": "https://healthid.abdm.gov.in",
+            "value": "91-5555-2449-0049"
+          },
+          {
+            "type": {
+              "text": "ABHA address"
+            },
+            "system": "https://healthid.abdm.gov.in",
+            "value": "yusuf.saiyed@sbx"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:HIP-GJ-AND-042",
+      "resource": {
+        "resourceType": "Organization",
+        "id": "HIP-GJ-AND-042",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Organization"
+          ]
+        },
+        "name": "PHC Navli (demo)",
+        "identifier": [
+          {
+            "system": "https://facility.abdm.gov.in",
+            "value": "HIP-GJ-AND-042"
+          }
+        ],
+        "type": [
+          {
+            "text": "Public PHC"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:HIP-GJ-AND-207",
+      "resource": {
+        "resourceType": "Organization",
+        "id": "HIP-GJ-AND-207",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Organization"
+          ]
+        },
+        "name": "Shiv Care Hospital, Anand (fictional)",
+        "identifier": [
+          {
+            "system": "https://facility.abdm.gov.in",
+            "value": "HIP-GJ-AND-207"
+          }
+        ],
+        "type": [
+          {
+            "text": "Private hospital"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b49-enc-1",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "b49-enc-1",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Encounter"
+          ]
+        },
+        "status": "finished",
+        "class": {
+          "code": "AMB"
+        },
+        "subject": {
+          "reference": "Patient/B49"
+        },
+        "serviceProvider": {
+          "reference": "Organization/HIP-GJ-AND-042"
+        },
+        "period": {
+          "start": "{{today-150d}}"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b49-cond-2",
+      "resource": {
+        "resourceType": "Condition",
+        "id": "b49-cond-2",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Condition"
+          ]
+        },
+        "subject": {
+          "reference": "Patient/B49"
+        },
+        "encounter": {
+          "reference": "Encounter/b49-enc-1"
+        },
+        "code": {
+          "text": "Type 2 diabetes mellitus",
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "44054006",
+              "display": "Type 2 diabetes mellitus"
+            }
+          ]
+        },
+        "clinicalStatus": {
+          "text": "active"
+        },
+        "recordedDate": "{{today-150d}}"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b49-obs-3",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "b49-obs-3",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Observation"
+          ]
+        },
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "4548-4",
+              "display": "HbA1c"
+            }
+          ],
+          "text": "HbA1c"
+        },
+        "subject": {
+          "reference": "Patient/B49"
+        },
+        "encounter": {
+          "reference": "Encounter/b49-enc-1"
+        },
+        "effectiveDateTime": "{{today-150d}}",
+        "performer": [
+          {
+            "reference": "Organization/HIP-GJ-AND-042"
+          }
+        ],
+        "valueQuantity": {
+          "value": 8.7,
+          "unit": "%"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b49-med-4",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "b49-med-4",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/MedicationRequest"
+          ]
+        },
+        "status": "active",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "text": "Metformin"
+        },
+        "subject": {
+          "reference": "Patient/B49"
+        },
+        "encounter": {
+          "reference": "Encounter/b49-enc-1"
+        },
+        "authoredOn": "{{today-150d}}",
+        "requester": {
+          "reference": "Organization/HIP-GJ-AND-042"
+        },
+        "dosageInstruction": [
+          {
+            "text": "1000 mg BD"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b49-enc-6",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "b49-enc-6",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Encounter"
+          ]
+        },
+        "status": "finished",
+        "class": {
+          "code": "AMB"
+        },
+        "subject": {
+          "reference": "Patient/B49"
+        },
+        "serviceProvider": {
+          "reference": "Organization/HIP-GJ-AND-207"
+        },
+        "period": {
+          "start": "{{today-50d}}"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b49-cond-7",
+      "resource": {
+        "resourceType": "Condition",
+        "id": "b49-cond-7",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Condition"
+          ]
+        },
+        "subject": {
+          "reference": "Patient/B49"
+        },
+        "encounter": {
+          "reference": "Encounter/b49-enc-6"
+        },
+        "code": {
+          "text": "Type 2 diabetes mellitus",
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "44054006",
+              "display": "Type 2 diabetes mellitus"
+            }
+          ]
+        },
+        "clinicalStatus": {
+          "text": "active"
+        },
+        "recordedDate": "{{today-50d}}"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b49-obs-8",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "b49-obs-8",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Observation"
+          ]
+        },
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "4548-4",
+              "display": "HbA1c"
+            }
+          ],
+          "text": "HbA1c"
+        },
+        "subject": {
+          "reference": "Patient/B49"
+        },
+        "encounter": {
+          "reference": "Encounter/b49-enc-6"
+        },
+        "effectiveDateTime": "{{today-50d}}",
+        "performer": [
+          {
+            "reference": "Organization/HIP-GJ-AND-207"
+          }
+        ],
+        "valueQuantity": {
+          "value": 8.1,
+          "unit": "%"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b49-med-9",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "b49-med-9",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/MedicationRequest"
+          ]
+        },
+        "status": "active",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "text": "Sitagliptin"
+        },
+        "subject": {
+          "reference": "Patient/B49"
+        },
+        "encounter": {
+          "reference": "Encounter/b49-enc-6"
+        },
+        "authoredOn": "{{today-50d}}",
+        "requester": {
+          "reference": "Organization/HIP-GJ-AND-207"
+        },
+        "dosageInstruction": [
+          {
+            "text": "100 mg OD"
+          }
+        ]
+      }
+    }
+  ]
+}

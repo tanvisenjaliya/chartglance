@@ -1,0 +1,214 @@
+{
+  "resourceType": "Bundle",
+  "id": "bundle-B47",
+  "type": "collection",
+  "meta": {
+    "tag": [
+      {
+        "code": "SYNTHETIC",
+        "display": "Synthetic demo data. Not a real patient."
+      }
+    ]
+  },
+  "entry": [
+    {
+      "fullUrl": "urn:uuid:b47-rec-4",
+      "resource": {
+        "resourceType": "Composition",
+        "id": "b47-rec-4",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/OPConsultRecord"
+          ]
+        },
+        "status": "final",
+        "type": {
+          "text": "OP consultation"
+        },
+        "title": "OP consultation",
+        "date": "{{today-40d}}",
+        "subject": {
+          "reference": "Patient/B47"
+        },
+        "encounter": {
+          "reference": "Encounter/b47-enc-1"
+        },
+        "author": [
+          {
+            "reference": "Organization/HIP-GJ-AND-001"
+          }
+        ],
+        "custodian": {
+          "reference": "Organization/HIP-GJ-AND-001"
+        },
+        "section": [
+          {
+            "title": "Clinical note",
+            "text": {
+              "status": "generated",
+              "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Fever x 8d, Widal +ve, blood culture not done. Azithro x 7d. Improved on review day 5.</div>"
+            },
+            "entry": [
+              {
+                "reference": "Condition/b47-cond-2"
+              },
+              {
+                "reference": "MedicationRequest/b47-med-3"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:B47",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "B47",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Patient"
+          ]
+        },
+        "name": [
+          {
+            "text": "Bhavesh Vasava"
+          }
+        ],
+        "gender": "male",
+        "birthDate": "{{today-36y}}",
+        "address": [
+          {
+            "text": "Ode, Anand district, Gujarat",
+            "city": "Ode",
+            "district": "Anand",
+            "state": "Gujarat",
+            "country": "IN"
+          }
+        ],
+        "identifier": [
+          {
+            "type": {
+              "text": "ABHA number"
+            },
+            "system": "https://healthid.abdm.gov.in",
+            "value": "91-5555-2247-0047"
+          },
+          {
+            "type": {
+              "text": "ABHA address"
+            },
+            "system": "https://healthid.abdm.gov.in",
+            "value": "bhavesh.vasava@sbx"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:HIP-GJ-AND-001",
+      "resource": {
+        "resourceType": "Organization",
+        "id": "HIP-GJ-AND-001",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Organization"
+          ]
+        },
+        "name": "CHC Petlad (demo)",
+        "identifier": [
+          {
+            "system": "https://facility.abdm.gov.in",
+            "value": "HIP-GJ-AND-001"
+          }
+        ],
+        "type": [
+          {
+            "text": "Public CHC"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b47-enc-1",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "b47-enc-1",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Encounter"
+          ]
+        },
+        "status": "finished",
+        "class": {
+          "code": "AMB"
+        },
+        "subject": {
+          "reference": "Patient/B47"
+        },
+        "serviceProvider": {
+          "reference": "Organization/HIP-GJ-AND-001"
+        },
+        "period": {
+          "start": "{{today-40d}}"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b47-cond-2",
+      "resource": {
+        "resourceType": "Condition",
+        "id": "b47-cond-2",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Condition"
+          ]
+        },
+        "subject": {
+          "reference": "Patient/B47"
+        },
+        "encounter": {
+          "reference": "Encounter/b47-enc-1"
+        },
+        "code": {
+          "text": "Enteric fever (typhoid)"
+        },
+        "clinicalStatus": {
+          "text": "active"
+        },
+        "recordedDate": "{{today-40d}}"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b47-med-3",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "b47-med-3",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/MedicationRequest"
+          ]
+        },
+        "status": "active",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "text": "Azithromycin"
+        },
+        "subject": {
+          "reference": "Patient/B47"
+        },
+        "encounter": {
+          "reference": "Encounter/b47-enc-1"
+        },
+        "authoredOn": "{{today-40d}}",
+        "requester": {
+          "reference": "Organization/HIP-GJ-AND-001"
+        },
+        "dosageInstruction": [
+          {
+            "text": "500 mg OD x 7 days"
+          }
+        ]
+      }
+    }
+  ]
+}

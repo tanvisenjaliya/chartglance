@@ -1,0 +1,542 @@
+{
+  "resourceType": "Bundle",
+  "id": "bundle-B30",
+  "type": "collection",
+  "meta": {
+    "tag": [
+      {
+        "code": "SYNTHETIC",
+        "display": "Synthetic demo data. Not a real patient."
+      }
+    ]
+  },
+  "entry": [
+    {
+      "fullUrl": "urn:uuid:b30-rec-3",
+      "resource": {
+        "resourceType": "Composition",
+        "id": "b30-rec-3",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/DiagnosticReportRecord"
+          ]
+        },
+        "status": "final",
+        "type": {
+          "text": "Diagnostic report"
+        },
+        "title": "Diagnostic report",
+        "date": "{{today-210d}}",
+        "subject": {
+          "reference": "Patient/B30"
+        },
+        "encounter": {
+          "reference": "Encounter/b30-enc-1"
+        },
+        "author": [
+          {
+            "reference": "Organization/HIP-GJ-AND-101"
+          }
+        ],
+        "custodian": {
+          "reference": "Organization/HIP-GJ-AND-101"
+        },
+        "section": [
+          {
+            "title": "Clinical note",
+            "text": {
+              "status": "generated",
+              "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Skin smear +ve. >5 hypopigmented anaesthetic patches. Ulnar nerve thickened (R). Started MB-MDT x 12 months. Notified (NLEP).</div>"
+            },
+            "entry": [
+              {
+                "reference": "Condition/b30-cond-2"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b30-rec-13",
+      "resource": {
+        "resourceType": "Composition",
+        "id": "b30-rec-13",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/PrescriptionRecord"
+          ]
+        },
+        "status": "final",
+        "type": {
+          "text": "Prescription"
+        },
+        "title": "Prescription",
+        "date": "{{today-180d}}",
+        "subject": {
+          "reference": "Patient/B30"
+        },
+        "encounter": {
+          "reference": "Encounter/b30-enc-4"
+        },
+        "author": [
+          {
+            "reference": "Organization/HIP-GJ-AND-042"
+          }
+        ],
+        "custodian": {
+          "reference": "Organization/HIP-GJ-AND-042"
+        },
+        "section": [
+          {
+            "title": "Clinical note",
+            "text": {
+              "status": "generated",
+              "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Monthly supervised dose at PHC. No reaction. Nerve function stable.</div>"
+            },
+            "entry": [
+              {
+                "reference": "MedicationRequest/b30-med-5"
+              },
+              {
+                "reference": "MedicationDispense/b30-disp-6"
+              },
+              {
+                "reference": "MedicationDispense/b30-disp-7"
+              },
+              {
+                "reference": "MedicationDispense/b30-disp-8"
+              },
+              {
+                "reference": "MedicationDispense/b30-disp-9"
+              },
+              {
+                "reference": "MedicationDispense/b30-disp-10"
+              },
+              {
+                "reference": "MedicationDispense/b30-disp-11"
+              },
+              {
+                "reference": "Appointment/b30-appt-12"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:B30",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "B30",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Patient"
+          ]
+        },
+        "name": [
+          {
+            "text": "Bhikhabhai Vankar"
+          }
+        ],
+        "gender": "male",
+        "birthDate": "{{today-49y}}",
+        "address": [
+          {
+            "text": "Ode, Anand district, Gujarat",
+            "city": "Ode",
+            "district": "Anand",
+            "state": "Gujarat",
+            "country": "IN"
+          }
+        ],
+        "identifier": [
+          {
+            "type": {
+              "text": "ABHA number"
+            },
+            "system": "https://healthid.abdm.gov.in",
+            "value": "91-5555-5530-0030"
+          },
+          {
+            "type": {
+              "text": "ABHA address"
+            },
+            "system": "https://healthid.abdm.gov.in",
+            "value": "bhikhabhai.vankar@sbx"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:HIP-GJ-AND-101",
+      "resource": {
+        "resourceType": "Organization",
+        "id": "HIP-GJ-AND-101",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Organization"
+          ]
+        },
+        "name": "General Hospital Anand (demo)",
+        "identifier": [
+          {
+            "system": "https://facility.abdm.gov.in",
+            "value": "HIP-GJ-AND-101"
+          }
+        ],
+        "type": [
+          {
+            "text": "Public district hospital"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:HIP-GJ-AND-042",
+      "resource": {
+        "resourceType": "Organization",
+        "id": "HIP-GJ-AND-042",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Organization"
+          ]
+        },
+        "name": "PHC Navli (demo)",
+        "identifier": [
+          {
+            "system": "https://facility.abdm.gov.in",
+            "value": "HIP-GJ-AND-042"
+          }
+        ],
+        "type": [
+          {
+            "text": "Public PHC"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b30-enc-1",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "b30-enc-1",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Encounter"
+          ]
+        },
+        "status": "finished",
+        "class": {
+          "code": "AMB"
+        },
+        "subject": {
+          "reference": "Patient/B30"
+        },
+        "serviceProvider": {
+          "reference": "Organization/HIP-GJ-AND-101"
+        },
+        "period": {
+          "start": "{{today-210d}}"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b30-cond-2",
+      "resource": {
+        "resourceType": "Condition",
+        "id": "b30-cond-2",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Condition"
+          ]
+        },
+        "subject": {
+          "reference": "Patient/B30"
+        },
+        "encounter": {
+          "reference": "Encounter/b30-enc-1"
+        },
+        "code": {
+          "text": "Leprosy, multibacillary"
+        },
+        "clinicalStatus": {
+          "text": "active"
+        },
+        "recordedDate": "{{today-210d}}"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b30-enc-4",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "b30-enc-4",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Encounter"
+          ]
+        },
+        "status": "finished",
+        "class": {
+          "code": "AMB"
+        },
+        "subject": {
+          "reference": "Patient/B30"
+        },
+        "serviceProvider": {
+          "reference": "Organization/HIP-GJ-AND-042"
+        },
+        "period": {
+          "start": "{{today-180d}}"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b30-med-5",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "b30-med-5",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/MedicationRequest"
+          ]
+        },
+        "status": "active",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "text": "MB-MDT adult blister pack"
+        },
+        "subject": {
+          "reference": "Patient/B30"
+        },
+        "encounter": {
+          "reference": "Encounter/b30-enc-4"
+        },
+        "authoredOn": "{{today-180d}}",
+        "requester": {
+          "reference": "Organization/HIP-GJ-AND-042"
+        },
+        "dosageInstruction": [
+          {
+            "text": "1 pack Monthly supervised + daily"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b30-disp-6",
+      "resource": {
+        "resourceType": "MedicationDispense",
+        "id": "b30-disp-6",
+        "status": "completed",
+        "medicationCodeableConcept": {
+          "text": "MB-MDT adult blister pack"
+        },
+        "subject": {
+          "reference": "Patient/B30"
+        },
+        "authorizingPrescription": [
+          {
+            "reference": "MedicationRequest/b30-med-5"
+          }
+        ],
+        "whenHandedOver": "{{today-180d}}",
+        "performer": [
+          {
+            "actor": {
+              "reference": "Organization/HIP-GJ-AND-042"
+            }
+          }
+        ],
+        "quantity": {
+          "value": 30,
+          "unit": "days supply"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b30-disp-7",
+      "resource": {
+        "resourceType": "MedicationDispense",
+        "id": "b30-disp-7",
+        "status": "completed",
+        "medicationCodeableConcept": {
+          "text": "MB-MDT adult blister pack"
+        },
+        "subject": {
+          "reference": "Patient/B30"
+        },
+        "authorizingPrescription": [
+          {
+            "reference": "MedicationRequest/b30-med-5"
+          }
+        ],
+        "whenHandedOver": "{{today-150d}}",
+        "performer": [
+          {
+            "actor": {
+              "reference": "Organization/HIP-GJ-AND-042"
+            }
+          }
+        ],
+        "quantity": {
+          "value": 30,
+          "unit": "days supply"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b30-disp-8",
+      "resource": {
+        "resourceType": "MedicationDispense",
+        "id": "b30-disp-8",
+        "status": "completed",
+        "medicationCodeableConcept": {
+          "text": "MB-MDT adult blister pack"
+        },
+        "subject": {
+          "reference": "Patient/B30"
+        },
+        "authorizingPrescription": [
+          {
+            "reference": "MedicationRequest/b30-med-5"
+          }
+        ],
+        "whenHandedOver": "{{today-120d}}",
+        "performer": [
+          {
+            "actor": {
+              "reference": "Organization/HIP-GJ-AND-042"
+            }
+          }
+        ],
+        "quantity": {
+          "value": 30,
+          "unit": "days supply"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b30-disp-9",
+      "resource": {
+        "resourceType": "MedicationDispense",
+        "id": "b30-disp-9",
+        "status": "completed",
+        "medicationCodeableConcept": {
+          "text": "MB-MDT adult blister pack"
+        },
+        "subject": {
+          "reference": "Patient/B30"
+        },
+        "authorizingPrescription": [
+          {
+            "reference": "MedicationRequest/b30-med-5"
+          }
+        ],
+        "whenHandedOver": "{{today-90d}}",
+        "performer": [
+          {
+            "actor": {
+              "reference": "Organization/HIP-GJ-AND-042"
+            }
+          }
+        ],
+        "quantity": {
+          "value": 30,
+          "unit": "days supply"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b30-disp-10",
+      "resource": {
+        "resourceType": "MedicationDispense",
+        "id": "b30-disp-10",
+        "status": "completed",
+        "medicationCodeableConcept": {
+          "text": "MB-MDT adult blister pack"
+        },
+        "subject": {
+          "reference": "Patient/B30"
+        },
+        "authorizingPrescription": [
+          {
+            "reference": "MedicationRequest/b30-med-5"
+          }
+        ],
+        "whenHandedOver": "{{today-60d}}",
+        "performer": [
+          {
+            "actor": {
+              "reference": "Organization/HIP-GJ-AND-042"
+            }
+          }
+        ],
+        "quantity": {
+          "value": 30,
+          "unit": "days supply"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b30-disp-11",
+      "resource": {
+        "resourceType": "MedicationDispense",
+        "id": "b30-disp-11",
+        "status": "completed",
+        "medicationCodeableConcept": {
+          "text": "MB-MDT adult blister pack"
+        },
+        "subject": {
+          "reference": "Patient/B30"
+        },
+        "authorizingPrescription": [
+          {
+            "reference": "MedicationRequest/b30-med-5"
+          }
+        ],
+        "whenHandedOver": "{{today-30d}}",
+        "performer": [
+          {
+            "actor": {
+              "reference": "Organization/HIP-GJ-AND-042"
+            }
+          }
+        ],
+        "quantity": {
+          "value": 30,
+          "unit": "days supply"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b30-appt-12",
+      "resource": {
+        "resourceType": "Appointment",
+        "id": "b30-appt-12",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Appointment"
+          ]
+        },
+        "status": "booked",
+        "description": "Monthly MDT pack (month 7)",
+        "start": "{{today+0d}}",
+        "participant": [
+          {
+            "actor": {
+              "reference": "Patient/B30"
+            },
+            "status": "accepted"
+          },
+          {
+            "actor": {
+              "reference": "Organization/HIP-GJ-AND-042"
+            },
+            "status": "accepted"
+          }
+        ]
+      }
+    }
+  ]
+}

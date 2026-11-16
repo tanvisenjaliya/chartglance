@@ -1,0 +1,301 @@
+{
+  "resourceType": "Bundle",
+  "id": "bundle-B46",
+  "type": "collection",
+  "meta": {
+    "tag": [
+      {
+        "code": "SYNTHETIC",
+        "display": "Synthetic demo data. Not a real patient."
+      }
+    ]
+  },
+  "entry": [
+    {
+      "fullUrl": "urn:uuid:b46-rec-7",
+      "resource": {
+        "resourceType": "Composition",
+        "id": "b46-rec-7",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/ImmunizationRecord"
+          ]
+        },
+        "status": "final",
+        "type": {
+          "text": "Immunization record"
+        },
+        "title": "Immunization record",
+        "date": "{{today-21d}}",
+        "subject": {
+          "reference": "Patient/B46"
+        },
+        "encounter": {
+          "reference": "Encounter/b46-enc-1"
+        },
+        "author": [
+          {
+            "reference": "Organization/HIP-GJ-AND-042"
+          }
+        ],
+        "custodian": {
+          "reference": "Organization/HIP-GJ-AND-042"
+        },
+        "section": [
+          {
+            "title": "Clinical note",
+            "text": {
+              "status": "generated",
+              "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Stray dog bite, cat III. Wound washed. RIG infiltrated. ARV ID schedule (0,3,7,28). Day 28 dose pending.</div>"
+            },
+            "entry": [
+              {
+                "reference": "Condition/b46-cond-2"
+              },
+              {
+                "reference": "Immunization/b46-imm-3"
+              },
+              {
+                "reference": "Immunization/b46-imm-4"
+              },
+              {
+                "reference": "Immunization/b46-imm-5"
+              },
+              {
+                "reference": "Appointment/b46-appt-6"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:B46",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "B46",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Patient"
+          ]
+        },
+        "name": [
+          {
+            "text": "Siddharth Jani"
+          }
+        ],
+        "gender": "male",
+        "birthDate": "{{today-17y}}",
+        "address": [
+          {
+            "text": "Vidyanagar, Anand district, Gujarat",
+            "city": "Vidyanagar",
+            "district": "Anand",
+            "state": "Gujarat",
+            "country": "IN"
+          }
+        ],
+        "identifier": [
+          {
+            "type": {
+              "text": "ABHA number"
+            },
+            "system": "https://healthid.abdm.gov.in",
+            "value": "91-5555-2146-0046"
+          },
+          {
+            "type": {
+              "text": "ABHA address"
+            },
+            "system": "https://healthid.abdm.gov.in",
+            "value": "siddharth.jani@sbx"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:HIP-GJ-AND-042",
+      "resource": {
+        "resourceType": "Organization",
+        "id": "HIP-GJ-AND-042",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Organization"
+          ]
+        },
+        "name": "PHC Navli (demo)",
+        "identifier": [
+          {
+            "system": "https://facility.abdm.gov.in",
+            "value": "HIP-GJ-AND-042"
+          }
+        ],
+        "type": [
+          {
+            "text": "Public PHC"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b46-enc-1",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "b46-enc-1",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Encounter"
+          ]
+        },
+        "status": "finished",
+        "class": {
+          "code": "AMB"
+        },
+        "subject": {
+          "reference": "Patient/B46"
+        },
+        "serviceProvider": {
+          "reference": "Organization/HIP-GJ-AND-042"
+        },
+        "period": {
+          "start": "{{today-21d}}"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b46-cond-2",
+      "resource": {
+        "resourceType": "Condition",
+        "id": "b46-cond-2",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Condition"
+          ]
+        },
+        "subject": {
+          "reference": "Patient/B46"
+        },
+        "encounter": {
+          "reference": "Encounter/b46-enc-1"
+        },
+        "code": {
+          "text": "Dog bite, category III (right calf)"
+        },
+        "clinicalStatus": {
+          "text": "active"
+        },
+        "recordedDate": "{{today-21d}}"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b46-imm-3",
+      "resource": {
+        "resourceType": "Immunization",
+        "id": "b46-imm-3",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Immunization"
+          ]
+        },
+        "status": "completed",
+        "vaccineCode": {
+          "text": "Anti-rabies vaccine (ID) day 0 + rabies immunoglobulin"
+        },
+        "patient": {
+          "reference": "Patient/B46"
+        },
+        "occurrenceDateTime": "{{today-21d}}",
+        "performer": [
+          {
+            "actor": {
+              "reference": "Organization/HIP-GJ-AND-042"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b46-imm-4",
+      "resource": {
+        "resourceType": "Immunization",
+        "id": "b46-imm-4",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Immunization"
+          ]
+        },
+        "status": "completed",
+        "vaccineCode": {
+          "text": "Anti-rabies vaccine (ID) day 3"
+        },
+        "patient": {
+          "reference": "Patient/B46"
+        },
+        "occurrenceDateTime": "{{today-18d}}",
+        "performer": [
+          {
+            "actor": {
+              "reference": "Organization/HIP-GJ-AND-042"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b46-imm-5",
+      "resource": {
+        "resourceType": "Immunization",
+        "id": "b46-imm-5",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Immunization"
+          ]
+        },
+        "status": "completed",
+        "vaccineCode": {
+          "text": "Anti-rabies vaccine (ID) day 7"
+        },
+        "patient": {
+          "reference": "Patient/B46"
+        },
+        "occurrenceDateTime": "{{today-14d}}",
+        "performer": [
+          {
+            "actor": {
+              "reference": "Organization/HIP-GJ-AND-042"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b46-appt-6",
+      "resource": {
+        "resourceType": "Appointment",
+        "id": "b46-appt-6",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Appointment"
+          ]
+        },
+        "status": "booked",
+        "description": "Anti-rabies vaccine day 28 dose",
+        "start": "{{today+7d}}",
+        "participant": [
+          {
+            "actor": {
+              "reference": "Patient/B46"
+            },
+            "status": "accepted"
+          },
+          {
+            "actor": {
+              "reference": "Organization/HIP-GJ-AND-042"
+            },
+            "status": "accepted"
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,372 @@
+{
+  "resourceType": "Bundle",
+  "id": "bundle-B34",
+  "type": "collection",
+  "meta": {
+    "tag": [
+      {
+        "code": "SYNTHETIC",
+        "display": "Synthetic demo data. Not a real patient."
+      }
+    ]
+  },
+  "entry": [
+    {
+      "fullUrl": "urn:uuid:b34-rec-8",
+      "resource": {
+        "resourceType": "Composition",
+        "id": "b34-rec-8",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/DischargeSummaryRecord"
+          ]
+        },
+        "status": "final",
+        "type": {
+          "text": "Discharge summary"
+        },
+        "title": "Discharge summary",
+        "date": "{{today-18d}}",
+        "subject": {
+          "reference": "Patient/B34"
+        },
+        "encounter": {
+          "reference": "Encounter/b34-enc-1"
+        },
+        "author": [
+          {
+            "reference": "Organization/HIP-GJ-AND-101"
+          }
+        ],
+        "custodian": {
+          "reference": "Organization/HIP-GJ-AND-101"
+        },
+        "section": [
+          {
+            "title": "Clinical note",
+            "text": {
+              "status": "generated",
+              "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">RDT Pf +ve. Adm 3 days, no severe features. ACT-SP + PQ single dose. Plt 88k. Repeat smear day 7 adv.</div>"
+            },
+            "entry": [
+              {
+                "reference": "Condition/b34-cond-2"
+              },
+              {
+                "reference": "Observation/b34-obs-3"
+              },
+              {
+                "reference": "Observation/b34-obs-4"
+              },
+              {
+                "reference": "MedicationRequest/b34-med-5"
+              },
+              {
+                "reference": "MedicationRequest/b34-med-6"
+              },
+              {
+                "reference": "Appointment/b34-appt-7"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:B34",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "B34",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Patient"
+          ]
+        },
+        "name": [
+          {
+            "text": "Ajay Rathva"
+          }
+        ],
+        "gender": "male",
+        "birthDate": "{{today-24y}}",
+        "address": [
+          {
+            "text": "Anklav, Anand district, Gujarat",
+            "city": "Anklav",
+            "district": "Anand",
+            "state": "Gujarat",
+            "country": "IN"
+          }
+        ],
+        "identifier": [
+          {
+            "type": {
+              "text": "ABHA number"
+            },
+            "system": "https://healthid.abdm.gov.in",
+            "value": "91-5555-9934-0034"
+          },
+          {
+            "type": {
+              "text": "ABHA address"
+            },
+            "system": "https://healthid.abdm.gov.in",
+            "value": "ajay.rathva@sbx"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:HIP-GJ-AND-101",
+      "resource": {
+        "resourceType": "Organization",
+        "id": "HIP-GJ-AND-101",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Organization"
+          ]
+        },
+        "name": "General Hospital Anand (demo)",
+        "identifier": [
+          {
+            "system": "https://facility.abdm.gov.in",
+            "value": "HIP-GJ-AND-101"
+          }
+        ],
+        "type": [
+          {
+            "text": "Public district hospital"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b34-enc-1",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "b34-enc-1",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Encounter"
+          ]
+        },
+        "status": "finished",
+        "class": {
+          "code": "IMP"
+        },
+        "subject": {
+          "reference": "Patient/B34"
+        },
+        "serviceProvider": {
+          "reference": "Organization/HIP-GJ-AND-101"
+        },
+        "period": {
+          "start": "{{today-18d}}"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b34-cond-2",
+      "resource": {
+        "resourceType": "Condition",
+        "id": "b34-cond-2",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Condition"
+          ]
+        },
+        "subject": {
+          "reference": "Patient/B34"
+        },
+        "encounter": {
+          "reference": "Encounter/b34-enc-1"
+        },
+        "code": {
+          "text": "Falciparum malaria",
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "62676009",
+              "display": "Falciparum malaria"
+            }
+          ]
+        },
+        "clinicalStatus": {
+          "text": "active"
+        },
+        "recordedDate": "{{today-18d}}"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b34-obs-3",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "b34-obs-3",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Observation"
+          ]
+        },
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "777-3",
+              "display": "Platelet count"
+            }
+          ],
+          "text": "Platelet count"
+        },
+        "subject": {
+          "reference": "Patient/B34"
+        },
+        "encounter": {
+          "reference": "Encounter/b34-enc-1"
+        },
+        "effectiveDateTime": "{{today-18d}}",
+        "performer": [
+          {
+            "reference": "Organization/HIP-GJ-AND-101"
+          }
+        ],
+        "valueQuantity": {
+          "value": 88,
+          "unit": "10^3/uL"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b34-obs-4",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "b34-obs-4",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Observation"
+          ]
+        },
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "718-7",
+              "display": "Haemoglobin"
+            }
+          ],
+          "text": "Haemoglobin"
+        },
+        "subject": {
+          "reference": "Patient/B34"
+        },
+        "encounter": {
+          "reference": "Encounter/b34-enc-1"
+        },
+        "effectiveDateTime": "{{today-18d}}",
+        "performer": [
+          {
+            "reference": "Organization/HIP-GJ-AND-101"
+          }
+        ],
+        "valueQuantity": {
+          "value": 10.4,
+          "unit": "g/dL"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b34-med-5",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "b34-med-5",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/MedicationRequest"
+          ]
+        },
+        "status": "active",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "text": "Artesunate + sulfadoxine-pyrimethamine (ACT-SP)"
+        },
+        "subject": {
+          "reference": "Patient/B34"
+        },
+        "encounter": {
+          "reference": "Encounter/b34-enc-1"
+        },
+        "authoredOn": "{{today-18d}}",
+        "requester": {
+          "reference": "Organization/HIP-GJ-AND-101"
+        },
+        "dosageInstruction": [
+          {
+            "text": "As per age pack 3 days"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b34-med-6",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "b34-med-6",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/MedicationRequest"
+          ]
+        },
+        "status": "active",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "text": "Primaquine"
+        },
+        "subject": {
+          "reference": "Patient/B34"
+        },
+        "encounter": {
+          "reference": "Encounter/b34-enc-1"
+        },
+        "authoredOn": "{{today-18d}}",
+        "requester": {
+          "reference": "Organization/HIP-GJ-AND-101"
+        },
+        "dosageInstruction": [
+          {
+            "text": "45 mg Single dose"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b34-appt-7",
+      "resource": {
+        "resourceType": "Appointment",
+        "id": "b34-appt-7",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Appointment"
+          ]
+        },
+        "status": "booked",
+        "description": "Repeat blood smear (day 7)",
+        "start": "{{today-11d}}",
+        "participant": [
+          {
+            "actor": {
+              "reference": "Patient/B34"
+            },
+            "status": "accepted"
+          },
+          {
+            "actor": {
+              "reference": "Organization/HIP-GJ-AND-101"
+            },
+            "status": "accepted"
+          }
+        ]
+      }
+    }
+  ]
+}

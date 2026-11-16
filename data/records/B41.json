@@ -1,0 +1,211 @@
+{
+  "resourceType": "Bundle",
+  "id": "bundle-B41",
+  "type": "collection",
+  "meta": {
+    "tag": [
+      {
+        "code": "SYNTHETIC",
+        "display": "Synthetic demo data. Not a real patient."
+      }
+    ]
+  },
+  "entry": [
+    {
+      "fullUrl": "urn:uuid:b41-rec-4",
+      "resource": {
+        "resourceType": "Composition",
+        "id": "b41-rec-4",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/OPConsultRecord"
+          ]
+        },
+        "status": "final",
+        "type": {
+          "text": "OP consultation"
+        },
+        "title": "OP consultation",
+        "date": "{{today-95d}}",
+        "subject": {
+          "reference": "Patient/B41"
+        },
+        "encounter": {
+          "reference": "Encounter/b41-enc-1"
+        },
+        "author": [
+          {
+            "reference": "Organization/HIP-GJ-AND-042"
+          }
+        ],
+        "custodian": {
+          "reference": "Organization/HIP-GJ-AND-042"
+        },
+        "section": [
+          {
+            "title": "Clinical note",
+            "text": {
+              "status": "generated",
+              "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Painless lump L breast ~2 cm, upper outer quadrant, firm. Referred DH surgery OPD for USG/mammography and FNAC. Report not received.</div>"
+            },
+            "entry": [
+              {
+                "reference": "Condition/b41-cond-2"
+              },
+              {
+                "reference": "Appointment/b41-appt-3"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:B41",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "B41",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Patient"
+          ]
+        },
+        "name": [
+          {
+            "text": "Ritaben Bhatt"
+          }
+        ],
+        "gender": "female",
+        "birthDate": "{{today-47y}}",
+        "address": [
+          {
+            "text": "Vidyanagar, Anand district, Gujarat",
+            "city": "Vidyanagar",
+            "district": "Anand",
+            "state": "Gujarat",
+            "country": "IN"
+          }
+        ],
+        "identifier": [
+          {
+            "type": {
+              "text": "ABHA number"
+            },
+            "system": "https://healthid.abdm.gov.in",
+            "value": "91-5555-1641-0041"
+          },
+          {
+            "type": {
+              "text": "ABHA address"
+            },
+            "system": "https://healthid.abdm.gov.in",
+            "value": "ritaben.bhatt@sbx"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:HIP-GJ-AND-042",
+      "resource": {
+        "resourceType": "Organization",
+        "id": "HIP-GJ-AND-042",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Organization"
+          ]
+        },
+        "name": "PHC Navli (demo)",
+        "identifier": [
+          {
+            "system": "https://facility.abdm.gov.in",
+            "value": "HIP-GJ-AND-042"
+          }
+        ],
+        "type": [
+          {
+            "text": "Public PHC"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b41-enc-1",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "b41-enc-1",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Encounter"
+          ]
+        },
+        "status": "finished",
+        "class": {
+          "code": "AMB"
+        },
+        "subject": {
+          "reference": "Patient/B41"
+        },
+        "serviceProvider": {
+          "reference": "Organization/HIP-GJ-AND-042"
+        },
+        "period": {
+          "start": "{{today-95d}}"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b41-cond-2",
+      "resource": {
+        "resourceType": "Condition",
+        "id": "b41-cond-2",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Condition"
+          ]
+        },
+        "subject": {
+          "reference": "Patient/B41"
+        },
+        "encounter": {
+          "reference": "Encounter/b41-enc-1"
+        },
+        "code": {
+          "text": "Breast lump (left), under evaluation"
+        },
+        "clinicalStatus": {
+          "text": "active"
+        },
+        "recordedDate": "{{today-95d}}"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b41-appt-3",
+      "resource": {
+        "resourceType": "Appointment",
+        "id": "b41-appt-3",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Appointment"
+          ]
+        },
+        "status": "booked",
+        "description": "Surgery OPD: breast lump evaluation",
+        "start": "{{today-88d}}",
+        "participant": [
+          {
+            "actor": {
+              "reference": "Patient/B41"
+            },
+            "status": "accepted"
+          },
+          {
+            "actor": {
+              "reference": "Organization/HIP-GJ-AND-042"
+            },
+            "status": "accepted"
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -383,5 +383,35 @@
         "status": "received"
       }
     ]
+  },
+  "emg-1794837375492": {
+    "id": "consent-emg-1794837375492-1794837375496",
+    "patientId": "emg-1794837375492",
+    "abhaNumber": "91-5555-8833-0033",
+    "abhaAddress": "lataben.makwana@sbx",
+    "requesterName": "Dr. Aditi Sharma",
+    "requesterFacility": "PHC Navli (demo) (HIU-GJ-AND-042)",
+    "purpose": "CAREMGT",
+    "hiTypes": [
+      "OPConsultation",
+      "DiagnosticReport",
+      "Prescription",
+      "DischargeSummary"
+    ],
+    "dateRange": {
+      "from": "2023-11-17",
+      "to": "2026-11-16"
+    },
+    "expiryDate": "2026-11-17T13:56:36.527Z",
+    "status": "GRANTED",
+    "createdAt": "2026-11-16T13:56:15.495Z",
+    "updatedAt": "2026-11-16T13:56:36.527Z",
+    "facilityFetch": [
+      {
+        "facility": "PHC Navli (demo)",
+        "scheduledAt": 1794837399370.3218,
+        "status": "pending"
+      }
+    ]
   }
 }
