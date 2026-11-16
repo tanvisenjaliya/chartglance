@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
+import SplashScreen from "@/components/SplashScreen";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -18,6 +19,10 @@ const ibmPlexMono = IBM_Plex_Mono({
 export const metadata: Metadata = {
   title: "ChartGlance · Clinical OPD Assistant",
   description: "Decision-ready clinical summaries for Primary Health Centre OPD consultations",
+  icons: {
+    icon: "/icon.svg",
+    apple: "/apple-icon.png",
+  },
 };
 
 export default function RootLayout({
@@ -30,6 +35,7 @@ export default function RootLayout({
       <body
         className={`${inter.variable} ${ibmPlexMono.variable} font-sans bg-surface text-navy antialiased min-h-screen`}
       >
+        <SplashScreen />
         {children}
       </body>
     </html>
