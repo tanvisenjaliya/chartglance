@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { PatientQueueItem, FacilityMetadata, sortQueueLive } from "@/lib/queue-utils";
 import { getStoredQueue, saveStoredQueue, resetDemoStorage } from "@/lib/client-storage";
+import { useWelcome } from "@/lib/welcome-context";
 import KpiBar, { FilterType, isInfant, isSenior } from "./KpiBar";
 import DoctorSidebar from "./DoctorSidebar";
 import QueueStatusBadge from "./QueueStatusBadge";
@@ -25,6 +26,7 @@ export default function OpdDashboard({
   },
 }: OpdDashboardProps) {
   const router = useRouter();
+  const { open: openBriefing } = useWelcome();
   const [patients, setPatients] = useState<PatientQueueItem[]>(() =>
     sortQueueLive(initialPatients)
   );
@@ -211,6 +213,12 @@ export default function OpdDashboard({
             <span className="text-xs text-slate hidden sm:inline-block">
               {currentDateFormatted}
             </span>
+            <button
+              onClick={() => openBriefing(false)}
+              className="text-xs text-[#6E95FF] hover:text-white transition-colors underline font-medium"
+            >
+              Today&apos;s briefing
+            </button>
           </div>
         </div>
       </header>

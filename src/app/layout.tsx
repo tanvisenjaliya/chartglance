@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Inter, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 import SplashScreen from "@/components/SplashScreen";
+import WelcomeScreen from "@/components/WelcomeScreen";
+import { WelcomeProvider } from "@/lib/welcome-context";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -35,8 +37,11 @@ export default function RootLayout({
       <body
         className={`${inter.variable} ${ibmPlexMono.variable} font-sans bg-surface text-navy antialiased min-h-screen`}
       >
-        <SplashScreen />
-        {children}
+        <WelcomeProvider>
+          <SplashScreen />
+          <WelcomeScreen />
+          {children}
+        </WelcomeProvider>
       </body>
     </html>
   );

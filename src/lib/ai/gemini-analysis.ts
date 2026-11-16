@@ -292,10 +292,16 @@ export interface GeminiCallOptions {
   userPrompt: string;
   systemInstruction?: string;
   responseMimeType?: string;
+  /** Optional JSON schema passed as responseSchema in generationConfig (requires responseMimeType: "application/json"). */
+  responseSchema?: Record<string, unknown>;
   temperature?: number;
   maxOutputTokens?: number;
   timeoutMs?: number;
   modelOverride?: string;
+  /** Optional extra tools array (e.g. googleSearch) added to the request body. */
+  tools?: unknown[];
+  /** Optional toolConfig added to the request body. */
+  toolConfig?: unknown;
 }
 
 export interface GeminiRawError {
@@ -318,6 +324,8 @@ export interface GeminiCallResult {
   fallbackUsed: boolean;
   attempts: number;
   promptTokens?: number;
+  /** True when the response included grounding metadata (Google Search was used). */
+  groundingUsed?: boolean;
 }
 
 /**
@@ -359,7 +367,10 @@ export async function callGemini(options: GeminiCallOptions): Promise<GeminiCall
       maxOutputTokens: options.maxOutputTokens ?? 1500,
       thinkingConfig: { thinkingLevel: "low" },
       ...(options.responseMimeType ? { responseMimeType: options.responseMimeType } : {}),
+      ...(options.responseSchema ? { responseSchema: options.responseSchema } : {}),
     },
+    ...(options.tools ? { tools: options.tools } : {}),
+    ...(options.toolConfig ? { toolConfig: options.toolConfig } : {}),
   };
 
   if (options.systemInstruction) {
@@ -377,6 +388,7 @@ export async function callGemini(options: GeminiCallOptions): Promise<GeminiCall
     requestUrlMasked: string;
     isTimeout?: boolean;
     promptTokens?: number;
+    groundingUsed?: boolean;
   }> => {
     // Note: Send key as query parameter (?key=...)
     const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(modelToUse)}:generateContent?key=${encodeURIComponent(apiKey)}`;
@@ -408,8 +420,14 @@ export async function callGemini(options: GeminiCallOptions): Promise<GeminiCall
       const parts = data.candidates?.[0]?.content?.parts as Array<{ text?: string; thought?: boolean }> | undefined;
       const textParts = parts?.filter((p) => !p.thought && typeof p.text === "string").map((p) => p.text);
       const textContent = textParts && textParts.length > 0 ? textParts.join("") : parts?.[0]?.text;
+      // Detect grounding: present when Google Search was actually used
+      const groundingUsed = !!(
+        data.candidates?.[0]?.groundingMetadata ||
+        data.candidates?.[0]?.groundingChunks ||
+        data.groundingMetadata
+      );
       if (typeof textContent === "string") {
-        return { ok: true, status: 200, text: textContent, promptTokens, requestUrlMasked: maskedUrl };
+        return { ok: true, status: 200, text: textContent, promptTokens, groundingUsed, requestUrlMasked: maskedUrl };
       }
       return { ok: false, status: 200, errorText: "Response contained no text parts", requestUrlMasked: maskedUrl };
     } catch (err: unknown) {
@@ -502,6 +520,7 @@ export async function callGemini(options: GeminiCallOptions): Promise<GeminiCall
       fallbackUsed,
       attempts,
       promptTokens: result.promptTokens,
+      groundingUsed: result.groundingUsed ?? false,
     };
   }
 
